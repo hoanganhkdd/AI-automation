@@ -1,1290 +1,238 @@
 {
   "meta": {
     "title": "AI AUTOMATION",
-    "subtitle": "Giáo án Sale thực chiến · Song ngữ Việt–Anh",
-    "source": "Biên soạn từ khung FMCG Sales (RTM, KAM, SPIN, BANT, Retention)",
+    "subtitle": "Tự động hoá công việc bằng AI · Song ngữ Việt–Anh",
+    "source": "Biên soạn từ khung AI Agent & Workflow Automation 2026 (Claude Code, Antigravity, n8n, Zapier, Make, RAG)",
     "modules": 4,
     "sessions": 16,
-    "updated": 1787475151511
+    "updated": 0
   },
   "sessions": [
     {
-      "id": "gt-01",
-      "module": "General Trade — kênh truyền thống",
-      "title_vi": "Tổng quan kênh GT & Route-to-Market",
-      "title_en": "GT Overview & Route-to-Market",
-      "subtitle": "Hiểu kênh truyền thống và cách phủ hàng hiệu quả",
-      "custom": false,
+      "id": "found-01", "module": "Nền tảng AI & Agent",
+      "title_vi": "AI, LLM & Agent là gì?", "title_en": "AI, LLM & Agents",
+      "subtitle": "Hiểu đúng để tự động hoá đúng", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Tổng quan kênh GT & Route-to-Market",
-            "GT Overview & Route-to-Market",
-            "Hiểu kênh truyền thống và cách phủ hàng hiệu quả"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**General Trade (GT)** = kênh truyền thống: tạp hoá, chợ, cửa hàng nhỏ lẻ (kirana/mom-and-pop).",
-            "Đặc điểm: **nhiều điểm bán, giá trị đơn nhỏ, quan hệ cá nhân**, quyết định nhanh bởi chủ quán.",
-            "Đối lập với **Modern Trade (MT)** — siêu thị, chuỗi bán lẻ hiện đại."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "RTM = Route-to-Market (lộ trình đưa hàng ra thị trường)",
-            "Coverage = Độ phủ (số điểm bán có hàng)",
-            "Outlet = Điểm bán lẻ",
-            "PJP = Permanent Journey Plan (lịch viếng thăm cố định)",
-            "Numeric Distribution = % số cửa hàng có bán SKU"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Mô hình RTM cơ bản",
-          "lines": [
-            "Nhà sản xuất → **Nhà phân phối (NPP)** → Salesman/DCR viếng thăm outlet.",
-            "Xác định **địa bàn (territory)** và chia tuyến (route) theo mật độ điểm bán.",
-            "Lập **PJP**: mỗi outlet được thăm mấy lần/tuần theo phân loại A/B/C.",
-            "Đặt mục tiêu **coverage + numeric distribution** cho từng tuyến.",
-            "Đo lường & tối ưu: giảm thời gian di chuyển, tăng thời gian gặp chủ quán."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Một NPP nước giải khát chia địa bàn 1.200 cửa hàng thành 6 tuyến, mỗi salesman ~40 outlet/ngày. Cửa hàng loại A (doanh số cao) thăm 2 lần/tuần, loại C thăm 1 lần/2 tuần → tối ưu công gặp mặt và độ phủ."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành tuần này",
-          "lines": [
-            "Vẽ sơ đồ RTM của công ty bạn (NSX → NPP → outlet).",
-            "Liệt kê 3 chỉ số RTM bạn đang chịu trách nhiệm (coverage, ND, doanh số/tuyến).",
-            "Phân loại A/B/C cho 20 cửa hàng trong tuyến của bạn."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Chỉ tập trung cửa hàng lớn, bỏ quên phủ rộng → mất thị phần vào tay đối thủ.",
-            "Không có PJP → viếng thăm ngẫu hứng, sót outlet.",
-            "Nhầm 'bán được nhiều' với 'phủ rộng' — cần cả hai."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["AI, LLM & Agent là gì?", "AI, LLM & Agents", "Hiểu đúng để tự động hoá đúng"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**AI tạo sinh (Generative AI)**: mô hình tạo ra văn bản, hình ảnh, mã nguồn từ mô tả bằng ngôn ngữ tự nhiên.", "**LLM (Large Language Model)**: mô hình ngôn ngữ lớn (GPT, Claude, Gemini) — 'bộ não' hiểu và sinh chữ.", "**AI Agent**: LLM được trao **công cụ** + **quyền hành động** → tự đọc file, chạy lệnh, lặp lại tới khi *hoàn thành công việc*."] },
+        { "n": 3, "kind": "terms", "label": "Thuật ngữ", "lines": ["Prompt = câu lệnh/yêu cầu bạn đưa cho AI", "Token = đơn vị chữ mô hình xử lý (ảnh hưởng chi phí)", "Context window = lượng thông tin AI 'nhớ' trong 1 phiên", "Agent = AI tự hành động qua nhiều bước", "Tool/Function calling = AI gọi công cụ (đọc file, gọi API)"] },
+        { "n": 4, "kind": "steps", "label": "Chatbot vs Agent", "lines": ["**Chatbot**: bạn hỏi → nó trả lời 1 lần. Là *giao diện trò chuyện*.", "**Agent**: bạn giao việc → nó *lập kế hoạch*, dùng công cụ, tự kiểm tra, lặp lại.", "Agent kết nối tới **công cụ thật** (file, email, web, API) và *làm xong việc* thay bạn.", "→ Automation mạnh nằm ở **agent**, không phải chatbot đơn thuần."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Yêu cầu: 'Đọc 12 file Excel bán hàng trong thư mục, gộp lại, tính tổng theo tháng và xuất 1 báo cáo có biểu đồ.' Chatbot chỉ hướng dẫn cách làm; **agent tự đọc file, viết code, chạy và giao ra file kết quả**."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Liệt kê 3 việc lặp lại tốn thời gian nhất của bạn — ứng viên tự động hoá đầu tiên.", "Với mỗi việc, ghi rõ: đầu vào là gì, kết quả mong muốn là gì.", "Phân biệt: việc nào chỉ cần chatbot trả lời, việc nào cần agent làm thật."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Kỳ vọng AI 'tự hiểu' mà không mô tả rõ đầu vào/đầu ra.", "Nhầm chatbot với agent → mong nó tự làm nhưng nó chỉ tư vấn.", "Giao việc quá mơ hồ ('làm cho đẹp') → kết quả lệch."] }
       ]
     },
     {
-      "id": "gt-02",
-      "module": "General Trade — kênh truyền thống",
-      "title_vi": "Quy trình viếng thăm cửa hàng (8 bước)",
-      "title_en": "The 8 Steps of the Call",
-      "subtitle": "Chuẩn hoá mỗi lần ghé điểm bán để không bỏ sót",
-      "custom": false,
+      "id": "found-02", "module": "Nền tảng AI & Agent",
+      "title_vi": "Ra lệnh (Prompt) hiệu quả", "title_en": "Effective Prompting",
+      "subtitle": "Nói đúng để AI làm đúng", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Quy trình viếng thăm cửa hàng (8 bước)",
-            "The 8 Steps of the Call",
-            "Chuẩn hoá mỗi lần ghé điểm bán để không bỏ sót"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Vì sao cần quy trình",
-          "lines": [
-            "Một quy trình chuẩn giúp **mọi lần viếng thăm đều tạo giá trị**: bán hàng, trưng bày, thu thập thông tin.",
-            "Giảm phụ thuộc vào trí nhớ, dễ đào tạo nhân viên mới, dễ đo lường."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "8 bước chuẩn (The 8-Step Call)",
-          "lines": [
-            "**Chuẩn bị**: xem lịch sử đơn, mục tiêu, POSM mang theo.",
-            "**Chào & quan sát**: chào chủ quán, quan sát cửa hàng.",
-            "**Kiểm kho & trưng bày**: đếm tồn, chỉnh bày, FIFO.",
-            "**Xác định đơn đề xuất** theo công thức tồn kho.",
-            "**Chào bán & xử lý từ chối**: giới thiệu SKU, khuyến mãi.",
-            "**Chốt đơn** & xác nhận số lượng.",
-            "**Trưng bày & POSM**: dán poster, sắp kệ.",
-            "**Ghi nhận & cảm ơn**: cập nhật báo cáo, hẹn lần sau."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Kỹ thuật đặt đơn đề xuất",
-          "lines": [
-            "**Công thức 1.5x**: Đơn đề xuất = (Bán ra trung bình × hệ số) − Tồn hiện tại.",
-            "Luôn *đề xuất con số cụ thể* thay vì hỏi 'anh lấy thêm không?'.",
-            "Gợi ý combo/SKU mới đi kèm SKU bán chạy."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Chủ quán bán ~2 thùng/tuần, tồn còn 1 thùng, tần suất thăm 1 tuần. Đề xuất: 2×1.5 − 1 = **2 thùng**. Salesman nói: 'Em để anh 2 thùng nhé, tuần rồi bán hết đấy' → tỉ lệ chốt cao hơn hỏi chung chung."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "In checklist 8 bước, áp dụng cho 10 cửa hàng ngày mai.",
-            "Tính đơn đề xuất bằng công thức cho 5 SKU bán chạy.",
-            "Tự chấm: mỗi lần ghé bạn làm đủ mấy/8 bước?"
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Bỏ bước kiểm kho → đề xuất sai số lượng.",
-            "Chỉ ghi đơn rồi đi, quên trưng bày & POSM.",
-            "Không chốt số cụ thể → chủ quán lấy ít."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Ra lệnh (Prompt) hiệu quả", "Effective Prompting", "Nói đúng để AI làm đúng"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["Chất lượng kết quả AI phụ thuộc lớn vào **cách bạn ra lệnh**.", "Prompt tốt = **rõ bối cảnh + yêu cầu cụ thể + định dạng kết quả mong muốn**."] },
+        { "n": 3, "kind": "steps", "label": "Công thức prompt (C-R-A-F-T)", "lines": ["**Context** — Bối cảnh: bạn là ai, dữ liệu gì, mục tiêu gì.", "**Role** — Vai trò: 'Đóng vai chuyên viên phân tích dữ liệu'.", "**Action** — Việc cần làm: động từ rõ ràng, một mục tiêu chính.", "**Format** — Định dạng đầu ra: bảng, JSON, file .docx, gạch đầu dòng.", "**Test/Tune** — Xem kết quả, chỉnh lại prompt, lặp."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật nâng cao", "lines": ["**Few-shot**: đưa 1-2 ví dụ mẫu để AI bắt chước định dạng.", "**Chia nhỏ**: tách việc lớn thành các bước, làm từng bước.", "**Yêu cầu tự kiểm tra**: 'Kiểm lại số liệu trước khi trả lời.'", "**Ràng buộc rõ**: độ dài, ngôn ngữ, điều KHÔNG được làm."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Kém: 'Tóm tắt file này.' → Tốt: 'Bạn là trợ lý phân tích. Tóm tắt báo cáo đính kèm thành **5 gạch đầu dòng** nêu doanh thu, tăng trưởng, rủi ro; **bằng tiếng Việt**; nếu thiếu số liệu thì ghi rõ.'"] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Viết lại 3 prompt cũ của bạn theo công thức C-R-A-F-T.", "Thử few-shot: đưa 1 ví dụ mẫu cho AI trước khi giao việc.", "So sánh kết quả trước/sau khi thêm định dạng mong muốn."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Prompt mơ hồ, đa mục tiêu → kết quả lan man.", "Không nêu định dạng → phải sửa tay nhiều.", "Không kiểm tra & tinh chỉnh, bỏ cuộc sau 1 lần."] }
       ]
     },
     {
-      "id": "gt-03",
-      "module": "General Trade — kênh truyền thống",
-      "title_vi": "Trưng bày & quản lý điểm bán",
-      "title_en": "Merchandising & POSM",
-      "subtitle": "Biến cửa hàng thành công cụ bán hàng",
-      "custom": false,
+      "id": "found-03", "module": "Nền tảng AI & Agent",
+      "title_vi": "Bản đồ công cụ AI Automation", "title_en": "The AI Automation Toolset",
+      "subtitle": "Chọn đúng công cụ cho từng loại việc", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Trưng bày & quản lý điểm bán",
-            "Merchandising & POSM",
-            "Biến cửa hàng thành công cụ bán hàng"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**Merchandising** = nghệ thuật trưng bày để hàng dễ thấy, dễ lấy, dễ mua.",
-            "Nguyên tắc: **Visibility (dễ thấy) – Availability (có hàng) – Accessibility (dễ lấy)**."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "POSM = Point of Sale Materials (vật phẩm quảng cáo tại điểm bán)",
-            "Planogram = sơ đồ bố trí kệ",
-            "Facing = số mặt sản phẩm quay ra ngoài kệ",
-            "Hot zone = vị trí ngang tầm mắt, dễ bán nhất",
-            "FIFO = First In First Out (hàng nhập trước bán trước)"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Quy trình trưng bày",
-          "lines": [
-            "Chọn **vị trí vàng**: ngang tầm mắt, gần quầy thu ngân/lối vào.",
-            "Tăng **facing** cho SKU bán chạy.",
-            "Nhóm sản phẩm theo ngành hàng, thương hiệu.",
-            "Áp dụng **FIFO**: đẩy hàng cũ ra trước, tránh hết hạn.",
-            "Gắn POSM: poster, wobbler, giá treo đúng chỗ."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Đưa SKU nước tăng lực từ kệ dưới lên ngang tầm mắt + tăng từ 2 lên 4 facing + dán wobbler → doanh số điểm bán tăng rõ trong 2 tuần vì khách nhìn thấy ngay khi vào."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Chụp ảnh trước–sau khi chỉnh trưng bày 3 cửa hàng.",
-            "Đảm bảo mọi SKU bán chạy đều ở hot zone.",
-            "Kiểm tra hạn dùng, xoay FIFO cho 5 điểm bán."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Dán POSM tràn lan, chủ quán bóc ngay hôm sau → chọn vị trí chủ quán đồng thuận.",
-            "Trưng bày đẹp nhưng hết hàng (out-of-stock) → mất doanh số.",
-            "Quên FIFO → hàng cận date, đổi trả nhiều."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Bản đồ công cụ AI Automation", "The AI Automation Toolset", "Chọn đúng công cụ cho từng loại việc"] },
+        { "n": 2, "kind": "concept", "label": "Hai trường phái (2026)", "lines": ["**AI là lớp phủ trên pipeline** (Zapier): tích hợp nhiều app, thêm agent lên trên.", "**AI là runtime chính** (Claude Code/Cowork, n8n): AI điều phối công cụ như plugin/node.", "Hiểu để chọn đúng: cần *logic chi tiết & kiểm soát* hay cần *giao việc bằng lời*."] },
+        { "n": 3, "kind": "terms", "label": "Công cụ chính", "lines": ["Claude Code = agent lập trình dòng lệnh (xử lý file, script, dữ liệu)", "Google Antigravity = IDE 'agent-first' (editor + terminal + browser)", "n8n / Make = workflow tự động, nhiều node, kiểm soát cao", "Zapier = nối 8.000+ app, dễ cho người không kỹ thuật", "ChatGPT / Claude / Gemini = trợ lý hội thoại + agent"] },
+        { "n": 4, "kind": "steps", "label": "Chọn công cụ theo việc", "lines": ["Xử lý **file/dữ liệu trên máy**, viết script → **Claude Code**.", "Quy trình có **thao tác web**, nhiều bước → **Antigravity**.", "**Nối nhiều app SaaS** (Gmail, Sheets, Slack) → **Zapier/Make**.", "Cần **logic phức tạp, self-host** → **n8n**.", "Hỏi đáp/soạn thảo nhanh → **ChatGPT/Claude**."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Mỗi khi có email đơn hàng → Zapier đọc email, ghi vào Google Sheets, gửi Slack. Nhưng để 'đọc 50 PDF hoá đơn và tạo báo cáo' thì Claude Code phù hợp hơn vì xử lý file & tính toán ngay trên máy."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Lập bảng: 5 việc của bạn → công cụ phù hợp nhất cho mỗi việc.", "Cài thử 1 công cụ agent (Claude Code hoặc Antigravity).", "Tạo 1 tài khoản no-code (Zapier hoặc Make) và xem thư viện mẫu."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Ép 1 công cụ làm mọi việc → khó và kém hiệu quả.", "Chọn công cụ phức tạp cho việc đơn giản (và ngược lại).", "Bỏ qua chi phí/giới hạn (token, số task/tháng)."] }
       ]
     },
     {
-      "id": "gt-04",
-      "module": "General Trade — kênh truyền thống",
-      "title_vi": "Quản lý nhà phân phối & chỉ tiêu",
-      "title_en": "Distributor & KPI Management",
-      "subtitle": "Làm việc với NPP để đạt độ phủ và doanh số",
-      "custom": false,
+      "id": "found-04", "module": "Nền tảng AI & Agent",
+      "title_vi": "An toàn, chi phí & giới hạn khi dùng AI", "title_en": "Safety, Cost & Limits",
+      "subtitle": "Tự động hoá có trách nhiệm", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Quản lý nhà phân phối & chỉ tiêu",
-            "Distributor & KPI Management",
-            "Làm việc với NPP để đạt độ phủ và doanh số"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**Nhà phân phối (NPP)** là cánh tay nối dài của NSX: kho, đội bán, vốn, phương tiện giao hàng.",
-            "Quản lý NPP = cân bằng giữa **áp chỉ tiêu** và **hỗ trợ để họ có lãi**."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Chỉ số then chốt (KPI)",
-          "lines": [
-            "Coverage / Numeric Distribution = độ phủ",
-            "Sell-in = bán vào NPP; Sell-out = NPP bán ra thị trường",
-            "Stock cover = số ngày tồn kho",
-            "SKU active = số mã hàng thực sự bán",
-            "Productivity = % lần ghé có đơn (strike rate)"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Quy trình làm việc với NPP",
-          "lines": [
-            "Thống nhất **mục tiêu tháng**: doanh số, độ phủ, SKU mới.",
-            "Kiểm tra **tồn kho & công nợ**, tránh sell-in ảo.",
-            "Cùng NPP lập **kế hoạch tuyến & nhân sự**.",
-            "Theo dõi **sell-out**, không chỉ sell-in.",
-            "Họp review định kỳ, khen thưởng & điều chỉnh."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "NPP đạt sell-in cao nhưng sell-out thấp → hàng ứ kho. Giải pháp: tạm dừng đẩy hàng, tập trung trưng bày & khuyến mãi để giải phóng tồn, tránh hàng cận date và xung đột giá."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Lập bảng KPI tuần cho 1 NPP bạn phụ trách.",
-            "Đối chiếu sell-in vs sell-out tháng gần nhất.",
-            "Đề xuất 2 hành động tăng độ phủ SKU mới."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Chạy theo sell-in để đạt target → dồn tồn, vỡ giá.",
-            "Bỏ quên sức khoẻ tài chính của NPP.",
-            "Không có dữ liệu sell-out → ra quyết định mù."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["An toàn, chi phí & giới hạn khi dùng AI", "Safety, Cost & Limits", "Tự động hoá có trách nhiệm"] },
+        { "n": 2, "kind": "concept", "label": "Nguyên tắc an toàn", "lines": ["Luôn **kiểm tra kết quả AI** trước khi dùng thật — nhất là số liệu tài chính, pháp lý.", "**Không** giao mật khẩu, số thẻ, dữ liệu nhạy cảm cho agent tự thao tác.", "AI có thể **bịa (hallucination)** — cần đối chiếu nguồn."] },
+        { "n": 3, "kind": "terms", "label": "Cần biết", "lines": ["Hallucination = AI bịa thông tin nghe có vẻ đúng", "Human-in-the-loop = có người duyệt trước bước quan trọng", "Data privacy = quyền riêng tư dữ liệu (đừng gửi dữ liệu mật lên dịch vụ ngoài)", "Rate limit / quota = giới hạn số lần gọi / token", "Cost per token = chi phí theo lượng chữ xử lý"] },
+        { "n": 4, "kind": "steps", "label": "Kiểm soát chi phí & rủi ro", "lines": ["Bắt đầu bằng **model rẻ** (vd gpt-4o-mini) cho việc đơn giản.", "Đặt **human-in-the-loop** cho bước gửi email/xoá dữ liệu/thanh toán.", "**Che/ẩn dữ liệu nhạy cảm** trước khi đưa cho AI.", "Ghi log & giới hạn quyền của agent.", "Kiểm thử trên dữ liệu mẫu trước khi chạy thật."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Trước khi cho agent tự gửi 100 email cho khách, chạy thử 3 email và **tự đọc duyệt**; chỉ khi đúng mới cho chạy toàn bộ. Tránh gửi nhầm hàng loạt."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Liệt kê dữ liệu nào của bạn KHÔNG được đưa lên AI ngoài.", "Xác định các bước cần người duyệt trong quy trình của bạn.", "Ước tính chi phí token cho 1 tác vụ định chạy hằng ngày."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Tin tuyệt đối kết quả AI, không kiểm tra.", "Để agent tự động hoá bước không thể hoàn tác mà không duyệt.", "Dùng model đắt cho mọi việc → chi phí phình to."] }
+      ]
+    },
+
+    {
+      "id": "agent-01", "module": "Automation với Claude Code & Antigravity",
+      "title_vi": "Claude Code cơ bản", "title_en": "Claude Code Basics",
+      "subtitle": "Trợ lý agent chạy trên máy bạn", "custom": false,
+      "slides": [
+        { "n": 1, "kind": "title", "lines": ["Claude Code cơ bản", "Claude Code Basics", "Trợ lý agent chạy trên máy bạn"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**Claude Code** = agent lập trình dòng lệnh: bạn ra lệnh bằng tiếng Việt, nó **đọc/sửa file, chạy lệnh, viết script**.", "Rất mạnh cho **xử lý file, dữ liệu, tạo tài liệu** ngay trên máy."] },
+        { "n": 3, "kind": "steps", "label": "Vòng lặp làm việc", "lines": ["**Giao việc** rõ ràng trong một thư mục dự án.", "Claude Code **đề xuất thay đổi / kế hoạch**.", "Bạn **duyệt** (nó xin phép trước khi sửa/chạy).", "Nó **thực hiện & tự kiểm tra**.", "Bạn **xem kết quả**, yêu cầu chỉnh nếu cần."] },
+        { "n": 4, "kind": "technique", "label": "Mẹo dùng hiệu quả", "lines": ["Mở đúng **thư mục dự án** để nó có ngữ cảnh file.", "Giao **từng việc rõ ràng**, không dồn quá nhiều một lúc.", "Dùng lệnh `/help` để xem tính năng.", "Tận dụng **Skills** có sẵn (docx, xlsx, pdf, pptx)."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["'Đọc file khachhang.csv, làm sạch trùng lặp và sai định dạng số điện thoại, xuất ra khachhang_sach.xlsx.' → Claude Code viết script, chạy, và giao file kết quả kèm báo cáo đã sửa bao nhiêu dòng."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Cài Node.js + Claude Code, mở 1 thư mục trống, yêu cầu tạo file ghi chú.", "Cho nó đọc 1 file CSV và tóm tắt.", "Nhờ viết 1 script đổi tên hàng loạt file."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Không mở đúng thư mục → thiếu ngữ cảnh.", "Duyệt qua loa các thay đổi quan trọng.", "Giao việc quá lớn một lần → khó kiểm soát."] }
       ]
     },
     {
-      "id": "mt-01",
-      "module": "Modern Trade — kênh hiện đại (MT/KA)",
-      "title_vi": "Tổng quan Modern Trade & Key Account",
-      "title_en": "Modern Trade & Key Account Overview",
-      "subtitle": "Bán hàng vào siêu thị và chuỗi bán lẻ",
-      "custom": false,
+      "id": "agent-02", "module": "Automation với Claude Code & Antigravity",
+      "title_vi": "Xử lý file & dữ liệu với Claude Code", "title_en": "Files & Data with Claude Code",
+      "subtitle": "Biến việc thủ công thành script tự động", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Tổng quan Modern Trade & Key Account",
-            "Modern Trade & Key Account Overview",
-            "Bán hàng vào siêu thị và chuỗi bán lẻ"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**Modern Trade (MT)** = siêu thị, đại siêu thị, cửa hàng tiện lợi, chuỗi bán lẻ vận hành tập trung.",
-            "**Key Account (KA)** = khách hàng lớn, chiến lược, do **KAM** phụ trách quan hệ dài hạn."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "KAM = Key Account Manager",
-            "Listing = đưa SKU vào danh mục bán của chuỗi",
-            "Trade terms = điều khoản thương mại (chiết khấu, thưởng)",
-            "Planogram = sơ đồ kệ do chuỗi/nhà cung cấp thống nhất",
-            "JBP = Joint Business Plan (kế hoạch kinh doanh chung)"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Khác biệt GT vs MT",
-          "lines": [
-            "MT: **mua tập trung**, đàm phán ở cấp HQ chuỗi, không phải từng cửa hàng.",
-            "Yêu cầu **chứng từ, hợp đồng, EDI** chặt chẽ.",
-            "Chi phí vào kênh cao: phí listing, phí trưng bày, khuyến mãi.",
-            "Quan hệ **1 KAM – 1 chuỗi**, xây dựng JBP dài hạn.",
-            "Đo bằng **sell-out, share of shelf, ROI khuyến mãi**."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "KAM đàm phán với chuỗi siêu thị để listing 5 SKU mới + 2 đầu kệ (gondola end) dịp Tết, đổi lại cam kết doanh số và ngân sách khuyến mãi. Ký JBP khoá giá và lịch khuyến mãi cả quý."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Liệt kê các chuỗi MT trong khu vực của bạn và người phụ trách mua.",
-            "So sánh chi phí vào kênh GT vs MT cho 1 SKU.",
-            "Chuẩn bị hồ sơ listing 1 SKU (giá, lợi nhuận cho chuỗi, hỗ trợ)."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Đồng ý mọi yêu cầu chi phí của chuỗi → âm lợi nhuận.",
-            "Không theo sell-out → trả hàng, phạt.",
-            "Bỏ qua điều khoản hợp đồng (giao hàng, phạt) → thiệt hại."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Xử lý file & dữ liệu với Claude Code", "Files & Data with Claude Code", "Biến việc thủ công thành script tự động"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["Claude Code có thể **đọc – biến đổi – tạo file** hàng loạt: Excel, CSV, Word, PDF, ảnh.", "Kết quả có thể **tái sử dụng** thành script chạy lại mỗi lần."] },
+        { "n": 3, "kind": "steps", "label": "Quy trình tự động hoá 1 tác vụ", "lines": ["Mô tả **đầu vào** (loại file, ở đâu) và **đầu ra** mong muốn.", "Cho Claude Code **viết script** (thường bằng Python: pandas, openpyxl).", "**Chạy thử** trên dữ liệu mẫu, kiểm tra kết quả.", "**Lưu lại script** để dùng cho lần sau.", "Tùy chọn: **đặt lịch** chạy tự động."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Yêu cầu nó **giải thích** các bước để bạn kiểm soát.", "Nhờ **xử lý ngoại lệ** (ô trống, sai định dạng).", "Gộp nhiều file, tách file lớn theo tiêu chí.", "Xuất kèm **báo cáo** những gì đã thay đổi."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Gộp 12 file Excel doanh số theo tháng → 1 file tổng có sheet tóm tắt + biểu đồ cột theo tháng, tự tính tăng trưởng. Lưu script để tháng sau chỉ cần chạy lại."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Tự động hoá 1 tác vụ Excel bạn làm hằng tuần.", "Chuyển vài PDF hoá đơn thành 1 bảng Excel.", "Lưu lại script và chạy lại lần 2 để kiểm tra."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Không kiểm tra kết quả trên dữ liệu thật.", "Không lưu script → lần sau làm lại từ đầu.", "Bỏ qua ô lỗi/ngoại lệ → sai số liệu."] }
       ]
     },
     {
-      "id": "mt-02",
-      "module": "Modern Trade — kênh hiện đại (MT/KA)",
-      "title_vi": "Quản trị ngành hàng & Planogram",
-      "title_en": "Category Management & Planogram",
-      "subtitle": "Tối ưu kệ để cả chuỗi và nhãn hàng cùng thắng",
-      "custom": false,
+      "id": "agent-03", "module": "Automation với Claude Code & Antigravity",
+      "title_vi": "Google Antigravity cơ bản", "title_en": "Google Antigravity Basics",
+      "subtitle": "Agent làm việc xuyên editor + terminal + trình duyệt", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Quản trị ngành hàng & Planogram",
-            "Category Management & Planogram",
-            "Tối ưu kệ để cả chuỗi và nhãn hàng cùng thắng"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**Category Management** = quản lý ngành hàng như một đơn vị kinh doanh, tối ưu doanh số & lợi nhuận cả ngành hàng, không chỉ 1 nhãn.",
-            "Nhà cung cấp mạnh thường làm **Category Captain** tư vấn bố trí kệ cho chuỗi."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "Quy trình 8 bước Category Management",
-          "lines": [
-            "Định nghĩa ngành hàng & vai trò của nó.",
-            "Đánh giá hiệu quả hiện tại (doanh số, lợi nhuận, thị phần).",
-            "Đặt mục tiêu ngành hàng.",
-            "Xây chiến lược (traffic, cash, profit, image).",
-            "Chọn chiến thuật: assortment, giá, kệ, khuyến mãi.",
-            "Triển khai planogram.",
-            "Thực thi tại điểm bán.",
-            "Đo lường & rà soát."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Nguyên tắc lên kệ",
-          "lines": [
-            "Bố trí theo **hành vi mua** (decision tree của khách).",
-            "SKU chủ lực & lợi nhuận cao đặt **ngang tầm mắt**.",
-            "**Share of shelf ≈ share of market**: facing tương xứng thị phần.",
-            "Nhóm theo ngành hàng → thương hiệu → biến thể."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Sắp lại kệ dầu gội theo nhu cầu (trị gàu / suôn mượt / thảo dược) thay vì theo nhãn → khách dễ tìm, tổng doanh số ngành hàng tăng, chuỗi hài lòng và ưu ái nhà cung cấp tư vấn."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Chụp 1 planogram thực tế, đánh giá facing có tương xứng thị phần không.",
-            "Vẽ decision tree cho 1 ngành hàng bạn phụ trách.",
-            "Đề xuất 3 điều chỉnh kệ tăng doanh số ngành hàng."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Chỉ đòi facing cho nhãn mình → chuỗi từ chối vì hại tổng ngành hàng.",
-            "Planogram đẹp trên giấy nhưng không kiểm tra thực thi.",
-            "Bỏ qua dữ liệu bán hàng của chuỗi khi đề xuất."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Google Antigravity cơ bản", "Google Antigravity Basics", "Agent làm việc xuyên editor + terminal + trình duyệt"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**Google Antigravity** = nền tảng 'agent-first' (dùng Gemini): agent tự làm việc across **editor + terminal + browser**.", "Hợp cho **quy trình nhiều bước có thao tác web** và dự án lớn hơn."] },
+        { "n": 3, "kind": "steps", "label": "Bắt đầu", "lines": ["Cài & đăng nhập Antigravity, tạo dự án.", "Giao **một tác vụ nhiều bước** cho agent.", "Quan sát **kế hoạch** agent tự lập.", "Agent thao tác **trình duyệt/terminal** để hoàn thành.", "Xem lại & duyệt kết quả từng bước."] },
+        { "n": 4, "kind": "technique", "label": "Khi nào dùng Antigravity", "lines": ["Cần **mở web, lấy dữ liệu, điền form**.", "Quy trình **nhiều bước** đan xen code + web.", "Muốn **giao diện trực quan** theo dõi agent.", "Kết hợp: dùng Antigravity lấy dữ liệu web, Claude Code xử lý sâu."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Giao: 'Vào trang giá của 3 đối thủ, lấy bảng giá sản phẩm và lưu ra Excel so sánh.' → Antigravity mở trình duyệt, thu thập dữ liệu, tạo file so sánh."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Cài Antigravity, cho agent giải thích 1 đoạn nội dung/web.", "Giao 1 tác vụ 3 bước và theo dõi kế hoạch của nó.", "Cho agent lấy 1 bảng dữ liệu từ web → Excel."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Dùng cho việc chỉ cần xử lý file đơn giản (Claude Code nhanh hơn).", "Không duyệt bước thao tác web quan trọng.", "Không mô tả rõ trang/dữ liệu cần lấy."] }
       ]
     },
     {
-      "id": "mt-03",
-      "module": "Modern Trade — kênh hiện đại (MT/KA)",
-      "title_vi": "Joint Business Plan & đàm phán điều khoản",
-      "title_en": "JBP & Trade Terms Negotiation",
-      "subtitle": "Đàm phán để hai bên cùng có lợi và cam kết dài hạn",
-      "custom": false,
+      "id": "agent-04", "module": "Automation với Claude Code & Antigravity",
+      "title_vi": "Tự động thao tác web & kết hợp công cụ", "title_en": "Web Automation & Combining Tools",
+      "subtitle": "Ghép agent thành quy trình trọn vẹn", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Joint Business Plan & đàm phán điều khoản",
-            "JBP & Trade Terms Negotiation",
-            "Đàm phán để hai bên cùng có lợi và cam kết dài hạn"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**JBP (Joint Business Plan)** = kế hoạch kinh doanh chung giữa nhãn hàng và chuỗi: mục tiêu, khuyến mãi, trưng bày, đầu tư — khoá cho cả năm/quý.",
-            "Biến quan hệ mua–bán thành **đối tác tăng trưởng**."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "Chuẩn bị đàm phán",
-          "lines": [
-            "Xác định **mục tiêu tối thiểu (walk-away)** và mục tiêu lý tưởng.",
-            "Chuẩn bị **dữ liệu**: doanh số, tăng trưởng ngành hàng, ROI.",
-            "Liệt kê **biến số trao đổi**: giá, listing, trưng bày, khuyến mãi, thanh toán.",
-            "Đóng gói thành **gói giá trị** thay vì nhượng bộ đơn lẻ.",
-            "Dự phòng phản đối & phương án thay thế (BATNA)."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Kỹ thuật đàm phán win-win",
-          "lines": [
-            "**Nếu... thì...**: mọi nhượng bộ đều đổi lấy cam kết ('Nếu bên em hỗ trợ đầu kệ, thì chuỗi cam kết trưng bày 3 tháng').",
-            "Đàm phán trên **lợi ích**, không trên **lập trường**.",
-            "Neo (anchor) hợp lý, giữ nhiều biến số để trao đổi.",
-            "Im lặng sau đề nghị — đừng tự nhượng bộ."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Chuỗi đòi tăng chiết khấu 3%. KAM đổi hướng: giữ chiết khấu, nhưng đầu tư 2 đầu kệ + khuyến mãi mua 2 tặng 1 trong 6 tuần, đổi lấy cam kết doanh số +15% và listing thêm 2 SKU → cả hai cùng có lợi, không phá giá."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Viết 3 câu 'Nếu... thì...' cho tình huống của bạn.",
-            "Xác định BATNA khi đàm phán với 1 chuỗi.",
-            "Chuẩn bị 1 trang JBP: mục tiêu – khuyến mãi – trưng bày – đầu tư."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Nhượng bộ giá mà không đổi lại cam kết.",
-            "Đàm phán không có dữ liệu → yếu thế.",
-            "Chỉ nghĩ thắng–thua, phá vỡ quan hệ dài hạn."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Tự động thao tác web & kết hợp công cụ", "Web Automation & Combining Tools", "Ghép agent thành quy trình trọn vẹn"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["Nhiều quy trình cần **thu thập dữ liệu web** rồi **xử lý & xuất báo cáo**.", "Sức mạnh đến từ **kết hợp**: mỗi công cụ làm phần nó giỏi nhất."] },
+        { "n": 3, "kind": "steps", "label": "Mẫu quy trình kết hợp", "lines": ["**Antigravity**: mở web, lấy dữ liệu (giá, tin, danh sách).", "Lưu dữ liệu ra file trung gian (CSV/JSON).", "**Claude Code**: làm sạch, tính toán, tạo báo cáo/slide.", "Xuất kết quả (Excel/Word/PPTX).", "Tùy chọn: gửi kết quả qua email/Slack."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Chuẩn hoá **định dạng file trung gian** để hai công cụ hiểu nhau.", "Tách quy trình thành các **bước có thể chạy lại độc lập**.", "Ghi chú lại prompt & script để tái sử dụng.", "Thêm bước **kiểm tra** giữa các công cụ."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Theo dõi đối thủ: Antigravity lấy giá hằng tuần → Claude Code so sánh với tuần trước, tô đỏ mục thay đổi, tạo slide tóm tắt gửi sếp. Toàn bộ chạy lại chỉ với 1 lệnh."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Thiết kế 1 quy trình 'web → xử lý → báo cáo' cho công việc của bạn.", "Chạy thử từng bước riêng trước khi ghép.", "Đo thời gian tiết kiệm so với làm thủ công."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Ghép mọi thứ vào 1 bước → khó gỡ lỗi.", "Định dạng file trung gian không thống nhất.", "Không kiểm tra dữ liệu web (có thể thiếu/sai)."] }
+      ]
+    },
+
+    {
+      "id": "office-01", "module": "Tự động hoá công việc văn phòng",
+      "title_vi": "Automation Excel & dữ liệu", "title_en": "Excel & Data Automation",
+      "subtitle": "Xoá bỏ việc bảng tính lặp đi lặp lại", "custom": false,
+      "slides": [
+        { "n": 1, "kind": "title", "lines": ["Automation Excel & dữ liệu", "Excel & Data Automation", "Xoá bỏ việc bảng tính lặp đi lặp lại"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["Nhập liệu thủ công chiếm gần **30% thời gian làm việc**. Agent có thể **đọc, cập nhật, tạo bảng tính** tự động.", "AI phân tích Excel, tổng hợp, lọc, tạo biểu đồ — không rời khỏi khung chat."] },
+        { "n": 3, "kind": "steps", "label": "Các tác vụ tự động hoá", "lines": ["**Tổng hợp & pivot** dữ liệu nhiều nguồn.", "**Làm sạch**: khử trùng lặp, chuẩn hoá, điền ô thiếu.", "**Gộp/tách** file theo tiêu chí.", "**Biểu đồ & dashboard** tự sinh.", "**Cập nhật định kỳ** từ dữ liệu mới."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Mô tả rõ cấu trúc cột & quy tắc tính.", "Yêu cầu công thức/biểu đồ cụ thể (loại nào, trục nào).", "Dùng pandas/openpyxl qua Claude Code cho khối lượng lớn.", "Xuất kèm sheet 'thay đổi' để đối chiếu."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["🏆 **Dự án: Báo cáo bán hàng tự động** — thả nhiều file Excel bán hàng → nhận 1 file tổng hợp có bảng theo tháng/khu vực + biểu đồ, chạy lại mỗi tuần chỉ bằng 1 lệnh."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Tự động hoá báo cáo Excel bạn làm hằng tuần.", "Làm sạch 1 file dữ liệu bẩn thành bảng gọn.", "Tạo 1 dashboard đơn giản từ dữ liệu bán hàng."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Không mô tả rõ quy tắc tính → sai kết quả.", "Không kiểm tra trên dữ liệu thật.", "Tự động hoá xong không lưu lại để tái dùng."] }
       ]
     },
     {
-      "id": "mt-04",
-      "module": "Modern Trade — kênh hiện đại (MT/KA)",
-      "title_vi": "Khuyến mãi & thực thi tại siêu thị",
-      "title_en": "Promotion & In-store Execution",
-      "subtitle": "Chạy khuyến mãi có lãi và kiểm soát thực thi",
-      "custom": false,
+      "id": "office-02", "module": "Tự động hoá công việc văn phòng",
+      "title_vi": "Tự động soạn tài liệu & email", "title_en": "Documents & Email Automation",
+      "subtitle": "Sinh văn bản và email hàng loạt cá nhân hoá", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Khuyến mãi & thực thi tại siêu thị",
-            "Promotion & In-store Execution",
-            "Chạy khuyến mãi có lãi và kiểm soát thực thi"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Khuyến mãi tại MT tốn kém → phải đo **ROI** và **incrementality** (doanh số tăng thêm thực sự).",
-            "Thực thi (execution) quan trọng ngang thiết kế: đúng trưng bày, đúng giá, đủ hàng."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "Uplift = mức tăng doanh số nhờ khuyến mãi",
-            "Incrementality = phần tăng thêm THỰC (trừ phần vốn dĩ vẫn mua)",
-            "ROI = (lợi nhuận tăng thêm − chi phí KM) / chi phí KM",
-            "Gondola end = đầu kệ; Display = quầy trưng bày rời",
-            "OSA = On-Shelf Availability (tỉ lệ có hàng trên kệ)"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Quy trình chạy khuyến mãi",
-          "lines": [
-            "Đặt **mục tiêu** rõ (dùng thử, giành thị phần, xả tồn).",
-            "Thiết kế cơ chế phù hợp (giảm giá / combo / quà tặng).",
-            "Dự báo nhu cầu & **đặt hàng đủ** tránh hết hàng.",
-            "Chuẩn bị trưng bày & POSM, huấn luyện PG.",
-            "Kiểm tra thực thi tại điểm bán (audit).",
-            "Đo **uplift, ROI**, rút kinh nghiệm."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Chương trình mua 2 tặng 1 tại chuỗi X: uplift 60% nhưng đa phần là khách vốn đã mua → incrementality thấp, ROI âm. Bài học: chọn cơ chế thu hút **khách mới/dùng thử** thay vì trợ giá cho khách trung thành."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Tính ROI cho 1 chương trình khuyến mãi gần nhất.",
-            "Lập checklist audit thực thi (giá, trưng bày, OSA, POSM).",
-            "Dự báo lượng hàng cần cho 1 chương trình sắp chạy."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Hết hàng giữa chương trình → mất doanh số & uy tín.",
-            "Chỉ nhìn uplift, bỏ qua incrementality & ROI.",
-            "Thiết kế hay nhưng thực thi kém tại cửa hàng."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Tự động soạn tài liệu & email", "Documents & Email Automation", "Sinh văn bản và email hàng loạt cá nhân hoá"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["AI có thể **điền dữ liệu vào mẫu** (hợp đồng, công văn, biên bản) và **soạn email cá nhân hoá** hàng loạt.", "Tiết kiệm hàng giờ cho các văn bản lặp lại."] },
+        { "n": 3, "kind": "steps", "label": "Quy trình", "lines": ["Chuẩn bị **template** (Word) với các chỗ điền.", "Chuẩn bị **dữ liệu** (Excel danh sách).", "Cho AI **ghép dữ liệu vào template** → xuất từng văn bản/PDF.", "Với email: sinh nội dung riêng cho từng người từ danh sách.", "**Duyệt mẫu** trước khi gửi thật (human-in-the-loop)."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Dùng Skill **docx** để tạo Word chuẩn (heading, bảng).", "Cá nhân hoá bằng biến (tên, số liệu) — 'mail merge thông minh'.", "Yêu cầu **giọng văn** phù hợp (trang trọng/thân thiện).", "Tóm tắt & dịch song ngữ tài liệu dài."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["🏆 **Dự án: Máy sinh hợp đồng** — từ danh sách khách trong Excel → xuất hàng loạt hợp đồng Word/PDF đã điền đúng thông tin, đặt tên file theo mã khách."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Tạo template + sinh 5 văn bản từ dữ liệu mẫu.", "Soạn 10 email cá nhân hoá từ 1 danh sách Excel.", "Tóm tắt 1 báo cáo dài thành 1 trang song ngữ."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Gửi hàng loạt mà không duyệt mẫu trước.", "Template lỗi biến → điền sai chỗ.", "Giọng văn/nội dung không phù hợp ngữ cảnh."] }
       ]
     },
     {
-      "id": "close-01",
-      "module": "Kỹ năng chốt sale & xử lý từ chối",
-      "title_vi": "Tâm lý mua hàng & khám phá nhu cầu (SPIN)",
-      "title_en": "Buyer Psychology & Discovery (SPIN)",
-      "subtitle": "Bán bằng cách đặt câu hỏi, không thuyết giáo",
-      "custom": false,
+      "id": "office-03", "module": "Tự động hoá công việc văn phòng",
+      "title_vi": "Slide, báo cáo & trực quan hoá", "title_en": "Slides, Reports & Visualization",
+      "subtitle": "Từ số liệu tới bài trình bày sẵn dùng", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Tâm lý mua hàng & khám phá nhu cầu (SPIN)",
-            "Buyer Psychology & Discovery (SPIN)",
-            "Bán bằng cách đặt câu hỏi, không thuyết giáo"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Người ta mua vì **lý do của họ**, không phải của bạn. Nhiệm vụ đầu tiên là **khám phá nhu cầu**.",
-            "**SPIN Selling** (Neil Rackham): dẫn dắt bằng 4 nhóm câu hỏi để khách tự nhận ra nhu cầu."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "SPIN = 4 nhóm câu hỏi",
-          "lines": [
-            "S — Situation (hiện trạng): thu thập thông tin nền",
-            "P — Problem (vấn đề): khơi ra khó khăn khách gặp",
-            "I — Implication (hệ quả): làm rõ hậu quả nếu không giải quyết",
-            "N — Need-Payoff (giá trị): để khách tự nói ra lợi ích khi giải quyết"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Áp dụng SPIN",
-          "lines": [
-            "Bắt đầu bằng vài câu **Situation** (đừng hỏi quá nhiều).",
-            "Chuyển sang **Problem** để lộ khó khăn.",
-            "Dùng **Implication** khuếch đại chi phí của vấn đề.",
-            "Kết bằng **Need-Payoff** để khách tự mô tả lợi ích → chốt là hệ quả tự nhiên."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "S: 'Anh đang nhập nước ngọt của mấy nhà?' → P: 'Có khi nào hết hàng bán chạy giữa tuần không?' → I: 'Mỗi lần hết hàng anh mất bao nhiêu khách?' → N: 'Nếu em giao 2 lần/tuần đảm bảo không đứt hàng thì có giúp anh giữ khách không?' → khách tự thấy cần."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Viết 2 câu hỏi cho mỗi chữ S-P-I-N cho sản phẩm của bạn.",
-            "Thử SPIN với 3 khách hàng, ghi lại phản ứng.",
-            "Tập nói ít hơn, hỏi và lắng nghe nhiều hơn."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Thuyết trình tính năng quá sớm, chưa hiểu nhu cầu.",
-            "Hỏi quá nhiều câu Situation làm khách chán.",
-            "Không lắng nghe, chỉ chờ tới lượt nói."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Slide, báo cáo & trực quan hoá", "Slides, Reports & Visualization", "Từ số liệu tới bài trình bày sẵn dùng"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["AI có thể **biến số liệu/nội dung thành slide** và **báo cáo định kỳ** tự động.", "Trực quan hoá tốt giúp thông điệp rõ ràng, thuyết phục."] },
+        { "n": 3, "kind": "steps", "label": "Quy trình tạo slide/báo cáo", "lines": ["Cung cấp **số liệu/nội dung** nguồn.", "Xác định **cấu trúc** (mục lục, thông điệp chính).", "AI **tạo slide (PPTX)** hoặc **báo cáo (Word)** kèm biểu đồ.", "Chỉnh sửa nhanh theo góp ý.", "Tái dùng **mẫu** cho kỳ sau (tuần/tháng)."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Dùng Skill **pptx** cho slide có biểu đồ.", "Chọn đúng loại biểu đồ cho từng dữ liệu.", "Giữ **một thông điệp/slide**, bố cục sạch.", "Tạo mẫu báo cáo, mỗi kỳ chỉ thay số."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["🏆 **Dự án: Slide họp tuần** — từ file số liệu → bộ slide PowerPoint có biểu đồ doanh số, top sản phẩm, cảnh báo — sẵn sàng cho buổi họp sáng thứ Hai."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Tạo 5 slide từ một đoạn nội dung có sẵn.", "Lập mẫu báo cáo tháng và điền số liệu mẫu.", "Làm dashboard HTML đơn giản từ dữ liệu."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Nhồi quá nhiều thông tin lên 1 slide.", "Chọn sai loại biểu đồ gây hiểu lầm.", "Không tái dùng mẫu → làm lại mỗi kỳ."] }
       ]
     },
     {
-      "id": "close-02",
-      "module": "Kỹ năng chốt sale & xử lý từ chối",
-      "title_vi": "Kỹ thuật chốt sale",
-      "title_en": "Closing Techniques",
-      "subtitle": "Chốt tự nhiên như hệ quả của cuộc trò chuyện",
-      "custom": false,
+      "id": "office-04", "module": "Tự động hoá công việc văn phòng",
+      "title_vi": "Chạy định kỳ (Scheduling) & pipeline", "title_en": "Scheduling & Pipelines",
+      "subtitle": "Để quy trình tự chạy mà không cần bạn", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Kỹ thuật chốt sale",
-            "Closing Techniques",
-            "Chốt tự nhiên như hệ quả của cuộc trò chuyện"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Chốt không phải 'ép', mà là **giúp khách ra quyết định** khi họ đã thấy giá trị.",
-            "Nhận diện **tín hiệu mua** (buying signals): hỏi giá, hỏi giao hàng, gật đầu."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "technique",
-          "label": "Các kỹ thuật chốt phổ biến",
-          "lines": [
-            "**Chốt giả định (Assumptive)**: 'Em giao anh thứ Năm nhé?'",
-            "**Chốt lựa chọn (Alternative)**: 'Anh lấy 3 hay 5 thùng?'",
-            "**Chốt tóm tắt (Summary)**: tóm lợi ích đã đồng thuận rồi đề nghị.",
-            "**Chốt khan hiếm (Urgency)**: 'Khuyến mãi này hết thứ Sáu.'",
-            "**Chốt thử (Trial/Puppy dog)**: cho lấy ít dùng thử."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Trình tự chốt",
-          "lines": [
-            "Xác nhận khách đã thấy giá trị (test close nhẹ).",
-            "Tóm tắt điểm đồng thuận.",
-            "Đưa **đề nghị cụ thể** (số lượng, thời gian).",
-            "**Im lặng** chờ khách quyết.",
-            "Chốt xong: xác nhận & bước tiếp theo."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "'Vậy mình thống nhất: em để anh 3 thùng loại bán chạy + 1 thùng hàng mới dùng thử, giao sáng thứ Năm, có poster tặng kèm. Em xếp đơn nhé?' (rồi im lặng) → khách gật."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Chuẩn bị sẵn 3 câu chốt (giả định, lựa chọn, tóm tắt).",
-            "Tập kỹ thuật im lặng sau đề nghị.",
-            "Ghi lại tín hiệu mua bạn nhận ra ở 5 cuộc gặp."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Không dám chốt, nói lan man → mất thời điểm.",
-            "Chốt quá sớm khi khách chưa thấy giá trị.",
-            "Nói tiếp sau khi đề nghị → tự phá vỡ điểm chốt."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Chạy định kỳ (Scheduling) & pipeline", "Scheduling & Pipelines", "Để quy trình tự chạy mà không cần bạn"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**Scheduling** = cho quy trình tự chạy theo lịch (mỗi sáng, mỗi thứ Hai).", "**Pipeline** = nối các bước: lấy dữ liệu → xử lý → gửi kết quả, chạy liền mạch."] },
+        { "n": 3, "kind": "steps", "label": "Thiết lập chạy tự động", "lines": ["Đóng gói quy trình thành **1 script/luồng** chạy được.", "Chọn cơ chế lịch: **Task Scheduler (Windows) / cron**, hoặc scheduler của n8n/Make.", "Thêm **xử lý lỗi & thông báo** khi có sự cố.", "Ghi **log** để theo dõi.", "Kiểm thử vài lần trước khi để chạy tự động hoàn toàn."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Thiết kế bước **idempotent** (chạy lại không hỏng dữ liệu).", "Gửi cảnh báo (email/Slack) khi lỗi hoặc vượt ngưỡng.", "Tách cấu hình (thời gian, người nhận) khỏi code.", "Sao lưu dữ liệu trước bước ghi đè."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["🏆 **Dự án: Bản tin sáng** — mỗi 7h sáng tự tổng hợp số liệu hôm qua + tin tức liên quan và gửi email tóm tắt cho sếp. Bạn không phải làm gì thêm."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Đặt lịch chạy thử 1 script nhỏ mỗi ngày.", "Ghép 3 bước thành 1 pipeline chạy liền.", "Thêm thông báo lỗi cho quy trình."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Không có xử lý lỗi → hỏng âm thầm.", "Không log → khó biết vì sao sai.", "Để chạy tự động khi chưa kiểm thử kỹ."] }
+      ]
+    },
+
+    {
+      "id": "flow-01", "module": "Workflow automation nâng cao",
+      "title_vi": "No-code automation: Zapier, Make, n8n", "title_en": "No-code Automation",
+      "subtitle": "Nối các ứng dụng mà không cần lập trình", "custom": false,
+      "slides": [
+        { "n": 1, "kind": "title", "lines": ["No-code automation: Zapier, Make, n8n", "No-code Automation", "Nối các ứng dụng mà không cần lập trình"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**No-code automation** = kéo-thả để nối các app (Gmail, Sheets, Slack...) theo luật **khi X thì làm Y**.", "2026: các nền tảng đều gắn **AI agent** (Zapier Agents, Make Maia, n8n 2.0 với ~70 node AI)."] },
+        { "n": 3, "kind": "terms", "label": "Thuật ngữ", "lines": ["Trigger = sự kiện kích hoạt (email đến, form gửi)", "Action = việc thực hiện (ghi Sheet, gửi Slack)", "Scenario / Workflow = chuỗi trigger–action", "Node = 1 bước trong luồng (n8n/Make)", "Webhook = URL nhận sự kiện từ app khác"] },
+        { "n": 4, "kind": "steps", "label": "Tạo automation đầu tiên", "lines": ["Chọn **trigger** (vd: có email đơn hàng).", "Thêm bước **xử lý/AI** (trích thông tin bằng AI).", "Thêm **action** (ghi vào Sheets, gửi thông báo).", "**Chạy thử** với dữ liệu mẫu.", "Bật chạy tự động & theo dõi."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Khi có email chứa hoá đơn → AI đọc trích số tiền, mã đơn → ghi vào Google Sheets → gửi Slack cho kế toán. Tất cả không cần code, chạy 24/7."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Tạo 1 automation: form → Google Sheets → email xác nhận.", "Thêm 1 bước AI (tóm tắt/phân loại) vào luồng.", "So sánh Zapier vs Make vs n8n cho nhu cầu của bạn."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Tạo luồng phức tạp trước khi chạy thử từng bước.", "Không xử lý trường hợp dữ liệu thiếu/sai.", "Bỏ qua chi phí theo số task/tháng."] }
       ]
     },
     {
-      "id": "close-03",
-      "module": "Kỹ năng chốt sale & xử lý từ chối",
-      "title_vi": "Xử lý từ chối & phản đối về giá",
-      "title_en": "Objection Handling",
-      "subtitle": "Biến lời từ chối thành cơ hội",
-      "custom": false,
+      "id": "flow-02", "module": "Workflow automation nâng cao",
+      "title_vi": "Kết nối API & Webhook", "title_en": "APIs & Webhooks",
+      "subtitle": "Cho các hệ thống nói chuyện với nhau", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Xử lý từ chối & phản đối về giá",
-            "Objection Handling",
-            "Biến lời từ chối thành cơ hội"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Từ chối thường là **tín hiệu quan tâm** kèm băn khoăn chưa được giải toả.",
-            "Đừng tranh cãi — **lắng nghe và làm rõ** trước khi trả lời."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Khung LAER",
-          "lines": [
-            "L — Listen: lắng nghe hết, không ngắt lời",
-            "A — Acknowledge: ghi nhận cảm xúc/quan điểm",
-            "E — Explore: đặt câu hỏi làm rõ gốc rễ",
-            "R — Respond: trả lời đúng mối bận tâm thật"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Xử lý phản đối 'giá cao'",
-          "lines": [
-            "Làm rõ: 'Cao so với cái gì ạ?' (đối thủ? ngân sách? giá trị?).",
-            "Tách **giá** khỏi **giá trị**: nhắc lợi ích, vòng quay, lợi nhuận/đơn vị.",
-            "Quy về **chi phí nhỏ theo ngày/đơn vị** thay vì tổng.",
-            "Đưa bằng chứng: bán chạy, biên lợi nhuận, hỗ trợ trưng bày.",
-            "Chốt lại bằng đề nghị điều chỉnh (số lượng, gói)."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "'Hàng này đắt.' → (L/A) 'Em hiểu anh cân nhắc chi phí.' → (E) 'Anh so với sản phẩm nào ạ?' → (R) 'So cùng phân khúc, biên lợi nhuận anh cao hơn 8% và bán nhanh hơn, nên thực ra lời hơn dù giá nhập nhỉnh chút.'"
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Liệt kê 5 lời từ chối hay gặp + soạn câu trả lời theo LAER.",
-            "Tập tách giá/giá trị cho SKU biên lợi nhuận cao.",
-            "Đóng vai xử lý phản đối với đồng nghiệp."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Giảm giá ngay khi bị chê đắt → mất biên lợi nhuận & uy tín.",
-            "Trả lời trước khi hiểu gốc phản đối.",
-            "Tranh cãi tay đôi, làm khách phòng thủ."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Kết nối API & Webhook", "APIs & Webhooks", "Cho các hệ thống nói chuyện với nhau"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**API** = cách các phần mềm trao đổi dữ liệu theo yêu cầu.", "**Webhook** = app tự 'gọi' bạn khi có sự kiện (ngược với API bạn chủ động gọi).", "Là nền tảng để nối những app chưa có tích hợp sẵn."] },
+        { "n": 3, "kind": "terms", "label": "Thuật ngữ", "lines": ["Endpoint = địa chỉ URL của một API", "Request/Response = yêu cầu gửi đi / dữ liệu trả về", "JSON = định dạng dữ liệu phổ biến giữa các API", "API key/token = chìa khoá xác thực (giữ bí mật!)", "Rate limit = giới hạn số lần gọi"] },
+        { "n": 4, "kind": "steps", "label": "Dùng API trong automation", "lines": ["Đọc **tài liệu API** của dịch vụ (endpoint, tham số).", "Lấy **API key**, lưu an toàn (không commit/không lộ).", "Gọi thử bằng công cụ (Postman / node HTTP trong n8n).", "Xử lý **JSON** trả về, lấy trường cần dùng.", "Ghép vào luồng automation."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Nhận webhook khi có đơn mới từ website → gọi API vận chuyển tạo vận đơn → gọi API Zalo/email báo khách. AI có thể giúp đọc tài liệu API và viết bước gọi."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Gọi thử 1 API công khai (thời tiết/tỷ giá) và đọc JSON.", "Tạo 1 webhook trong n8n/Make và gửi dữ liệu thử.", "Nhờ AI giải thích 1 tài liệu API bạn cần dùng."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Lộ API key (đưa lên Git/chat công khai).", "Không xử lý lỗi/deadline khi API chậm.", "Vượt rate limit → bị chặn."] }
       ]
     },
     {
-      "id": "close-04",
-      "module": "Kỹ năng chốt sale & xử lý từ chối",
-      "title_vi": "Sàng lọc khách & theo đuổi (BANT)",
-      "title_en": "Qualifying & Follow-up (BANT)",
-      "subtitle": "Dồn sức vào cơ hội đáng theo đuổi",
-      "custom": false,
+      "id": "flow-03", "module": "Workflow automation nâng cao",
+      "title_vi": "Chatbot & trợ lý AI nội bộ (RAG)", "title_en": "Internal AI Assistant (RAG)",
+      "subtitle": "Hỏi đáp trên tài liệu của chính bạn", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Sàng lọc khách & theo đuổi (BANT)",
-            "Qualifying & Follow-up (BANT)",
-            "Dồn sức vào cơ hội đáng theo đuổi"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Không phải khách nào cũng đáng đầu tư thời gian như nhau. **Qualify** giúp ưu tiên đúng chỗ.",
-            "**BANT** (IBM) là khung sàng lọc kinh điển."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "BANT",
-          "lines": [
-            "B — Budget: có ngân sách/khả năng chi trả không",
-            "A — Authority: có phải người quyết định không",
-            "N — Need: nhu cầu thật sự tới đâu",
-            "T — Timeline: khi nào mua/nhập hàng"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Quy trình theo đuổi",
-          "lines": [
-            "Sàng lọc theo BANT, phân loại nóng/ấm/lạnh.",
-            "Đặt **bước tiếp theo cụ thể** sau mỗi lần gặp (ngày, việc).",
-            "Theo đuổi đa kênh (gặp trực tiếp, gọi, nhắn) — kiên trì nhưng tạo giá trị mỗi lần.",
-            "Ghi CRM/sổ tay: lịch sử, cam kết.",
-            "Biết **buông** khách không đủ điều kiện."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Khách hào hứng nhưng không phải chủ (thiếu Authority) và chưa có ngân sách (Budget) → xếp 'ấm', hẹn gặp đúng người quyết định thay vì tốn 5 lần ghé thuyết phục người không có quyền."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Chấm BANT cho 10 khách tiềm năng trong sổ.",
-            "Đặt 1 'next step' cụ thể cho mỗi khách nóng.",
-            "Xác định 3 khách nên buông để tập trung nguồn lực."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Theo đuổi mãi khách không có quyền/ngân sách.",
-            "Không đặt bước tiếp theo → cơ hội nguội.",
-            "Theo đuổi mà không mang lại giá trị → bị né."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Chatbot & trợ lý AI nội bộ (RAG)", "Internal AI Assistant (RAG)", "Hỏi đáp trên tài liệu của chính bạn"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["**RAG (Retrieval-Augmented Generation)** = AI **tìm** đoạn liên quan trong tài liệu của bạn rồi **trả lời dựa trên đó** → chính xác hơn, ít bịa.", "Biến kho tài liệu (PDF, Excel, quy trình) thành **trợ lý hỏi–đáp**."] },
+        { "n": 3, "kind": "steps", "label": "Cách RAG hoạt động", "lines": ["**Nạp tài liệu** và cắt thành đoạn nhỏ (chunk).", "Tạo **embedding** (vector) & lưu vào vector database.", "Khi hỏi: **tìm đoạn liên quan nhất**.", "Đưa đoạn đó + câu hỏi cho LLM để **trả lời có dẫn nguồn**.", "Hiển thị câu trả lời kèm trích dẫn."] },
+        { "n": 4, "kind": "technique", "label": "Kỹ thuật", "lines": ["Chunk vừa phải, có chồng lấn để giữ ngữ cảnh.", "Yêu cầu AI **trích nguồn** và nói 'không biết' nếu thiếu.", "Cập nhật tài liệu định kỳ để trợ lý luôn mới.", "Dùng nền tảng có sẵn (Copilot, Cowork, hoặc n8n + vector DB)."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["Trợ lý nội bộ trả lời: 'Chính sách đổi trả bao nhiêu ngày?' bằng cách tìm trong file quy định công ty và trả lời kèm trích dẫn — nhân viên không phải đọc cả tài liệu dày."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Chọn 1 bộ tài liệu bạn hay tra cứu (quy trình, FAQ).", "Thử 1 công cụ RAG (Copilot/Cowork/NotebookLM) với tài liệu đó.", "Kiểm tra độ chính xác & trích dẫn của câu trả lời."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Tài liệu cũ/sai → trợ lý trả lời sai.", "Không yêu cầu trích nguồn → khó kiểm chứng.", "Đưa dữ liệu mật lên dịch vụ ngoài không kiểm soát."] }
       ]
     },
     {
-      "id": "care-01",
-      "module": "Chăm sóc & giữ khách",
-      "title_vi": "Vì sao phải giữ khách (CLV & Retention)",
-      "title_en": "Why Retention Matters (CLV)",
-      "subtitle": "Giữ khách cũ rẻ hơn tìm khách mới",
-      "custom": false,
+      "id": "flow-04", "module": "Workflow automation nâng cao",
+      "title_vi": "Xây & bàn giao quy trình tự động của bạn", "title_en": "Build & Hand-off Your Automation",
+      "subtitle": "Dự án tốt nghiệp: tự động hoá thật một quy trình", "custom": false,
       "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Vì sao phải giữ khách (CLV & Retention)",
-            "Why Retention Matters (CLV)",
-            "Giữ khách cũ rẻ hơn tìm khách mới"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Chi phí **giành khách mới** thường cao hơn nhiều lần giữ khách cũ.",
-            "Khách trung thành mua lại nhiều hơn, giới thiệu người khác, ít nhạy cảm giá."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "CLV = Customer Lifetime Value (giá trị vòng đời khách hàng)",
-            "Retention rate = tỉ lệ giữ khách",
-            "Churn = tỉ lệ rời bỏ",
-            "NPS = Net Promoter Score (mức độ sẵn sàng giới thiệu)",
-            "Repeat purchase = tỉ lệ mua lại"
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "steps",
-          "label": "Nâng giá trị vòng đời khách",
-          "lines": [
-            "Đo **retention & churn** theo tháng.",
-            "Phân khúc khách theo giá trị (RFM: Recency–Frequency–Monetary).",
-            "Chăm sóc chủ động nhóm giá trị cao.",
-            "Tăng **tần suất & giá trị đơn** (upsell/cross-sell).",
-            "Thu thập phản hồi, cải thiện liên tục."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Với chủ tạp hoá loại A: gọi hỏi thăm mỗi 2 tuần, ưu tiên hàng khan hiếm, hỗ trợ trưng bày → họ ở lại lâu, đơn đều, và giới thiệu bạn bè cùng nhập → CLV tăng mạnh so với chỉ chạy theo khách mới."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Tính retention tháng trước cho tuyến của bạn.",
-            "Phân nhóm RFM cho 20 khách chính.",
-            "Chọn 5 khách giá trị cao để chăm sóc đặc biệt tuần này."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Chỉ chạy theo khách mới, bỏ bê khách cũ.",
-            "Không đo churn → mất khách mà không biết.",
-            "Đối xử mọi khách như nhau, lãng phí nguồn lực."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "care-02",
-      "module": "Chăm sóc & giữ khách",
-      "title_vi": "Chăm sóc sau bán & xử lý khiếu nại",
-      "title_en": "After-sales & Complaint Handling",
-      "subtitle": "Sự cố xử lý tốt tạo khách trung thành hơn",
-      "custom": false,
-      "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Chăm sóc sau bán & xử lý khiếu nại",
-            "After-sales & Complaint Handling",
-            "Sự cố xử lý tốt tạo khách trung thành hơn"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "**Service recovery paradox**: khách được xử lý khiếu nại tốt có thể trung thành hơn cả khách chưa từng gặp sự cố.",
-            "Khiếu nại là **món quà** — cơ hội sửa sai và giữ khách."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "Khung xử lý khiếu nại (LAST/HEARD)",
-          "lines": [
-            "**Lắng nghe** hết, không phòng thủ.",
-            "**Xin lỗi** chân thành về trải nghiệm.",
-            "**Làm rõ** vấn đề & mong muốn của khách.",
-            "**Giải quyết** nhanh (đổi/trả/bù) trong quyền hạn.",
-            "**Theo dõi** sau đó để chắc khách hài lòng."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Nguyên tắc vàng",
-          "lines": [
-            "Phản hồi **nhanh** — tốc độ quan trọng hơn sự hoàn hảo.",
-            "Đừng đổ lỗi cho khách hay hệ thống.",
-            "Trao quyền xử lý ở tuyến đầu (không đá qua đá lại).",
-            "Ghi nhận & sửa **gốc rễ** để không lặp lại."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Giao thiếu 1 thùng cho chủ quán. Salesman: xin lỗi ngay, bù thùng thiếu trong ngày + tặng 1 lốc dùng thử hàng mới. Kết quả: chủ quán cảm kích, đặt đơn lớn hơn kỳ sau."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Soạn kịch bản xử lý 3 khiếu nại hay gặp (giao thiếu, hàng lỗi, sai giá).",
-            "Xác định bạn được toàn quyền xử lý tới mức nào.",
-            "Gọi theo dõi 3 khách từng khiếu nại gần đây."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Phản hồi chậm → khách bức xúc lan rộng.",
-            "Tranh cãi đúng–sai thay vì giải quyết.",
-            "Xử lý xong không theo dõi → khách vẫn rời bỏ."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "care-03",
-      "module": "Chăm sóc & giữ khách",
-      "title_vi": "Chương trình khách hàng thân thiết",
-      "title_en": "Loyalty Programs",
-      "subtitle": "Tạo lý do để khách quay lại đều đặn",
-      "custom": false,
-      "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Chương trình khách hàng thân thiết",
-            "Loyalty Programs",
-            "Tạo lý do để khách quay lại đều đặn"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "concept",
-          "label": "Khái niệm",
-          "lines": [
-            "Chương trình loyalty tạo **động lực mua lại** và tăng gắn kết: tích điểm, thưởng bậc, ưu đãi riêng.",
-            "Với kênh GT: thưởng theo doanh số/tích luỹ cho chủ quán; với người tiêu dùng: tích điểm, quà."
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "Thiết kế chương trình",
-          "lines": [
-            "Xác định **mục tiêu** (tăng tần suất, giá trị đơn, giữ khách).",
-            "Chọn **cơ chế** đơn giản, dễ hiểu.",
-            "Phân **bậc/thưởng** theo giá trị khách.",
-            "Truyền thông rõ ràng & dễ tham gia.",
-            "Đo lường: mua lại, giá trị đơn, chi phí/hiệu quả."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Nguyên tắc hiệu quả",
-          "lines": [
-            "Phần thưởng phải **có ý nghĩa** và **đạt được**.",
-            "Cá nhân hoá ưu đãi theo lịch sử mua (dữ liệu).",
-            "Tạo cảm giác **tiến bộ** (gần đạt mốc → mua thêm).",
-            "Tránh phức tạp — rối là khách bỏ."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Chương trình cho chủ tạp hoá: đạt mốc doanh số quý → tặng chuyến du lịch/điện thoại; tích luỹ đổi quà. Chủ quán chủ động nhập nhiều hơn để đạt mốc → doanh số & lòng trung thành tăng."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Phác thảo 1 cơ chế loyalty cho nhóm khách của bạn.",
-            "Xác định mốc thưởng vừa sức để kích thích mua thêm.",
-            "Liệt kê dữ liệu cần thu thập để cá nhân hoá ưu đãi."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Cơ chế rối rắm, khách không hiểu → không tham gia.",
-            "Thưởng dàn trải, không nhắm khách giá trị cao.",
-            "Không đo hiệu quả → tốn chi phí vô ích."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "care-04",
-      "module": "Chăm sóc & giữ khách",
-      "title_vi": "Upsell, cross-sell & win-back",
-      "title_en": "Upsell, Cross-sell & Win-back",
-      "subtitle": "Tăng giá trị khách hiện có và kéo khách rời bỏ quay lại",
-      "custom": false,
-      "slides": [
-        {
-          "n": 1,
-          "kind": "title",
-          "lines": [
-            "Upsell, cross-sell & win-back",
-            "Upsell, Cross-sell & Win-back",
-            "Tăng giá trị khách hiện có và kéo khách rời bỏ quay lại"
-          ]
-        },
-        {
-          "n": 2,
-          "kind": "terms",
-          "label": "Thuật ngữ",
-          "lines": [
-            "Upsell = bán phiên bản cao cấp/số lượng lớn hơn",
-            "Cross-sell = bán thêm sản phẩm bổ trợ",
-            "Win-back = kéo khách đã rời bỏ quay lại",
-            "Basket size = giá trị giỏ hàng/đơn"
-          ]
-        },
-        {
-          "n": 3,
-          "kind": "steps",
-          "label": "Chiến thuật tăng giá trị đơn",
-          "lines": [
-            "Dựa vào **lịch sử mua** để gợi ý đúng lúc.",
-            "**Cross-sell** SKU bổ trợ ('mua nước ngọt thì thêm snack bán kèm').",
-            "**Upsell** gói/thùng lớn với ưu đãi/thùng.",
-            "Gợi ý **SKU mới** cho khách phù hợp.",
-            "Đặt mục tiêu tăng **basket size** mỗi lần ghé."
-          ]
-        },
-        {
-          "n": 4,
-          "kind": "technique",
-          "label": "Win-back khách rời bỏ",
-          "lines": [
-            "Xác định khách **ngừng mua** (giảm tần suất/giá trị).",
-            "Tìm **lý do rời bỏ** (giá, dịch vụ, đối thủ).",
-            "Đưa **lý do quay lại**: ưu đãi hồi phục, cải thiện dịch vụ.",
-            "Cá nhân hoá lời mời, theo dõi kết quả."
-          ]
-        },
-        {
-          "n": 5,
-          "kind": "example",
-          "label": "Ví dụ",
-          "lines": [
-            "Chủ quán 2 tháng không nhập hàng vì bị đối thủ chào giá tốt. Salesman gặp, tìm hiểu, đưa gói combo + hỗ trợ trưng bày + cam kết giao đúng hẹn → khách quay lại, đơn phục hồi."
-          ]
-        },
-        {
-          "n": 6,
-          "kind": "practice",
-          "label": "Thực hành",
-          "lines": [
-            "Lập 5 cặp cross-sell hợp lý cho danh mục của bạn.",
-            "Xác định 5 khách đang giảm mua để win-back.",
-            "Đặt mục tiêu basket size trung bình cho tuyến."
-          ]
-        },
-        {
-          "n": 7,
-          "kind": "pitfall",
-          "label": "Lỗi thường gặp",
-          "lines": [
-            "Gợi ý thêm không liên quan → khách khó chịu.",
-            "Ép upsell khi khách chưa sẵn sàng.",
-            "Không theo dõi khách rời bỏ → mất hẳn."
-          ]
-        }
+        { "n": 1, "kind": "title", "lines": ["Xây & bàn giao quy trình tự động của bạn", "Build & Hand-off Your Automation", "Dự án tốt nghiệp: tự động hoá thật một quy trình"] },
+        { "n": 2, "kind": "concept", "label": "Khái niệm", "lines": ["Đích đến: **tự động hoá trọn vẹn một quy trình thật** của bạn và **bàn giao** để người khác dùng lại.", "Đo bằng **thời gian tiết kiệm** và **độ ổn định**."] },
+        { "n": 3, "kind": "steps", "label": "Các bước dự án tốt nghiệp", "lines": ["Chọn **1 quy trình tốn thời gian nhất** của bạn.", "Mô tả rõ **đầu vào → các bước → đầu ra**.", "Chọn **công cụ** (Claude Code/Antigravity/n8n...) và xây.", "**Kiểm thử** trên dữ liệu thật, thêm xử lý lỗi.", "**Đặt lịch** chạy & viết **tài liệu 1 trang** để bàn giao."] },
+        { "n": 4, "kind": "technique", "label": "Chuẩn hoá để dùng lại", "lines": ["Tách **cấu hình** (đường dẫn, người nhận) khỏi logic.", "Viết hướng dẫn 'cách chạy lại' ngắn gọn.", "Ghi lại **prompt & script** hiệu quả.", "Lập danh sách **5 quy trình tiếp theo** sẽ tự động hoá."] },
+        { "n": 5, "kind": "example", "label": "Ví dụ", "lines": ["🏆 Tự động hoá 'báo cáo doanh số tuần': lấy dữ liệu → làm sạch → tạo slide → gửi email, chạy tự động sáng thứ Hai. Trước mất 3 giờ/tuần, nay ~0. Đồng nghiệp chạy lại bằng 1 lệnh theo hướng dẫn."] },
+        { "n": 6, "kind": "practice", "label": "Thực hành", "lines": ["Hoàn thành 1 quy trình tự động thật từ đầu tới cuối.", "Đo thời gian tiết kiệm được so với làm tay.", "Viết hướng dẫn 1 trang & bàn giao cho 1 đồng nghiệp."] },
+        { "n": 7, "kind": "pitfall", "label": "Lỗi thường gặp", "lines": ["Chọn quy trình quá lớn cho dự án đầu tiên.", "Không viết tài liệu → chỉ mình bạn chạy được.", "Không đo hiệu quả → khó thuyết phục nhân rộng."] }
       ]
     }
   ]

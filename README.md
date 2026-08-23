@@ -1,9 +1,10 @@
 # 🎓 AI Automation Academy
 
-App học tập **song ngữ Việt–Anh** với giáo án **Sale thực chiến** (4 module), tích hợp **trợ lý AI (OpenAI)**, **đọc to (TTS)**, **kiểm tra/thi**, và **thư viện tài liệu**. Backend Node/Express, frontend vanilla JS, lưu file JSON — không cần database, không build step.
+App học tập **song ngữ Việt–Anh** với giáo án **AI Automation** (4 module) + **tin tức AI cập nhật mỗi ngày**, tích hợp **trợ lý AI (OpenAI)**, **đọc to (TTS)**, **kiểm tra/thi**, và **thư viện tài liệu**. Backend Node/Express, frontend vanilla JS, lưu file JSON — không cần database, không build step.
 
 ## ✨ Tính năng chính
-- **Giáo án 4 module × 4 bài** (General Trade, Modern Trade, Chốt sale & xử lý từ chối, Chăm sóc & giữ khách), mỗi bài nhiều slide: khái niệm, quy trình, kỹ thuật, ví dụ, thực hành, lỗi thường gặp, thuật ngữ.
+- **Giáo án 4 module × 4 bài** (Nền tảng AI & Agent · Automation với Claude Code & Antigravity · Tự động hoá công việc văn phòng · Workflow automation nâng cao), mỗi bài nhiều slide: khái niệm, quy trình, kỹ thuật, ví dụ, thực hành, lỗi thường gặp, thuật ngữ.
+- **📰 Tin tức AI Automation mỗi ngày**: tổng hợp RSS (TechCrunch, VentureBeat, The Verge, OpenAI, Google, Zapier, Hugging Face…), lọc theo AI/automation, tự cập nhật mỗi giờ, đánh dấu **tin MỚI** kể từ lần xem trước (nút 📰 Tin AI trên thanh trên).
 - **🎧 Đọc to (TTS)**: nghe từng bài (chế độ ngồi xe, tự chuyển bài) hoặc **nghe toàn bộ phần Đào sâu** (bài học + ví dụ + công cụ + video + thực hành + hỏi AI). Mini-player chỉnh tốc độ, chọn giọng vi-VN.
 - **🧠 Đào sâu (AI)**: gợi ý ví dụ thực tế, công cụ/website, **video liên quan**, bài tập — kèm URL nguồn thật (web_search). Mỗi kết quả **💾 Lưu** vào Kho kiến thức **và** Thư viện.
 - **📚 Thư viện**: thêm text/PDF/ảnh/YouTube/Reel FB/link, gắn tag, **✨ Rút insight** (Tóm tắt / Bài học chính / Áp dụng ngay), xuất .md.
@@ -48,6 +49,7 @@ render.yaml, Procfile, .nvmrc, DEPLOY.md
 | POST | /api/quiz/generate · /api/quiz/grade | Sinh đề · chấm tự luận |
 | POST | /api/chat · /api/insight | Coach AI · rút insight tài liệu |
 | GET/POST | /api/settings | Key + model |
+| GET | /api/news · POST /api/news/refresh | Tin tức AI (RSS, tự lọc & cập nhật) |
 | GET | /healthz | Kiểm tra sống |
 
 ## 🚀 Deploy

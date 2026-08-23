@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import Parser from "rss-parser";
 
 dotenv.config();
 
@@ -465,6 +466,63 @@ app.post("/api/quiz/grade", async (req, res) => {
   } catch (e) { res.status(502).json({ ok: false, error: e.message }); }
 });
 
+// =========================================================
+//  TIN TỨC AI AUTOMATION (RSS, cập nhật mỗi ngày)
+// =========================================================
+const NEWS_FEEDS = [
+  { name: "TechCrunch – AI", url: "https://techcrunch.com/category/artificial-intelligence/feed/" },
+  { name: "VentureBeat – AI", url: "https://venturebeat.com/category/ai/feed/" },
+  { name: "The Verge – AI", url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml" },
+  { name: "MIT Tech Review – AI", url: "https://www.technologyreview.com/topic/artificial-intelligence/feed" },
+  { name: "Ars Technica – AI", url: "https://arstechnica.com/ai/feed/" },
+  { name: "OpenAI Blog", url: "https://openai.com/blog/rss.xml" },
+  { name: "Google AI Blog", url: "https://blog.google/technology/ai/rss/" },
+  { name: "Zapier Blog", url: "https://zapier.com/blog/feeds/latest/" },
+  { name: "Hugging Face Blog", url: "https://huggingface.co/blog/feed.xml" },
+];
+// Từ khoá lọc để ưu tiên tin về AI/automation
+const NEWS_KEYWORDS = /\b(ai|a\.i|automat|agent|llm|gpt|claude|gemini|copilot|workflow|no-code|nocode|rpa|zapier|n8n|make\.com|chatbot|machine learning|ml\b|neural|openai|anthropic)/i;
+
+const rssParser = new Parser({ timeout: 15000, headers: { "User-Agent": "AI-Automation-Academy/1.0" } });
+let newsCache = { items: [], updatedAt: null, refreshing: false, sources: [] };
+
+function cleanText(s = "") {
+  return s.replace(/<[^>]*>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
+}
+async function fetchNews() {
+  if (newsCache.refreshing) return;
+  newsCache.refreshing = true;
+  const results = await Promise.allSettled(NEWS_FEEDS.map(async (f) => {
+    const feed = await rssParser.parseURL(f.url);
+    return (feed.items || []).map((it) => ({
+      id: it.guid || it.link || (f.name + it.title),
+      title: cleanText(it.title || ""),
+      link: it.link || "",
+      source: f.name,
+      summary: cleanText(it.contentSnippet || it.content || it.summary || "").slice(0, 260),
+      ts: it.isoDate || it.pubDate ? new Date(it.isoDate || it.pubDate).getTime() : 0,
+    }));
+  }));
+  const items = [];
+  const sources = [];
+  results.forEach((r, i) => {
+    if (r.status === "fulfilled") { items.push(...r.value); sources.push({ name: NEWS_FEEDS[i].name, ok: true, count: r.value.length }); }
+    else sources.push({ name: NEWS_FEEDS[i].name, ok: false, count: 0 });
+  });
+  // Lọc theo từ khoá AI/automation + khử trùng lặp + sắp xếp mới nhất
+  const seen = new Set();
+  const filtered = items.filter((it) => {
+    if (!NEWS_KEYWORDS.test(it.title + " " + it.summary)) return false;
+    const key = it.link || it.id;
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  }).sort((a, b) => b.ts - a.ts).slice(0, 120);
+  newsCache = { items: filtered, updatedAt: new Date().toISOString(), refreshing: false, sources };
+  console.log(`  📰 Tin AI: ${filtered.length} tin từ ${sources.filter((s) => s.ok).length}/${NEWS_FEEDS.length} nguồn.`);
+}
+app.get("/api/news", (req, res) => res.json({ updatedAt: newsCache.updatedAt, total: newsCache.items.length, sources: newsCache.sources, items: newsCache.items }));
+app.post("/api/news/refresh", async (req, res) => { await fetchNews(); res.json({ ok: true, updatedAt: newsCache.updatedAt, total: newsCache.items.length }); });
+
 // ---------- Middleware bắt lỗi ----------
 app.use((err, req, res, next) => {
   console.error("[express error]", err);
@@ -474,4 +532,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`\n🎓 AI Automation Academy chạy tại http://localhost:${PORT}`);
   console.log(`   DATA_DIR = ${DATA_DIR}\n`);
+  fetchNews().catch((e) => console.warn("news init fail", e.message));
+  setInterval(() => fetchNews().catch(() => {}), 60 * 60 * 1000); // cập nhật tin mỗi giờ
 });

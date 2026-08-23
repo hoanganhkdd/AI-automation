@@ -98,23 +98,17 @@ const TTS = {
 /* ================= ROUTER ================= */
 function route() {
   const hash = location.hash.replace(/^#/, "") || "home";
+  if (hash === "news") { showNews(); return; }
   if (hash === "home" || !hash) { showHome(); return; }
   const s = CUR.sessions.find((x) => x.id === hash);
   if (s) showSession(s); else showHome();
 }
 function goHome() { location.hash = "#home"; }
+function hideViews() { $("home-view").hidden = true; $("session-view").hidden = true; $("news-view").hidden = true; }
 
-function showHome() {
-  $("session-view").hidden = true;
-  $("home-view").hidden = false;
-  renderHome();
-}
-function showSession(s) {
-  $("home-view").hidden = true;
-  $("session-view").hidden = false;
-  renderSession(s);
-  window.scrollTo(0, 0);
-}
+function showHome() { hideViews(); $("home-view").hidden = false; renderHome(); }
+function showSession(s) { hideViews(); $("session-view").hidden = false; renderSession(s); window.scrollTo(0, 0); }
+function showNews() { hideViews(); $("news-view").hidden = false; renderNews(); window.scrollTo(0, 0); }
 
 /* ================= HOME ================= */
 function computeStats() {
@@ -772,6 +766,61 @@ function ensureKey() {
   return false;
 }
 
+/* ================= TIN TỨC AI AUTOMATION ================= */
+const NEWS_VISIT_KEY = "aiacad:newsVisit";
+let newsLastVisit = Number(localStorage.getItem(NEWS_VISIT_KEY)) || (Date.now() - 2 * 86400000);
+function newsTimeAgo(ts) {
+  if (!ts) return "";
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 3600) return Math.floor(s / 60) + " phút trước";
+  if (s < 86400) return Math.floor(s / 3600) + " giờ trước";
+  return Math.floor(s / 86400) + " ngày trước";
+}
+async function updateNewsBadge() {
+  try {
+    const d = await api("GET", "/api/news");
+    const n = (d.items || []).filter((i) => i.ts > newsLastVisit).length;
+    const b = $("newsBadge");
+    if (n > 0) { b.textContent = n; b.hidden = false; } else b.hidden = true;
+  } catch {}
+}
+async function renderNews() {
+  const view = $("news-view");
+  view.innerHTML = `<div class="loading" style="padding:30px">⏳ Đang tải tin tức AI...</div>`;
+  let d;
+  try { d = await api("GET", "/api/news"); } catch (e) { view.innerHTML = `<p class="err" style="padding:30px">Không tải được tin: ${escapeHtml(e.message)}</p>`; return; }
+  const items = d.items || [];
+  const newCount = items.filter((i) => i.ts > newsLastVisit).length;
+  view.innerHTML = `
+    <div class="crumbs"><a href="#home">← Trang chủ</a></div>
+    <div class="news-top">
+      <div><h1>📰 Tin tức AI Automation</h1>
+        <p class="muted">${d.updatedAt ? "Cập nhật: " + new Date(d.updatedAt).toLocaleString("vi-VN") : "Đang lấy tin..."} · ${items.length} tin</p></div>
+      <div class="news-actions">
+        <button class="mini-btn" id="newsRefresh">↻ Cập nhật</button>
+        <button class="mini-btn" id="newsRead">✓ Đã xem hết</button>
+      </div>
+    </div>
+    ${newCount ? `<div class="news-banner">✨ Có <b>${newCount}</b> tin mới kể từ lần bạn xem gần nhất.</div>` : ""}
+    <div class="news-list">
+      ${items.length ? items.map((i) => `
+        <article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""}">
+          <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
+          <h3><a href="${escapeHtml(i.link)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></h3>
+          ${i.summary ? `<p>${escapeHtml(i.summary)}</p>` : ""}
+        </article>`).join("") : `<p class="muted">Chưa có tin. Bấm "Cập nhật".</p>`}
+    </div>`;
+  $("newsRefresh").onclick = async () => {
+    const b = $("newsRefresh"); b.disabled = true; b.textContent = "⏳...";
+    try { await api("POST", "/api/news/refresh"); } catch {}
+    renderNews(); updateNewsBadge();
+  };
+  $("newsRead").onclick = () => {
+    newsLastVisit = Date.now(); localStorage.setItem(NEWS_VISIT_KEY, String(newsLastVisit));
+    renderNews(); updateNewsBadge(); toast("Đã đánh dấu xem hết");
+  };
+}
+
 /* ================= INIT ================= */
 async function loadCurriculumRetry(n = 5) {
   for (let i = 0; i < n; i++) {
@@ -816,6 +865,8 @@ async function init() {
 
   window.addEventListener("hashchange", route);
   route();
+  updateNewsBadge();
+  setInterval(updateNewsBadge, 15 * 60 * 1000);
 }
 
 // Cold-start guard: nếu sau 8s chưa sẵn sàng thì reload 1 lần

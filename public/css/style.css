@@ -181,5 +181,25 @@ button{font:inherit;cursor:pointer}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:10px;z-index:70;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .toast[hidden]{display:none}
 
+/* news */
+.top-actions{display:flex;gap:8px;align-items:center}
+.news-badge{background:var(--pink);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-weight:700}
+.news-badge[hidden]{display:none}
+.news-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.news-top h1{font-size:22px}
+.news-actions{display:flex;gap:8px}
+.news-banner{background:linear-gradient(90deg,rgba(255,92,138,.15),rgba(124,92,255,.12));border:1px solid rgba(255,92,138,.4);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-weight:600}
+.news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.news-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px}
+.news-card.is-new{border-color:rgba(255,92,138,.45)}
+.news-card:hover{border-color:var(--accent)}
+.news-meta{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:6px}
+.badge-new{background:var(--pink);color:#fff;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:700}
+.news-src{color:var(--muted)}
+.news-time{color:var(--muted);margin-left:auto}
+.news-card h3{font-size:15px;line-height:1.35;margin:2px 0}
+.news-card h3 a{color:var(--text)}
+.news-card p{color:var(--muted);font-size:13px;margin:6px 0 0}
+
 @media(max-width:820px){ .deep-grid{grid-template-columns:1fr} }
 @media(max-width:600px){ .hero{flex-direction:column;align-items:flex-start} .bubble{max-width:92%} }
