@@ -21,6 +21,11 @@ const KIND_LABEL = {
   example: "Ví dụ", practice: "Thực hành", pitfall: "Lỗi thường gặp", terms: "Thuật ngữ",
 };
 
+// Bản dịch tiếng Anh cho nội dung bài học (VI -> EN), do app.js nạp vào
+let LTRANS = {};
+function setLessonTrans(map) { Object.assign(LTRANS, map || {}); }
+function enOf(text) { const e = LTRANS[text]; return e && e !== text ? `<div class="ln-en">${mdLite(e)}</div>` : ""; }
+
 function renderSlide(slide, opts = {}) {
   const lines = slide.lines || [];
   const delBtn = slide.custom && opts.allowDelete
@@ -39,17 +44,17 @@ function renderSlide(slide, opts = {}) {
   let inner = "";
 
   if (slide.kind === "steps") {
-    inner = `<ol class="steps">${lines.map((l) => `<li>${mdLite(l)}</li>`).join("")}</ol>`;
+    inner = `<ol class="steps">${lines.map((l) => `<li>${mdLite(l)}${enOf(l)}</li>`).join("")}</ol>`;
   } else if (slide.kind === "terms") {
     inner = `<div class="terms">${lines.map((l) => {
       const idx = l.indexOf("=");
-      if (idx > -1) return `<div class="term"><span class="term-k">${mdLite(l.slice(0, idx).trim())}</span><span class="term-v">${mdLite(l.slice(idx + 1).trim())}</span></div>`;
-      return `<div class="term"><span class="term-v">${mdLite(l)}</span></div>`;
+      if (idx > -1) return `<div class="term"><span class="term-k">${mdLite(l.slice(0, idx).trim())}</span><span class="term-v">${mdLite(l.slice(idx + 1).trim())}${enOf(l)}</span></div>`;
+      return `<div class="term"><span class="term-v">${mdLite(l)}${enOf(l)}</span></div>`;
     }).join("")}</div>`;
   } else if (slide.kind === "example") {
-    inner = `<div class="example-box">${lines.map((l) => `<p>${mdLite(l)}</p>`).join("")}</div>`;
+    inner = `<div class="example-box">${lines.map((l) => `<p>${mdLite(l)}${enOf(l)}</p>`).join("")}</div>`;
   } else {
-    inner = `<ul class="bullets">${lines.map((l) => `<li>${mdLite(l)}</li>`).join("")}</ul>`;
+    inner = `<ul class="bullets">${lines.map((l) => `<li>${mdLite(l)}${enOf(l)}</li>`).join("")}</ul>`;
   }
 
   const cls = slide.kind === "pitfall" ? "slide slide-pitfall" : "slide";
@@ -83,5 +88,5 @@ function sessionToSentences(session) {
   return out.filter(Boolean);
 }
 
-window.SLIDES = { renderSlide, renderSlides, slideToText, sessionToSentences, mdLite, escapeHtml };
+window.SLIDES = { renderSlide, renderSlides, slideToText, sessionToSentences, mdLite, escapeHtml, setLessonTrans };
 })();

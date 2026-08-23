@@ -99,6 +99,9 @@ button{font:inherit;cursor:pointer}
 .term{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--border)}
 .term-k{font-weight:700;color:var(--accent2);min-width:110px}
 .term-v{color:var(--text)}
+/* bản dịch tiếng Anh dưới mỗi dòng (song ngữ bài học) */
+.ln-en{color:var(--muted);font-style:italic;font-size:.9em;margin-top:2px;opacity:.9}
+.ln-en::before{content:"EN ";font-style:normal;font-size:.85em;color:var(--accent);font-weight:700}
 
 /* learn actions */
 .learn-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}

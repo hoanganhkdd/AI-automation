@@ -1,5 +1,22 @@
 /* ================= AI Automation Academy — app.js ================= */
-const { renderSlides, slideToText, sessionToSentences, mdLite, escapeHtml } = window.SLIDES;
+const { renderSlides, slideToText, sessionToSentences, mdLite, escapeHtml, setLessonTrans } = window.SLIDES;
+const lessonTransMap = {}; // câu VI -> bản dịch tiếng Anh (song ngữ bài học)
+async function ensureLessonTrans(session) {
+  if (!session) return;
+  const texts = [];
+  for (const s of session.slides || []) { if (s.kind === "title") continue; for (const l of s.lines || []) if (l) texts.push(l); }
+  setLessonTrans(lessonTransMap); // áp bản dịch đã có
+  const need = [...new Set(texts.filter((t) => !lessonTransMap[t]))];
+  if (!need.length) return;
+  try {
+    const r = await api("POST", "/api/curriculum/translate", { texts: need });
+    if (r.translations && Object.keys(r.translations).length) {
+      Object.assign(lessonTransMap, r.translations);
+      setLessonTrans(r.translations);
+      if (curSession && curSession.id === session.id) renderTab();
+    }
+  } catch {}
+}
 
 let CUR = { meta: {}, sessions: [] };
 let STATE = { progress: {}, plan: { perWeek: 3, minPerDay: 30 }, studylog: {}, reviewlog: {} };
@@ -344,6 +361,7 @@ function renderLearnTab(body) {
     try { await api("DELETE", `/api/curriculum/sessions/${s.id}/slides/${b.dataset.slideN}`); CUR = await api("GET", "/api/curriculum"); curSession = CUR.sessions.find((x) => x.id === s.id); renderTab(); toast("Đã xoá slide"); }
     catch (e) { toast(e.message); }
   });
+  ensureLessonTrans(s); // dịch song ngữ bài học
 }
 
 /* ---------- Tab: Đào sâu (5 bảng + video) ---------- */
@@ -377,6 +395,7 @@ function renderDeepTab(body) {
   });
   $("deepAskBtn").onclick = () => deepAsk();
   loadSavedKnowledge();
+  ensureLessonTrans(curSession); // dịch song ngữ nội dung bài học ở bảng Đào sâu
 }
 function deepPanel(kind, title, btn) {
   return `<div class="panel" data-kind="${kind}">

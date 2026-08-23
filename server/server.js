@@ -209,6 +209,17 @@ app.get("/healthz", (req, res) => res.json({ ok: true, ts: Date.now() }));
 // ---------- CURRICULUM ----------
 app.get("/api/curriculum", (req, res) => res.json(readJSON(FILES.curriculum, { meta: {}, sessions: [] })));
 
+// Dịch nội dung bài học sang tiếng Anh (song ngữ). Trả về map { "câu VI": "EN" }
+app.post("/api/curriculum/translate", async (req, res) => {
+  const texts = Array.isArray(req.body?.texts) ? req.body.texts.slice(0, 200) : [];
+  try {
+    await translateLessonBatch(texts);
+    const out = {};
+    for (const t of texts) if (t && lessonTrans[t]) out[t] = lessonTrans[t];
+    res.json({ ok: true, translations: out });
+  } catch (e) { res.status(502).json({ ok: false, error: e.message }); }
+});
+
 app.post("/api/curriculum/sessions", (req, res) => {
   const cur = readJSON(FILES.curriculum, { meta: {}, sessions: [] });
   const { module, title_vi, title_en, subtitle } = req.body || {};
@@ -486,42 +497,68 @@ const NEWS_KEYWORDS = /\b(ai|a\.i|automat|agent|llm|gpt|claude|gemini|copilot|wo
 const rssParser = new Parser({ timeout: 15000, headers: { "User-Agent": "AI-Automation-Academy/1.0" } });
 let newsCache = { items: [], updatedAt: null, refreshing: false, sources: [] };
 
-// ---- Dịch song ngữ (Google free -> MyMemory dự phòng, có cache ra file) ----
-const NEWS_TRANS_FILE = path.join(DATA_DIR, "news_trans.json");
-let newsTrans = readJSON(NEWS_TRANS_FILE, {});
-let newsTransDirty = false;
-setInterval(() => { if (newsTransDirty) { writeJSON(NEWS_TRANS_FILE, newsTrans); newsTransDirty = false; } }, 20000);
+// ---- Dịch song ngữ 2 chiều (Google free -> MyMemory dự phòng, cache ra file) ----
 const sleepMs = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function gTranslate(text) {
-  const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + encodeURIComponent(text.slice(0, 1800));
+// Cache tin tức (EN -> VI) và cache bài học (VI -> EN)
+const NEWS_TRANS_FILE = path.join(DATA_DIR, "news_trans.json");
+const LESSON_TRANS_FILE = path.join(DATA_DIR, "lesson_trans.json");
+let newsTrans = readJSON(NEWS_TRANS_FILE, {});
+let lessonTrans = readJSON(LESSON_TRANS_FILE, {});
+let newsTransDirty = false, lessonTransDirty = false;
+setInterval(() => {
+  if (newsTransDirty) { writeJSON(NEWS_TRANS_FILE, newsTrans); newsTransDirty = false; }
+  if (lessonTransDirty) { writeJSON(LESSON_TRANS_FILE, lessonTrans); lessonTransDirty = false; }
+}, 20000);
+
+async function gTranslate(text, sl = "en", tl = "vi") {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=` + encodeURIComponent(text.slice(0, 1800));
   const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" } });
   if (!res.ok) throw new Error("google " + res.status);
   const data = await res.json();
   return (data[0] || []).map((seg) => seg[0]).join("");
 }
-async function mmTranslate(text) {
-  const url = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + encodeURIComponent(text.slice(0, 480));
+async function mmTranslate(text, sl = "en", tl = "vi") {
+  const url = `https://api.mymemory.translated.net/get?langpair=${sl}|${tl}&q=` + encodeURIComponent(text.slice(0, 480));
   const res = await fetch(url);
   if (!res.ok) throw new Error("mymemory " + res.status);
   const data = await res.json();
   return data?.responseData?.translatedText || "";
 }
-async function translateVi(text) {
+// translate 1 đoạn theo chiều sl->tl, dùng cache tương ứng
+async function translateOneWay(text, sl, tl, cache, markDirty) {
   if (!text) return "";
-  if (newsTrans[text]) return newsTrans[text];
+  if (cache[text]) return cache[text];
   let out = "";
-  for (let i = 0; i < 2 && !out; i++) { try { out = await gTranslate(text); } catch (e) { if (String(e).includes("429")) await sleepMs(600); } }
-  if (!out) { try { out = await mmTranslate(text); } catch {} }
-  if (out) { newsTrans[text] = out; newsTransDirty = true; }
+  for (let i = 0; i < 2 && !out; i++) { try { out = await gTranslate(text, sl, tl); } catch (e) { if (String(e).includes("429")) await sleepMs(600); } }
+  if (!out) { try { out = await mmTranslate(text, sl, tl); } catch {} }
+  if (out) { cache[text] = out; markDirty(); }
   return out || text;
 }
+const translateVi = (t) => translateOneWay(t, "en", "vi", newsTrans, () => (newsTransDirty = true));
+const translateEn = (t) => translateOneWay(t, "vi", "en", lessonTrans, () => (lessonTransDirty = true));
 // Dịch theo LÔ bằng OpenAI (ổn định, không cạn quota như dịch vụ free)
-async function openaiTranslateMany(texts) {
-  const system = 'Bạn là người dịch. Dịch từng chuỗi tiếng Anh sang tiếng Việt tự nhiên, giữ nguyên số phần tử và thứ tự. CHỈ trả về JSON đúng dạng {"t":["...","..."]}.';
+async function openaiTranslateMany(texts, target = "Vietnamese") {
+  const system = `Bạn là người dịch. Dịch từng chuỗi sang ${target} tự nhiên, giữ nguyên số phần tử và đúng thứ tự. Giữ dấu ** (đậm) nếu có. CHỈ trả về JSON đúng dạng {"t":["...","..."]}.`;
   const raw = await openaiChat({ system, user: JSON.stringify(texts), json: true });
   const parsed = parseJSONLoose(raw);
   return Array.isArray(parsed?.t) ? parsed.t : [];
+}
+
+// Dịch nội dung bài học sang tiếng Anh (VI -> EN), theo lô, có cache
+async function translateLessonBatch(texts) {
+  const need = [...new Set(texts.filter((t) => t && !lessonTrans[t]))];
+  if (!need.length) return;
+  const { key } = getKeyModel();
+  if (key) {
+    for (let i = 0; i < need.length; i += 20) {
+      const batch = need.slice(i, i + 20);
+      try { const en = await openaiTranslateMany(batch, "English"); batch.forEach((t, j) => { if (en[j]) { lessonTrans[t] = en[j]; lessonTransDirty = true; } }); }
+      catch (e) { console.warn("lesson translate batch fail", e.message); break; }
+    }
+  } else {
+    for (const t of need) { try { await translateEn(t); await sleepMs(120); } catch {} }
+  }
 }
 
 let preTransRunning = false;
