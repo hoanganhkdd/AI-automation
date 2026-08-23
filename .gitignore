@@ -4,6 +4,8 @@ server/data/settings.json
 server/data/knowledge.json
 server/data/state.json
 server/data/news_trans.json
+server/data/lesson_trans.json
+server/data/nblm_notebooks.json
 server/data/uploads/*
 !server/data/uploads/.gitkeep
 .claude/settings.local.json

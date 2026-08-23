@@ -871,6 +871,44 @@ app.post("/api/notebooklm/podcast/status", async (req, res) => {
   } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) }); }
 });
 
+// Tạo/lấy notebook cho một BÀI HỌC (nạp nội dung slide làm nguồn), có cache theo sessionId
+const NBLM_NB_FILE = path.join(DATA_DIR, "nblm_notebooks.json");
+function sessionToText(s) {
+  let t = s.title_vi + (s.title_en ? " / " + s.title_en : "") + "\n\n";
+  for (const sl of s.slides || []) {
+    if (sl.kind === "title") continue;
+    if (sl.label) t += "## " + sl.label + "\n";
+    for (const l of sl.lines || []) t += "- " + String(l).replace(/\*\*/g, "") + "\n";
+    t += "\n";
+  }
+  return t;
+}
+async function notebookForSession(sessionId) {
+  const cache = readJSON(NBLM_NB_FILE, {});
+  if (cache[sessionId]) return cache[sessionId];
+  const cur = readJSON(FILES.curriculum, { sessions: [] });
+  const s = (cur.sessions || []).find((x) => x.id === sessionId);
+  if (!s) throw new Error("Không tìm thấy bài học");
+  const file = path.join(UPLOAD_DIR, "lesson-" + sessionId + ".md");
+  fs.writeFileSync(file, sessionToText(s), "utf8");
+  const created = parseJSONLoose(await nblm(["create", "Bài học: " + s.title_vi, "--json"], 40000));
+  const nid = created?.notebook?.id;
+  if (!nid) throw new Error("Không tạo được notebook");
+  await nblm(["source", "add", file, "-n", nid, "--json"], 60000);
+  await waitSourcesReady(nid, 240000);
+  cache[sessionId] = nid;
+  writeJSON(NBLM_NB_FILE, cache);
+  return nid;
+}
+app.post("/api/notebooklm/lesson", async (req, res) => {
+  try {
+    const sid = req.body?.sessionId;
+    if (!sid) return res.status(400).json({ ok: false, error: "Thiếu sessionId" });
+    const nid = await notebookForSession(sid);
+    res.json({ ok: true, notebookId: nid, notebookUrl: "https://notebooklm.google.com/notebook/" + nid });
+  } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) }); }
+});
+
 // ---------- Middleware bắt lỗi ----------
 app.use((err, req, res, next) => {
   console.error("[express error]", err);
