@@ -185,6 +185,8 @@ html[data-bi="off"] .bi-tag{display:none}
 .ig-kicker{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--accent)}
 .ig-head h2{font-size:22px;margin:4px 0}
 .ig-date{color:var(--muted);font-size:13px}
+.ig-focus{color:var(--accent2);font-size:13px;font-weight:600;margin-top:2px}
+.ig-foot-btns{display:flex;gap:8px;flex-wrap:wrap}
 .ig-badge{background:var(--accent);color:#fff;border-radius:14px;min-width:76px;text-align:center;padding:12px 14px;font-size:30px;font-weight:800;line-height:1}
 .ig-badge small{display:block;font-size:12px;font-weight:600;opacity:.9}
 .ig-overview{background:var(--panel2);border-left:4px solid var(--accent2);border-radius:8px;padding:14px 16px;font-size:15px;font-style:italic;margin-bottom:18px}
@@ -245,7 +247,8 @@ html[data-bi="off"] .bi-tag{display:none}
 .news-controls label{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px}
 .news-controls select{background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 11px;border-radius:8px;min-width:170px;font:inherit}
 .news-group{margin-bottom:22px}
-.news-group-h{font-size:16px;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--text)}
+.news-group-h{font-size:16px;margin:0 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border);color:var(--text);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ig-topic-sum{margin-left:auto;font-size:12px;padding:5px 11px}
 .news-topic{font-size:11px;color:var(--accent2);background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:1px 8px}
 .news-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .news-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px}

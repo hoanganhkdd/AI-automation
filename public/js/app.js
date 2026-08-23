@@ -908,12 +908,15 @@ function renderNewsList() {
     const order = ["automation", "model", "business", "policy", "other"];
     const groups = {};
     for (const i of items) (groups[i.topic || "other"] ||= []).push(i);
-    list.innerHTML = order.filter((t) => groups[t]).map((t) => newsGroupHtml((groups[t][0].topicLabel || t) + " (" + groups[t].length + ")", groups[t])).join("") || emptyNews();
+    list.innerHTML = order.filter((t) => groups[t]).map((t) => newsGroupHtml((groups[t][0].topicLabel || t) + " (" + groups[t].length + ")", groups[t], t)).join("") || emptyNews();
+    // nút tóm tắt riêng theo chủ đề
+    list.querySelectorAll("[data-sum-topic]").forEach((b) => b.onclick = () => newsSummarize({ topic: b.dataset.sumTopic, source: "" }));
   }
 }
 function emptyNews() { return `<p class="muted">Không có tin phù hợp bộ lọc.</p>`; }
-function newsGroupHtml(title, items) {
-  return `<div class="news-group"><h2 class="news-group-h">${escapeHtml(title)}</h2><div class="news-list">${newsCardsHtml(items)}</div></div>`;
+function newsGroupHtml(title, items, topicKey) {
+  const sumBtn = topicKey ? `<button class="mini-btn ig-topic-sum" data-sum-topic="${escapeHtml(topicKey)}">🖼️ Tóm tắt chủ đề này</button>` : "";
+  return `<div class="news-group"><h2 class="news-group-h">${escapeHtml(title)}${sumBtn}</h2><div class="news-list">${newsCardsHtml(items)}</div></div>`;
 }
 function newsCardsHtml(items) {
   if (!items.length) return emptyNews();
@@ -957,19 +960,68 @@ async function translateNewsVisible(items) {
 }
 
 /* ================= TÓM TẮT INFOGRAPHIC ================= */
-async function newsSummarize() {
+async function newsSummarize(opts = {}) {
   if (!ensureKey()) return;
   const inner = $("modal").querySelector(".modal");
   $("modalTitle").textContent = "🖼️ Tóm tắt nhanh Tin AI";
-  $("modalBody").innerHTML = `<div class="loading" style="padding:24px">⏳ AI đang đọc & tóm tắt các tin mới nhất...</div>`;
+  $("modalBody").innerHTML = `<div class="loading" style="padding:24px">⏳ AI đang đọc & tóm tắt các tin${opts.topic ? " (theo chủ đề)" : ""}...</div>`;
   if (inner) inner.classList.add("wide");
   $("modal").hidden = false;
   try {
-    const r = await api("POST", "/api/news/summarize", { source: newsSourceFilter });
+    const body = { source: opts.source ?? newsSourceFilter };
+    if (opts.topic) body.topic = opts.topic;
+    const r = await api("POST", "/api/news/summarize", body);
     $("modalBody").innerHTML = infographicHtml(r);
     if ($("infoPrint")) $("infoPrint").onclick = () => window.print();
+    if ($("infoPng")) $("infoPng").onclick = () => downloadInfographicPng();
   } catch (e) {
     $("modalBody").innerHTML = `<p class="err" style="padding:16px">Không tóm tắt được: ${escapeHtml(e.message)}</p>`;
+  }
+}
+
+// Tải infographic thành ảnh PNG (dùng SVG foreignObject -> canvas, không cần thư viện ngoài)
+function collectCss() {
+  let css = "";
+  for (const sheet of document.styleSheets) {
+    try { for (const rule of sheet.cssRules) css += rule.cssText + "\n"; } catch {}
+  }
+  return css;
+}
+async function downloadInfographicPng() {
+  const el = $("infographic"); if (!el) return;
+  const btn = $("infoPng"); if (btn) { btn.disabled = true; btn.textContent = "⏳ Đang tạo ảnh..."; }
+  try {
+    const w = el.offsetWidth, h = el.scrollHeight, pad = 24, scale = 2;
+    const css = collectCss();
+    const clone = el.cloneNode(true);
+    clone.querySelectorAll("#infoPrint,#infoPng").forEach((b) => b.remove());
+    const html = `<div xmlns="http://www.w3.org/1999/xhtml"><style>${css}</style>` +
+      `<div style="background:#0e1116;color:#e6edf3;padding:${pad}px;width:${w}px;box-sizing:content-box">${clone.outerHTML}</div></div>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w + pad * 2}" height="${h + pad * 2}">` +
+      `<foreignObject width="100%" height="100%">${html}</foreignObject></svg>`;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    await new Promise((resolve, reject) => {
+      img.onload = resolve; img.onerror = reject;
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    });
+    const canvas = document.createElement("canvas");
+    canvas.width = (w + pad * 2) * scale; canvas.height = (h + pad * 2) * scale;
+    const ctx = canvas.getContext("2d"); ctx.scale(scale, scale);
+    ctx.fillStyle = "#0e1116"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    canvas.toBlob((blob) => {
+      if (!blob) throw new Error("blob null");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "tom-tat-tin-ai-" + new Date().toISOString().slice(0, 10) + ".png";
+      a.click();
+      toast("Đã tạo ảnh PNG");
+    }, "image/png");
+  } catch (e) {
+    toast("Trình duyệt chặn xuất ảnh — hãy dùng nút 🖨️ In / Lưu PDF thay thế.");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "🖼️ Lưu ảnh PNG"; }
   }
 }
 
@@ -999,7 +1051,9 @@ function infographicHtml(r) {
   return `
   <div class="infographic" id="infographic">
     <div class="ig-head">
-      <div><div class="ig-kicker">📊 TÓM TẮT NHANH</div><h2>Tin tức AI Automation</h2><div class="ig-date">${escapeHtml(dateStr)}</div></div>
+      <div><div class="ig-kicker">📊 TÓM TẮT NHANH</div><h2>Tin tức AI Automation</h2>
+        ${r.focus ? `<div class="ig-focus">Chủ đề: ${escapeHtml(r.focus)}</div>` : ""}
+        <div class="ig-date">${escapeHtml(dateStr)}</div></div>
       <div class="ig-badge">${r.stats?.total || 0}<small>tin</small></div>
     </div>
 
@@ -1014,7 +1068,10 @@ function infographicHtml(r) {
 
     <div class="ig-foot">
       <span>${r.stats?.sources || 0} nguồn · tổng hợp bởi AI Automation Academy</span>
-      <button class="mini-btn" id="infoPrint">🖨️ In / Lưu PDF</button>
+      <span class="ig-foot-btns">
+        <button class="mini-btn" id="infoPng">🖼️ Lưu ảnh PNG</button>
+        <button class="mini-btn" id="infoPrint">🖨️ In / Lưu PDF</button>
+      </span>
     </div>
   </div>`;
 }

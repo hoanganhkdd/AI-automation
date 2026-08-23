@@ -670,10 +670,12 @@ app.post("/api/news/refresh", async (req, res) => { await fetchNews(); res.json(
 app.post("/api/news/summarize", async (req, res) => {
   try {
     const source = req.body?.source || "";
+    const topic = req.body?.topic || "";
     let items = newsCache.items.slice();
     if (source) items = items.filter((i) => i.source === source);
+    if (topic) items = items.filter((i) => classifyTopic(i.title + " " + i.summary) === topic);
     items = items.slice(0, 45);
-    if (!items.length) return res.status(400).json({ ok: false, error: "Chưa có tin để tóm tắt" });
+    if (!items.length) return res.status(400).json({ ok: false, error: "Chưa có tin phù hợp để tóm tắt" });
 
     // Thống kê (không cần AI)
     const byTopic = {}, bySource = {};
@@ -696,6 +698,7 @@ app.post("/api/news/summarize", async (req, res) => {
     res.json({
       ok: true,
       updatedAt: newsCache.updatedAt,
+      focus: topic ? TOPICS[topic] : (source || ""),
       stats: { total: items.length, sources: Object.keys(bySource).length, byTopic, topicLabels: TOPICS },
       overview: ai.overview || "",
       topics: ai.topics || [],
