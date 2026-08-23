@@ -62,7 +62,7 @@ function openModal(title, html) {
   $("modalBody").innerHTML = html;
   $("modal").hidden = false;
 }
-function closeModal() { $("modal").hidden = true; const inner = $("modal").querySelector(".modal"); if (inner) inner.classList.remove("wide"); }
+function closeModal() { $("modal").hidden = true; const inner = $("modal").querySelector(".modal"); if (inner) inner.classList.remove("wide"); if (typeof podcastPoll !== "undefined" && podcastPoll) { clearInterval(podcastPoll); podcastPoll = null; } }
 
 /* ---------- State sync (debounce) ---------- */
 let stateT;
@@ -1150,19 +1150,69 @@ async function summarizeNblm() {
       const blob = new Blob([`# ${r.title}\n\nNguồn: ${r.notebookUrl}\n\n${r.answer}\n`], { type: "text/markdown" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "notebooklm-tom-tat.md"; a.click();
     };
+    if ($("nblmMindmap")) $("nblmMindmap").onclick = genMindmap;
+    if ($("nblmPodcast")) $("nblmPodcast").onclick = genPodcast;
   } catch (e) {
     $("modalBody").innerHTML = `<p class="err" style="padding:16px">NotebookLM lỗi: ${escapeHtml(e.message)}<br><small>Nếu do đăng nhập, mở terminal chạy: <code>notebooklm login</code></small></p>`;
   }
 }
+let curNotebookId = null;
 function nblmResultHtml(r) {
+  curNotebookId = r.notebookId;
   return `<div class="nblm-result">
     <div class="nblm-head">📓 NotebookLM đã đọc <b>${r.total || 0}</b> nguồn (toàn văn)${r.timedOut ? " · một số nguồn xử lý chưa xong" : ""}</div>
     <div class="nblm-answer">${mdRich(r.answer || "")}</div>
     <div class="nblm-foot">
-      <a href="${escapeHtml(r.notebookUrl)}" target="_blank" rel="noopener" class="mini-btn">↗ Mở trong NotebookLM (tạo podcast, mind map, quiz...)</a>
+      <button class="mini-btn primary" id="nblmMindmap">🧠 Tạo mind map</button>
+      <button class="mini-btn primary" id="nblmPodcast">🎙️ Tạo podcast</button>
+      <a href="${escapeHtml(r.notebookUrl)}" target="_blank" rel="noopener" class="mini-btn">↗ Mở NotebookLM</a>
       <button class="mini-btn" id="nblmSaveMd">⬇️ Lưu .md</button>
     </div>
+    <div id="nblmExtra" class="nblm-extra"></div>
   </div>`;
+}
+
+// ----- Mind map -----
+async function genMindmap() {
+  const nid = curNotebookId; if (!nid) return;
+  const box = $("nblmExtra"); box.innerHTML = `<div class="nblm-loading"><div class="spin">🧠</div><p>Đang tạo mind map...</p></div>`;
+  try {
+    const r = await api("POST", "/api/notebooklm/mindmap", { notebookId: nid });
+    box.innerHTML = `<div class="mind-box"><div class="mind-title">🧠 Mind map</div><ul class="mind-root">${renderMind(r.mindMap)}</ul></div>`;
+  } catch (e) { box.innerHTML = `<p class="err">Mind map lỗi: ${escapeHtml(e.message)}</p>`; }
+}
+function renderMind(node) {
+  if (!node) return "";
+  const kids = node.children || [];
+  const childHtml = kids.length ? `<ul>${kids.map(renderMind).join("")}</ul>` : "";
+  return `<li><span>${escapeHtml(node.name || node.title || "")}</span>${childHtml}</li>`;
+}
+
+// ----- Podcast (chạy nền, tự kiểm tra) -----
+let podcastPoll = null;
+async function genPodcast() {
+  const nid = curNotebookId; if (!nid) return;
+  const box = $("nblmExtra");
+  box.innerHTML = `<div class="nblm-loading"><div class="spin">🎙️</div><p>Đang bắt đầu tạo podcast...</p></div>`;
+  try {
+    const r = await api("POST", "/api/notebooklm/podcast/start", { notebookId: nid });
+    box.innerHTML = `<div class="pod-box">🎙️ <b>Đang tạo podcast</b> — NotebookLM cần <b>10–20 phút</b>. App sẽ tự kiểm tra; bạn có thể để cửa sổ này mở hoặc quay lại sau.
+      <div id="podStatus" class="muted" style="margin-top:8px">Trạng thái: đang tạo...</div>
+      <button class="mini-btn" id="podCheck" style="margin-top:8px">🔄 Kiểm tra ngay</button></div>`;
+    const check = async () => {
+      try {
+        const s = await api("POST", "/api/notebooklm/podcast/status", { notebookId: nid, taskId: r.taskId });
+        if (s.ready) {
+          clearInterval(podcastPoll); podcastPoll = null;
+          $("nblmExtra").innerHTML = `<div class="pod-box">🎙️ <b>Podcast đã sẵn sàng!</b>
+            <audio controls src="${escapeHtml(s.url)}" style="width:100%;margin-top:10px"></audio>
+            <a class="mini-btn" href="${escapeHtml(s.url)}" download style="margin-top:8px;display:inline-block">⬇️ Tải .m4a</a></div>`;
+        } else if ($("podStatus")) { $("podStatus").textContent = "Trạng thái: " + (s.status || "đang tạo") + " · (tự kiểm tra mỗi 30s)"; }
+      } catch {}
+    };
+    if ($("podCheck")) $("podCheck").onclick = check;
+    clearInterval(podcastPoll); podcastPoll = setInterval(() => { if (!$("nblmExtra") || !document.getElementById("podStatus")) { clearInterval(podcastPoll); return; } check(); }, 30000);
+  } catch (e) { box.innerHTML = `<p class="err">Podcast lỗi: ${escapeHtml(e.message)}</p>`; }
 }
 
 /* ================= INIT ================= */

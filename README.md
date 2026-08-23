@@ -23,6 +23,8 @@ pip install "notebooklm-py[browser]"
 notebooklm login          # đăng nhập Google 1 lần (mở trình duyệt)
 notebooklm auth check --test   # kiểm tra
 ```
+Từ kết quả tóm tắt, có thể bấm **🧠 Tạo mind map** (nhanh, hiện cây kiến thức ngay) và **🎙️ Tạo podcast** (NotebookLM dựng audio ~10–20 phút, app tự kiểm tra và cho nghe/tải .m4a khi xong).
+
 Nếu chưa cài/đăng nhập, nút sẽ tự **mờ đi** kèm hướng dẫn — các tính năng khác không ảnh hưởng.
 
 ## ▶️ Chạy trên máy

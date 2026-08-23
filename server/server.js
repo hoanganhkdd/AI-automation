@@ -719,18 +719,37 @@ app.post("/api/news/summarize", async (req, res) => {
 // =========================================================
 //  TÍCH HỢP NOTEBOOKLM (gọi CLI notebooklm-py)
 // =========================================================
-let NBLM_BIN = process.env.NBLM_BIN || "notebooklm";
-(async () => {
+// Dò đường dẫn CLI notebooklm một lần (lười + nhớ) — tránh đua tiến trình & lỗi .exe trên Windows
+let _binPromise = null;
+async function resolveBin() {
+  if (process.env.NBLM_BIN) return process.env.NBLM_BIN;
   try {
     const cmd = process.platform === "win32" ? "where" : "which";
     const { stdout } = await execFileP(cmd, ["notebooklm"], { timeout: 8000 });
     const p = stdout.split(/\r?\n/).map((s) => s.trim()).find(Boolean);
-    if (p) { NBLM_BIN = p; console.log("  📓 NotebookLM CLI:", p); }
-  } catch { console.log("  📓 NotebookLM CLI: không tìm thấy (tính năng sẽ tắt)"); }
-})();
-
+    if (p) return p;
+  } catch {}
+  // Dự phòng: quét thư mục Scripts của các bản Python trên Windows
+  if (process.platform === "win32") {
+    const roots = [
+      path.join(process.env.LOCALAPPDATA || "", "Programs", "Python"),
+      path.join(process.env.APPDATA || "", "Python"),
+    ];
+    for (const root of roots) {
+      try {
+        for (const d of fs.readdirSync(root)) {
+          const cand = path.join(root, d, "Scripts", "notebooklm.exe");
+          if (fs.existsSync(cand)) return cand;
+        }
+      } catch {}
+    }
+  }
+  return "notebooklm";
+}
+function binOnce() { return (_binPromise ||= resolveBin()); }
 async function nblm(args, timeout = 60000) {
-  const { stdout } = await execFileP(NBLM_BIN, args, { timeout, maxBuffer: 12 * 1024 * 1024, windowsHide: true });
+  const bin = await binOnce();
+  const { stdout } = await execFileP(bin, args, { timeout, maxBuffer: 12 * 1024 * 1024, windowsHide: true });
   return stdout;
 }
 async function waitSourcesReady(nid, timeoutMs = 240000) {
@@ -751,7 +770,8 @@ async function waitSourcesReady(nid, timeoutMs = 240000) {
 // Trạng thái: CLI có sẵn & đã đăng nhập?
 let nblmStatusCache = null, nblmStatusAt = 0;
 app.get("/api/notebooklm/status", async (req, res) => {
-  if (nblmStatusCache && Date.now() - nblmStatusAt < 60000) return res.json(nblmStatusCache);
+  const ttl = nblmStatusCache?.authed ? 60000 : 8000; // OK: nhớ 60s; lỗi: chỉ 8s để tự phục hồi
+  if (nblmStatusCache && Date.now() - nblmStatusAt < ttl) return res.json(nblmStatusCache);
   try {
     const j = parseJSONLoose(await nblm(["auth", "check", "--test", "--json"], 30000)) || {};
     const authed = j.status === "ok" && j?.checks?.token_fetch === true;
@@ -805,6 +825,50 @@ app.post("/api/notebooklm/summarize", async (req, res) => {
   } catch (e) {
     res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) });
   }
+});
+
+// Tạo MIND MAP từ notebook (note-backed = nhanh, đồng bộ)
+app.post("/api/notebooklm/mindmap", async (req, res) => {
+  try {
+    const nid = req.body?.notebookId;
+    if (!nid) return res.status(400).json({ ok: false, error: "Thiếu notebookId" });
+    const out = parseJSONLoose(await nblm(["generate", "mind-map", "--kind", "note-backed", "-n", nid, "--json"], 150000)) || {};
+    const mindMap = out.mind_map || out.mindMap || null;
+    if (!mindMap) throw new Error("NotebookLM không trả về mind map");
+    res.json({ ok: true, mindMap });
+  } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) }); }
+});
+
+// Bắt đầu tạo PODCAST (audio) — chạy nền, trả task_id
+app.post("/api/notebooklm/podcast/start", async (req, res) => {
+  try {
+    const nid = req.body?.notebookId;
+    if (!nid) return res.status(400).json({ ok: false, error: "Thiếu notebookId" });
+    const instr = "Tạo podcast tiếng Việt tóm tắt các nguồn tin: nêu các điểm chính nổi bật, xu hướng chung và vì sao đáng chú ý. Giọng tự nhiên, mạch lạc.";
+    let out;
+    try { out = parseJSONLoose(await nblm(["generate", "audio", instr, "--language", "vi", "-n", nid, "--json"], 60000)); }
+    catch (e) { out = parseJSONLoose(await nblm(["generate", "audio", instr, "-n", nid, "--json"], 60000)); }
+    const taskId = out?.task_id || out?.taskId;
+    if (!taskId) throw new Error("Không bắt đầu được việc tạo podcast");
+    res.json({ ok: true, taskId, status: out.status || "pending" });
+  } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) }); }
+});
+
+// Kiểm tra podcast; xong thì tải về và trả link phát
+app.post("/api/notebooklm/podcast/status", async (req, res) => {
+  try {
+    const nid = req.body?.notebookId, taskId = req.body?.taskId;
+    if (!nid || !taskId) return res.status(400).json({ ok: false, error: "Thiếu tham số" });
+    const j = parseJSONLoose(await nblm(["artifact", "list", "-n", nid, "--json"], 30000)) || { artifacts: [] };
+    const art = (j.artifacts || []).find((a) => a.id === taskId || a.id?.startsWith(taskId) || taskId.startsWith(a.id));
+    const status = art?.status || "unknown";
+    if (status === "completed") {
+      const file = path.join(UPLOAD_DIR, "podcast-" + String(taskId).slice(0, 8) + ".m4a");
+      if (!fs.existsSync(file)) await nblm(["download", "audio", file, "-a", taskId, "-n", nid], 180000);
+      return res.json({ ok: true, ready: true, url: "/uploads/" + path.basename(file) });
+    }
+    res.json({ ok: true, ready: false, status });
+  } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) }); }
 });
 
 // ---------- Middleware bắt lỗi ----------
