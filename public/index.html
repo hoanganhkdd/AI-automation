@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Automation Academy — Học Sale thực chiến</title>
+  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="#home" class="brand" id="brandLink">
+      <span class="logo">🎓</span>
+      <div><b id="courseTitle">AI AUTOMATION</b><small id="courseSub">Học Sale thực chiến</small></div>
+    </a>
+    <div class="top-actions">
+      <button id="settingsBtn" class="ghost" title="Cài đặt AI">⚙️ Cài đặt</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <section id="home-view"></section>
+    <section id="session-view" hidden></section>
+  </main>
+
+  <!-- Mini-player TTS -->
+  <div id="miniPlayer" class="mini-player" hidden>
+    <button id="mpPrev" title="Câu trước">⏮</button>
+    <button id="mpToggle" title="Phát/Dừng">▶️</button>
+    <button id="mpNext" title="Câu sau">⏭</button>
+    <div class="mp-info"><span id="mpTitle">—</span><small id="mpProgress"></small></div>
+    <label class="mp-rate">Tốc độ
+      <select id="mpRate">
+        <option value="0.8">0.8x</option><option value="1" selected>1x</option>
+        <option value="1.2">1.2x</option><option value="1.5">1.5x</option><option value="1.75">1.75x</option>
+      </select>
+    </label>
+    <select id="mpVoice" class="mp-voice" title="Giọng đọc"></select>
+    <button id="mpClose" title="Đóng">✕</button>
+  </div>
+
+  <!-- Modal chung -->
+  <div id="modal" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head"><h3 id="modalTitle">—</h3><button id="modalClose" class="icon-btn">✕</button></div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/slides.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>

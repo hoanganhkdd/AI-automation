@@ -1,0 +1,1291 @@
+{
+  "meta": {
+    "title": "AI AUTOMATION",
+    "subtitle": "Giáo án Sale thực chiến · Song ngữ Việt–Anh",
+    "source": "Biên soạn từ khung FMCG Sales (RTM, KAM, SPIN, BANT, Retention)",
+    "modules": 4,
+    "sessions": 16,
+    "updated": 1787475151511
+  },
+  "sessions": [
+    {
+      "id": "gt-01",
+      "module": "General Trade — kênh truyền thống",
+      "title_vi": "Tổng quan kênh GT & Route-to-Market",
+      "title_en": "GT Overview & Route-to-Market",
+      "subtitle": "Hiểu kênh truyền thống và cách phủ hàng hiệu quả",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Tổng quan kênh GT & Route-to-Market",
+            "GT Overview & Route-to-Market",
+            "Hiểu kênh truyền thống và cách phủ hàng hiệu quả"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**General Trade (GT)** = kênh truyền thống: tạp hoá, chợ, cửa hàng nhỏ lẻ (kirana/mom-and-pop).",
+            "Đặc điểm: **nhiều điểm bán, giá trị đơn nhỏ, quan hệ cá nhân**, quyết định nhanh bởi chủ quán.",
+            "Đối lập với **Modern Trade (MT)** — siêu thị, chuỗi bán lẻ hiện đại."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "RTM = Route-to-Market (lộ trình đưa hàng ra thị trường)",
+            "Coverage = Độ phủ (số điểm bán có hàng)",
+            "Outlet = Điểm bán lẻ",
+            "PJP = Permanent Journey Plan (lịch viếng thăm cố định)",
+            "Numeric Distribution = % số cửa hàng có bán SKU"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Mô hình RTM cơ bản",
+          "lines": [
+            "Nhà sản xuất → **Nhà phân phối (NPP)** → Salesman/DCR viếng thăm outlet.",
+            "Xác định **địa bàn (territory)** và chia tuyến (route) theo mật độ điểm bán.",
+            "Lập **PJP**: mỗi outlet được thăm mấy lần/tuần theo phân loại A/B/C.",
+            "Đặt mục tiêu **coverage + numeric distribution** cho từng tuyến.",
+            "Đo lường & tối ưu: giảm thời gian di chuyển, tăng thời gian gặp chủ quán."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Một NPP nước giải khát chia địa bàn 1.200 cửa hàng thành 6 tuyến, mỗi salesman ~40 outlet/ngày. Cửa hàng loại A (doanh số cao) thăm 2 lần/tuần, loại C thăm 1 lần/2 tuần → tối ưu công gặp mặt và độ phủ."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành tuần này",
+          "lines": [
+            "Vẽ sơ đồ RTM của công ty bạn (NSX → NPP → outlet).",
+            "Liệt kê 3 chỉ số RTM bạn đang chịu trách nhiệm (coverage, ND, doanh số/tuyến).",
+            "Phân loại A/B/C cho 20 cửa hàng trong tuyến của bạn."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Chỉ tập trung cửa hàng lớn, bỏ quên phủ rộng → mất thị phần vào tay đối thủ.",
+            "Không có PJP → viếng thăm ngẫu hứng, sót outlet.",
+            "Nhầm 'bán được nhiều' với 'phủ rộng' — cần cả hai."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gt-02",
+      "module": "General Trade — kênh truyền thống",
+      "title_vi": "Quy trình viếng thăm cửa hàng (8 bước)",
+      "title_en": "The 8 Steps of the Call",
+      "subtitle": "Chuẩn hoá mỗi lần ghé điểm bán để không bỏ sót",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Quy trình viếng thăm cửa hàng (8 bước)",
+            "The 8 Steps of the Call",
+            "Chuẩn hoá mỗi lần ghé điểm bán để không bỏ sót"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Vì sao cần quy trình",
+          "lines": [
+            "Một quy trình chuẩn giúp **mọi lần viếng thăm đều tạo giá trị**: bán hàng, trưng bày, thu thập thông tin.",
+            "Giảm phụ thuộc vào trí nhớ, dễ đào tạo nhân viên mới, dễ đo lường."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "8 bước chuẩn (The 8-Step Call)",
+          "lines": [
+            "**Chuẩn bị**: xem lịch sử đơn, mục tiêu, POSM mang theo.",
+            "**Chào & quan sát**: chào chủ quán, quan sát cửa hàng.",
+            "**Kiểm kho & trưng bày**: đếm tồn, chỉnh bày, FIFO.",
+            "**Xác định đơn đề xuất** theo công thức tồn kho.",
+            "**Chào bán & xử lý từ chối**: giới thiệu SKU, khuyến mãi.",
+            "**Chốt đơn** & xác nhận số lượng.",
+            "**Trưng bày & POSM**: dán poster, sắp kệ.",
+            "**Ghi nhận & cảm ơn**: cập nhật báo cáo, hẹn lần sau."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Kỹ thuật đặt đơn đề xuất",
+          "lines": [
+            "**Công thức 1.5x**: Đơn đề xuất = (Bán ra trung bình × hệ số) − Tồn hiện tại.",
+            "Luôn *đề xuất con số cụ thể* thay vì hỏi 'anh lấy thêm không?'.",
+            "Gợi ý combo/SKU mới đi kèm SKU bán chạy."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Chủ quán bán ~2 thùng/tuần, tồn còn 1 thùng, tần suất thăm 1 tuần. Đề xuất: 2×1.5 − 1 = **2 thùng**. Salesman nói: 'Em để anh 2 thùng nhé, tuần rồi bán hết đấy' → tỉ lệ chốt cao hơn hỏi chung chung."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "In checklist 8 bước, áp dụng cho 10 cửa hàng ngày mai.",
+            "Tính đơn đề xuất bằng công thức cho 5 SKU bán chạy.",
+            "Tự chấm: mỗi lần ghé bạn làm đủ mấy/8 bước?"
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Bỏ bước kiểm kho → đề xuất sai số lượng.",
+            "Chỉ ghi đơn rồi đi, quên trưng bày & POSM.",
+            "Không chốt số cụ thể → chủ quán lấy ít."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gt-03",
+      "module": "General Trade — kênh truyền thống",
+      "title_vi": "Trưng bày & quản lý điểm bán",
+      "title_en": "Merchandising & POSM",
+      "subtitle": "Biến cửa hàng thành công cụ bán hàng",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Trưng bày & quản lý điểm bán",
+            "Merchandising & POSM",
+            "Biến cửa hàng thành công cụ bán hàng"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**Merchandising** = nghệ thuật trưng bày để hàng dễ thấy, dễ lấy, dễ mua.",
+            "Nguyên tắc: **Visibility (dễ thấy) – Availability (có hàng) – Accessibility (dễ lấy)**."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "POSM = Point of Sale Materials (vật phẩm quảng cáo tại điểm bán)",
+            "Planogram = sơ đồ bố trí kệ",
+            "Facing = số mặt sản phẩm quay ra ngoài kệ",
+            "Hot zone = vị trí ngang tầm mắt, dễ bán nhất",
+            "FIFO = First In First Out (hàng nhập trước bán trước)"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Quy trình trưng bày",
+          "lines": [
+            "Chọn **vị trí vàng**: ngang tầm mắt, gần quầy thu ngân/lối vào.",
+            "Tăng **facing** cho SKU bán chạy.",
+            "Nhóm sản phẩm theo ngành hàng, thương hiệu.",
+            "Áp dụng **FIFO**: đẩy hàng cũ ra trước, tránh hết hạn.",
+            "Gắn POSM: poster, wobbler, giá treo đúng chỗ."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Đưa SKU nước tăng lực từ kệ dưới lên ngang tầm mắt + tăng từ 2 lên 4 facing + dán wobbler → doanh số điểm bán tăng rõ trong 2 tuần vì khách nhìn thấy ngay khi vào."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Chụp ảnh trước–sau khi chỉnh trưng bày 3 cửa hàng.",
+            "Đảm bảo mọi SKU bán chạy đều ở hot zone.",
+            "Kiểm tra hạn dùng, xoay FIFO cho 5 điểm bán."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Dán POSM tràn lan, chủ quán bóc ngay hôm sau → chọn vị trí chủ quán đồng thuận.",
+            "Trưng bày đẹp nhưng hết hàng (out-of-stock) → mất doanh số.",
+            "Quên FIFO → hàng cận date, đổi trả nhiều."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gt-04",
+      "module": "General Trade — kênh truyền thống",
+      "title_vi": "Quản lý nhà phân phối & chỉ tiêu",
+      "title_en": "Distributor & KPI Management",
+      "subtitle": "Làm việc với NPP để đạt độ phủ và doanh số",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Quản lý nhà phân phối & chỉ tiêu",
+            "Distributor & KPI Management",
+            "Làm việc với NPP để đạt độ phủ và doanh số"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**Nhà phân phối (NPP)** là cánh tay nối dài của NSX: kho, đội bán, vốn, phương tiện giao hàng.",
+            "Quản lý NPP = cân bằng giữa **áp chỉ tiêu** và **hỗ trợ để họ có lãi**."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Chỉ số then chốt (KPI)",
+          "lines": [
+            "Coverage / Numeric Distribution = độ phủ",
+            "Sell-in = bán vào NPP; Sell-out = NPP bán ra thị trường",
+            "Stock cover = số ngày tồn kho",
+            "SKU active = số mã hàng thực sự bán",
+            "Productivity = % lần ghé có đơn (strike rate)"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Quy trình làm việc với NPP",
+          "lines": [
+            "Thống nhất **mục tiêu tháng**: doanh số, độ phủ, SKU mới.",
+            "Kiểm tra **tồn kho & công nợ**, tránh sell-in ảo.",
+            "Cùng NPP lập **kế hoạch tuyến & nhân sự**.",
+            "Theo dõi **sell-out**, không chỉ sell-in.",
+            "Họp review định kỳ, khen thưởng & điều chỉnh."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "NPP đạt sell-in cao nhưng sell-out thấp → hàng ứ kho. Giải pháp: tạm dừng đẩy hàng, tập trung trưng bày & khuyến mãi để giải phóng tồn, tránh hàng cận date và xung đột giá."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Lập bảng KPI tuần cho 1 NPP bạn phụ trách.",
+            "Đối chiếu sell-in vs sell-out tháng gần nhất.",
+            "Đề xuất 2 hành động tăng độ phủ SKU mới."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Chạy theo sell-in để đạt target → dồn tồn, vỡ giá.",
+            "Bỏ quên sức khoẻ tài chính của NPP.",
+            "Không có dữ liệu sell-out → ra quyết định mù."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mt-01",
+      "module": "Modern Trade — kênh hiện đại (MT/KA)",
+      "title_vi": "Tổng quan Modern Trade & Key Account",
+      "title_en": "Modern Trade & Key Account Overview",
+      "subtitle": "Bán hàng vào siêu thị và chuỗi bán lẻ",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Tổng quan Modern Trade & Key Account",
+            "Modern Trade & Key Account Overview",
+            "Bán hàng vào siêu thị và chuỗi bán lẻ"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**Modern Trade (MT)** = siêu thị, đại siêu thị, cửa hàng tiện lợi, chuỗi bán lẻ vận hành tập trung.",
+            "**Key Account (KA)** = khách hàng lớn, chiến lược, do **KAM** phụ trách quan hệ dài hạn."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "KAM = Key Account Manager",
+            "Listing = đưa SKU vào danh mục bán của chuỗi",
+            "Trade terms = điều khoản thương mại (chiết khấu, thưởng)",
+            "Planogram = sơ đồ kệ do chuỗi/nhà cung cấp thống nhất",
+            "JBP = Joint Business Plan (kế hoạch kinh doanh chung)"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Khác biệt GT vs MT",
+          "lines": [
+            "MT: **mua tập trung**, đàm phán ở cấp HQ chuỗi, không phải từng cửa hàng.",
+            "Yêu cầu **chứng từ, hợp đồng, EDI** chặt chẽ.",
+            "Chi phí vào kênh cao: phí listing, phí trưng bày, khuyến mãi.",
+            "Quan hệ **1 KAM – 1 chuỗi**, xây dựng JBP dài hạn.",
+            "Đo bằng **sell-out, share of shelf, ROI khuyến mãi**."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "KAM đàm phán với chuỗi siêu thị để listing 5 SKU mới + 2 đầu kệ (gondola end) dịp Tết, đổi lại cam kết doanh số và ngân sách khuyến mãi. Ký JBP khoá giá và lịch khuyến mãi cả quý."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Liệt kê các chuỗi MT trong khu vực của bạn và người phụ trách mua.",
+            "So sánh chi phí vào kênh GT vs MT cho 1 SKU.",
+            "Chuẩn bị hồ sơ listing 1 SKU (giá, lợi nhuận cho chuỗi, hỗ trợ)."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Đồng ý mọi yêu cầu chi phí của chuỗi → âm lợi nhuận.",
+            "Không theo sell-out → trả hàng, phạt.",
+            "Bỏ qua điều khoản hợp đồng (giao hàng, phạt) → thiệt hại."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mt-02",
+      "module": "Modern Trade — kênh hiện đại (MT/KA)",
+      "title_vi": "Quản trị ngành hàng & Planogram",
+      "title_en": "Category Management & Planogram",
+      "subtitle": "Tối ưu kệ để cả chuỗi và nhãn hàng cùng thắng",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Quản trị ngành hàng & Planogram",
+            "Category Management & Planogram",
+            "Tối ưu kệ để cả chuỗi và nhãn hàng cùng thắng"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**Category Management** = quản lý ngành hàng như một đơn vị kinh doanh, tối ưu doanh số & lợi nhuận cả ngành hàng, không chỉ 1 nhãn.",
+            "Nhà cung cấp mạnh thường làm **Category Captain** tư vấn bố trí kệ cho chuỗi."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "Quy trình 8 bước Category Management",
+          "lines": [
+            "Định nghĩa ngành hàng & vai trò của nó.",
+            "Đánh giá hiệu quả hiện tại (doanh số, lợi nhuận, thị phần).",
+            "Đặt mục tiêu ngành hàng.",
+            "Xây chiến lược (traffic, cash, profit, image).",
+            "Chọn chiến thuật: assortment, giá, kệ, khuyến mãi.",
+            "Triển khai planogram.",
+            "Thực thi tại điểm bán.",
+            "Đo lường & rà soát."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Nguyên tắc lên kệ",
+          "lines": [
+            "Bố trí theo **hành vi mua** (decision tree của khách).",
+            "SKU chủ lực & lợi nhuận cao đặt **ngang tầm mắt**.",
+            "**Share of shelf ≈ share of market**: facing tương xứng thị phần.",
+            "Nhóm theo ngành hàng → thương hiệu → biến thể."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Sắp lại kệ dầu gội theo nhu cầu (trị gàu / suôn mượt / thảo dược) thay vì theo nhãn → khách dễ tìm, tổng doanh số ngành hàng tăng, chuỗi hài lòng và ưu ái nhà cung cấp tư vấn."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Chụp 1 planogram thực tế, đánh giá facing có tương xứng thị phần không.",
+            "Vẽ decision tree cho 1 ngành hàng bạn phụ trách.",
+            "Đề xuất 3 điều chỉnh kệ tăng doanh số ngành hàng."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Chỉ đòi facing cho nhãn mình → chuỗi từ chối vì hại tổng ngành hàng.",
+            "Planogram đẹp trên giấy nhưng không kiểm tra thực thi.",
+            "Bỏ qua dữ liệu bán hàng của chuỗi khi đề xuất."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mt-03",
+      "module": "Modern Trade — kênh hiện đại (MT/KA)",
+      "title_vi": "Joint Business Plan & đàm phán điều khoản",
+      "title_en": "JBP & Trade Terms Negotiation",
+      "subtitle": "Đàm phán để hai bên cùng có lợi và cam kết dài hạn",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Joint Business Plan & đàm phán điều khoản",
+            "JBP & Trade Terms Negotiation",
+            "Đàm phán để hai bên cùng có lợi và cam kết dài hạn"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**JBP (Joint Business Plan)** = kế hoạch kinh doanh chung giữa nhãn hàng và chuỗi: mục tiêu, khuyến mãi, trưng bày, đầu tư — khoá cho cả năm/quý.",
+            "Biến quan hệ mua–bán thành **đối tác tăng trưởng**."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "Chuẩn bị đàm phán",
+          "lines": [
+            "Xác định **mục tiêu tối thiểu (walk-away)** và mục tiêu lý tưởng.",
+            "Chuẩn bị **dữ liệu**: doanh số, tăng trưởng ngành hàng, ROI.",
+            "Liệt kê **biến số trao đổi**: giá, listing, trưng bày, khuyến mãi, thanh toán.",
+            "Đóng gói thành **gói giá trị** thay vì nhượng bộ đơn lẻ.",
+            "Dự phòng phản đối & phương án thay thế (BATNA)."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Kỹ thuật đàm phán win-win",
+          "lines": [
+            "**Nếu... thì...**: mọi nhượng bộ đều đổi lấy cam kết ('Nếu bên em hỗ trợ đầu kệ, thì chuỗi cam kết trưng bày 3 tháng').",
+            "Đàm phán trên **lợi ích**, không trên **lập trường**.",
+            "Neo (anchor) hợp lý, giữ nhiều biến số để trao đổi.",
+            "Im lặng sau đề nghị — đừng tự nhượng bộ."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Chuỗi đòi tăng chiết khấu 3%. KAM đổi hướng: giữ chiết khấu, nhưng đầu tư 2 đầu kệ + khuyến mãi mua 2 tặng 1 trong 6 tuần, đổi lấy cam kết doanh số +15% và listing thêm 2 SKU → cả hai cùng có lợi, không phá giá."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Viết 3 câu 'Nếu... thì...' cho tình huống của bạn.",
+            "Xác định BATNA khi đàm phán với 1 chuỗi.",
+            "Chuẩn bị 1 trang JBP: mục tiêu – khuyến mãi – trưng bày – đầu tư."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Nhượng bộ giá mà không đổi lại cam kết.",
+            "Đàm phán không có dữ liệu → yếu thế.",
+            "Chỉ nghĩ thắng–thua, phá vỡ quan hệ dài hạn."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mt-04",
+      "module": "Modern Trade — kênh hiện đại (MT/KA)",
+      "title_vi": "Khuyến mãi & thực thi tại siêu thị",
+      "title_en": "Promotion & In-store Execution",
+      "subtitle": "Chạy khuyến mãi có lãi và kiểm soát thực thi",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Khuyến mãi & thực thi tại siêu thị",
+            "Promotion & In-store Execution",
+            "Chạy khuyến mãi có lãi và kiểm soát thực thi"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Khuyến mãi tại MT tốn kém → phải đo **ROI** và **incrementality** (doanh số tăng thêm thực sự).",
+            "Thực thi (execution) quan trọng ngang thiết kế: đúng trưng bày, đúng giá, đủ hàng."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "Uplift = mức tăng doanh số nhờ khuyến mãi",
+            "Incrementality = phần tăng thêm THỰC (trừ phần vốn dĩ vẫn mua)",
+            "ROI = (lợi nhuận tăng thêm − chi phí KM) / chi phí KM",
+            "Gondola end = đầu kệ; Display = quầy trưng bày rời",
+            "OSA = On-Shelf Availability (tỉ lệ có hàng trên kệ)"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Quy trình chạy khuyến mãi",
+          "lines": [
+            "Đặt **mục tiêu** rõ (dùng thử, giành thị phần, xả tồn).",
+            "Thiết kế cơ chế phù hợp (giảm giá / combo / quà tặng).",
+            "Dự báo nhu cầu & **đặt hàng đủ** tránh hết hàng.",
+            "Chuẩn bị trưng bày & POSM, huấn luyện PG.",
+            "Kiểm tra thực thi tại điểm bán (audit).",
+            "Đo **uplift, ROI**, rút kinh nghiệm."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Chương trình mua 2 tặng 1 tại chuỗi X: uplift 60% nhưng đa phần là khách vốn đã mua → incrementality thấp, ROI âm. Bài học: chọn cơ chế thu hút **khách mới/dùng thử** thay vì trợ giá cho khách trung thành."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Tính ROI cho 1 chương trình khuyến mãi gần nhất.",
+            "Lập checklist audit thực thi (giá, trưng bày, OSA, POSM).",
+            "Dự báo lượng hàng cần cho 1 chương trình sắp chạy."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Hết hàng giữa chương trình → mất doanh số & uy tín.",
+            "Chỉ nhìn uplift, bỏ qua incrementality & ROI.",
+            "Thiết kế hay nhưng thực thi kém tại cửa hàng."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "close-01",
+      "module": "Kỹ năng chốt sale & xử lý từ chối",
+      "title_vi": "Tâm lý mua hàng & khám phá nhu cầu (SPIN)",
+      "title_en": "Buyer Psychology & Discovery (SPIN)",
+      "subtitle": "Bán bằng cách đặt câu hỏi, không thuyết giáo",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Tâm lý mua hàng & khám phá nhu cầu (SPIN)",
+            "Buyer Psychology & Discovery (SPIN)",
+            "Bán bằng cách đặt câu hỏi, không thuyết giáo"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Người ta mua vì **lý do của họ**, không phải của bạn. Nhiệm vụ đầu tiên là **khám phá nhu cầu**.",
+            "**SPIN Selling** (Neil Rackham): dẫn dắt bằng 4 nhóm câu hỏi để khách tự nhận ra nhu cầu."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "SPIN = 4 nhóm câu hỏi",
+          "lines": [
+            "S — Situation (hiện trạng): thu thập thông tin nền",
+            "P — Problem (vấn đề): khơi ra khó khăn khách gặp",
+            "I — Implication (hệ quả): làm rõ hậu quả nếu không giải quyết",
+            "N — Need-Payoff (giá trị): để khách tự nói ra lợi ích khi giải quyết"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Áp dụng SPIN",
+          "lines": [
+            "Bắt đầu bằng vài câu **Situation** (đừng hỏi quá nhiều).",
+            "Chuyển sang **Problem** để lộ khó khăn.",
+            "Dùng **Implication** khuếch đại chi phí của vấn đề.",
+            "Kết bằng **Need-Payoff** để khách tự mô tả lợi ích → chốt là hệ quả tự nhiên."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "S: 'Anh đang nhập nước ngọt của mấy nhà?' → P: 'Có khi nào hết hàng bán chạy giữa tuần không?' → I: 'Mỗi lần hết hàng anh mất bao nhiêu khách?' → N: 'Nếu em giao 2 lần/tuần đảm bảo không đứt hàng thì có giúp anh giữ khách không?' → khách tự thấy cần."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Viết 2 câu hỏi cho mỗi chữ S-P-I-N cho sản phẩm của bạn.",
+            "Thử SPIN với 3 khách hàng, ghi lại phản ứng.",
+            "Tập nói ít hơn, hỏi và lắng nghe nhiều hơn."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Thuyết trình tính năng quá sớm, chưa hiểu nhu cầu.",
+            "Hỏi quá nhiều câu Situation làm khách chán.",
+            "Không lắng nghe, chỉ chờ tới lượt nói."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "close-02",
+      "module": "Kỹ năng chốt sale & xử lý từ chối",
+      "title_vi": "Kỹ thuật chốt sale",
+      "title_en": "Closing Techniques",
+      "subtitle": "Chốt tự nhiên như hệ quả của cuộc trò chuyện",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Kỹ thuật chốt sale",
+            "Closing Techniques",
+            "Chốt tự nhiên như hệ quả của cuộc trò chuyện"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Chốt không phải 'ép', mà là **giúp khách ra quyết định** khi họ đã thấy giá trị.",
+            "Nhận diện **tín hiệu mua** (buying signals): hỏi giá, hỏi giao hàng, gật đầu."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "technique",
+          "label": "Các kỹ thuật chốt phổ biến",
+          "lines": [
+            "**Chốt giả định (Assumptive)**: 'Em giao anh thứ Năm nhé?'",
+            "**Chốt lựa chọn (Alternative)**: 'Anh lấy 3 hay 5 thùng?'",
+            "**Chốt tóm tắt (Summary)**: tóm lợi ích đã đồng thuận rồi đề nghị.",
+            "**Chốt khan hiếm (Urgency)**: 'Khuyến mãi này hết thứ Sáu.'",
+            "**Chốt thử (Trial/Puppy dog)**: cho lấy ít dùng thử."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Trình tự chốt",
+          "lines": [
+            "Xác nhận khách đã thấy giá trị (test close nhẹ).",
+            "Tóm tắt điểm đồng thuận.",
+            "Đưa **đề nghị cụ thể** (số lượng, thời gian).",
+            "**Im lặng** chờ khách quyết.",
+            "Chốt xong: xác nhận & bước tiếp theo."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "'Vậy mình thống nhất: em để anh 3 thùng loại bán chạy + 1 thùng hàng mới dùng thử, giao sáng thứ Năm, có poster tặng kèm. Em xếp đơn nhé?' (rồi im lặng) → khách gật."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Chuẩn bị sẵn 3 câu chốt (giả định, lựa chọn, tóm tắt).",
+            "Tập kỹ thuật im lặng sau đề nghị.",
+            "Ghi lại tín hiệu mua bạn nhận ra ở 5 cuộc gặp."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Không dám chốt, nói lan man → mất thời điểm.",
+            "Chốt quá sớm khi khách chưa thấy giá trị.",
+            "Nói tiếp sau khi đề nghị → tự phá vỡ điểm chốt."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "close-03",
+      "module": "Kỹ năng chốt sale & xử lý từ chối",
+      "title_vi": "Xử lý từ chối & phản đối về giá",
+      "title_en": "Objection Handling",
+      "subtitle": "Biến lời từ chối thành cơ hội",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Xử lý từ chối & phản đối về giá",
+            "Objection Handling",
+            "Biến lời từ chối thành cơ hội"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Từ chối thường là **tín hiệu quan tâm** kèm băn khoăn chưa được giải toả.",
+            "Đừng tranh cãi — **lắng nghe và làm rõ** trước khi trả lời."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Khung LAER",
+          "lines": [
+            "L — Listen: lắng nghe hết, không ngắt lời",
+            "A — Acknowledge: ghi nhận cảm xúc/quan điểm",
+            "E — Explore: đặt câu hỏi làm rõ gốc rễ",
+            "R — Respond: trả lời đúng mối bận tâm thật"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Xử lý phản đối 'giá cao'",
+          "lines": [
+            "Làm rõ: 'Cao so với cái gì ạ?' (đối thủ? ngân sách? giá trị?).",
+            "Tách **giá** khỏi **giá trị**: nhắc lợi ích, vòng quay, lợi nhuận/đơn vị.",
+            "Quy về **chi phí nhỏ theo ngày/đơn vị** thay vì tổng.",
+            "Đưa bằng chứng: bán chạy, biên lợi nhuận, hỗ trợ trưng bày.",
+            "Chốt lại bằng đề nghị điều chỉnh (số lượng, gói)."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "'Hàng này đắt.' → (L/A) 'Em hiểu anh cân nhắc chi phí.' → (E) 'Anh so với sản phẩm nào ạ?' → (R) 'So cùng phân khúc, biên lợi nhuận anh cao hơn 8% và bán nhanh hơn, nên thực ra lời hơn dù giá nhập nhỉnh chút.'"
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Liệt kê 5 lời từ chối hay gặp + soạn câu trả lời theo LAER.",
+            "Tập tách giá/giá trị cho SKU biên lợi nhuận cao.",
+            "Đóng vai xử lý phản đối với đồng nghiệp."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Giảm giá ngay khi bị chê đắt → mất biên lợi nhuận & uy tín.",
+            "Trả lời trước khi hiểu gốc phản đối.",
+            "Tranh cãi tay đôi, làm khách phòng thủ."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "close-04",
+      "module": "Kỹ năng chốt sale & xử lý từ chối",
+      "title_vi": "Sàng lọc khách & theo đuổi (BANT)",
+      "title_en": "Qualifying & Follow-up (BANT)",
+      "subtitle": "Dồn sức vào cơ hội đáng theo đuổi",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Sàng lọc khách & theo đuổi (BANT)",
+            "Qualifying & Follow-up (BANT)",
+            "Dồn sức vào cơ hội đáng theo đuổi"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Không phải khách nào cũng đáng đầu tư thời gian như nhau. **Qualify** giúp ưu tiên đúng chỗ.",
+            "**BANT** (IBM) là khung sàng lọc kinh điển."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "BANT",
+          "lines": [
+            "B — Budget: có ngân sách/khả năng chi trả không",
+            "A — Authority: có phải người quyết định không",
+            "N — Need: nhu cầu thật sự tới đâu",
+            "T — Timeline: khi nào mua/nhập hàng"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Quy trình theo đuổi",
+          "lines": [
+            "Sàng lọc theo BANT, phân loại nóng/ấm/lạnh.",
+            "Đặt **bước tiếp theo cụ thể** sau mỗi lần gặp (ngày, việc).",
+            "Theo đuổi đa kênh (gặp trực tiếp, gọi, nhắn) — kiên trì nhưng tạo giá trị mỗi lần.",
+            "Ghi CRM/sổ tay: lịch sử, cam kết.",
+            "Biết **buông** khách không đủ điều kiện."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Khách hào hứng nhưng không phải chủ (thiếu Authority) và chưa có ngân sách (Budget) → xếp 'ấm', hẹn gặp đúng người quyết định thay vì tốn 5 lần ghé thuyết phục người không có quyền."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Chấm BANT cho 10 khách tiềm năng trong sổ.",
+            "Đặt 1 'next step' cụ thể cho mỗi khách nóng.",
+            "Xác định 3 khách nên buông để tập trung nguồn lực."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Theo đuổi mãi khách không có quyền/ngân sách.",
+            "Không đặt bước tiếp theo → cơ hội nguội.",
+            "Theo đuổi mà không mang lại giá trị → bị né."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care-01",
+      "module": "Chăm sóc & giữ khách",
+      "title_vi": "Vì sao phải giữ khách (CLV & Retention)",
+      "title_en": "Why Retention Matters (CLV)",
+      "subtitle": "Giữ khách cũ rẻ hơn tìm khách mới",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Vì sao phải giữ khách (CLV & Retention)",
+            "Why Retention Matters (CLV)",
+            "Giữ khách cũ rẻ hơn tìm khách mới"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Chi phí **giành khách mới** thường cao hơn nhiều lần giữ khách cũ.",
+            "Khách trung thành mua lại nhiều hơn, giới thiệu người khác, ít nhạy cảm giá."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "CLV = Customer Lifetime Value (giá trị vòng đời khách hàng)",
+            "Retention rate = tỉ lệ giữ khách",
+            "Churn = tỉ lệ rời bỏ",
+            "NPS = Net Promoter Score (mức độ sẵn sàng giới thiệu)",
+            "Repeat purchase = tỉ lệ mua lại"
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "steps",
+          "label": "Nâng giá trị vòng đời khách",
+          "lines": [
+            "Đo **retention & churn** theo tháng.",
+            "Phân khúc khách theo giá trị (RFM: Recency–Frequency–Monetary).",
+            "Chăm sóc chủ động nhóm giá trị cao.",
+            "Tăng **tần suất & giá trị đơn** (upsell/cross-sell).",
+            "Thu thập phản hồi, cải thiện liên tục."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Với chủ tạp hoá loại A: gọi hỏi thăm mỗi 2 tuần, ưu tiên hàng khan hiếm, hỗ trợ trưng bày → họ ở lại lâu, đơn đều, và giới thiệu bạn bè cùng nhập → CLV tăng mạnh so với chỉ chạy theo khách mới."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Tính retention tháng trước cho tuyến của bạn.",
+            "Phân nhóm RFM cho 20 khách chính.",
+            "Chọn 5 khách giá trị cao để chăm sóc đặc biệt tuần này."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Chỉ chạy theo khách mới, bỏ bê khách cũ.",
+            "Không đo churn → mất khách mà không biết.",
+            "Đối xử mọi khách như nhau, lãng phí nguồn lực."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care-02",
+      "module": "Chăm sóc & giữ khách",
+      "title_vi": "Chăm sóc sau bán & xử lý khiếu nại",
+      "title_en": "After-sales & Complaint Handling",
+      "subtitle": "Sự cố xử lý tốt tạo khách trung thành hơn",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Chăm sóc sau bán & xử lý khiếu nại",
+            "After-sales & Complaint Handling",
+            "Sự cố xử lý tốt tạo khách trung thành hơn"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "**Service recovery paradox**: khách được xử lý khiếu nại tốt có thể trung thành hơn cả khách chưa từng gặp sự cố.",
+            "Khiếu nại là **món quà** — cơ hội sửa sai và giữ khách."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "Khung xử lý khiếu nại (LAST/HEARD)",
+          "lines": [
+            "**Lắng nghe** hết, không phòng thủ.",
+            "**Xin lỗi** chân thành về trải nghiệm.",
+            "**Làm rõ** vấn đề & mong muốn của khách.",
+            "**Giải quyết** nhanh (đổi/trả/bù) trong quyền hạn.",
+            "**Theo dõi** sau đó để chắc khách hài lòng."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Nguyên tắc vàng",
+          "lines": [
+            "Phản hồi **nhanh** — tốc độ quan trọng hơn sự hoàn hảo.",
+            "Đừng đổ lỗi cho khách hay hệ thống.",
+            "Trao quyền xử lý ở tuyến đầu (không đá qua đá lại).",
+            "Ghi nhận & sửa **gốc rễ** để không lặp lại."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Giao thiếu 1 thùng cho chủ quán. Salesman: xin lỗi ngay, bù thùng thiếu trong ngày + tặng 1 lốc dùng thử hàng mới. Kết quả: chủ quán cảm kích, đặt đơn lớn hơn kỳ sau."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Soạn kịch bản xử lý 3 khiếu nại hay gặp (giao thiếu, hàng lỗi, sai giá).",
+            "Xác định bạn được toàn quyền xử lý tới mức nào.",
+            "Gọi theo dõi 3 khách từng khiếu nại gần đây."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Phản hồi chậm → khách bức xúc lan rộng.",
+            "Tranh cãi đúng–sai thay vì giải quyết.",
+            "Xử lý xong không theo dõi → khách vẫn rời bỏ."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care-03",
+      "module": "Chăm sóc & giữ khách",
+      "title_vi": "Chương trình khách hàng thân thiết",
+      "title_en": "Loyalty Programs",
+      "subtitle": "Tạo lý do để khách quay lại đều đặn",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Chương trình khách hàng thân thiết",
+            "Loyalty Programs",
+            "Tạo lý do để khách quay lại đều đặn"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "concept",
+          "label": "Khái niệm",
+          "lines": [
+            "Chương trình loyalty tạo **động lực mua lại** và tăng gắn kết: tích điểm, thưởng bậc, ưu đãi riêng.",
+            "Với kênh GT: thưởng theo doanh số/tích luỹ cho chủ quán; với người tiêu dùng: tích điểm, quà."
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "Thiết kế chương trình",
+          "lines": [
+            "Xác định **mục tiêu** (tăng tần suất, giá trị đơn, giữ khách).",
+            "Chọn **cơ chế** đơn giản, dễ hiểu.",
+            "Phân **bậc/thưởng** theo giá trị khách.",
+            "Truyền thông rõ ràng & dễ tham gia.",
+            "Đo lường: mua lại, giá trị đơn, chi phí/hiệu quả."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Nguyên tắc hiệu quả",
+          "lines": [
+            "Phần thưởng phải **có ý nghĩa** và **đạt được**.",
+            "Cá nhân hoá ưu đãi theo lịch sử mua (dữ liệu).",
+            "Tạo cảm giác **tiến bộ** (gần đạt mốc → mua thêm).",
+            "Tránh phức tạp — rối là khách bỏ."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Chương trình cho chủ tạp hoá: đạt mốc doanh số quý → tặng chuyến du lịch/điện thoại; tích luỹ đổi quà. Chủ quán chủ động nhập nhiều hơn để đạt mốc → doanh số & lòng trung thành tăng."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Phác thảo 1 cơ chế loyalty cho nhóm khách của bạn.",
+            "Xác định mốc thưởng vừa sức để kích thích mua thêm.",
+            "Liệt kê dữ liệu cần thu thập để cá nhân hoá ưu đãi."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Cơ chế rối rắm, khách không hiểu → không tham gia.",
+            "Thưởng dàn trải, không nhắm khách giá trị cao.",
+            "Không đo hiệu quả → tốn chi phí vô ích."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "care-04",
+      "module": "Chăm sóc & giữ khách",
+      "title_vi": "Upsell, cross-sell & win-back",
+      "title_en": "Upsell, Cross-sell & Win-back",
+      "subtitle": "Tăng giá trị khách hiện có và kéo khách rời bỏ quay lại",
+      "custom": false,
+      "slides": [
+        {
+          "n": 1,
+          "kind": "title",
+          "lines": [
+            "Upsell, cross-sell & win-back",
+            "Upsell, Cross-sell & Win-back",
+            "Tăng giá trị khách hiện có và kéo khách rời bỏ quay lại"
+          ]
+        },
+        {
+          "n": 2,
+          "kind": "terms",
+          "label": "Thuật ngữ",
+          "lines": [
+            "Upsell = bán phiên bản cao cấp/số lượng lớn hơn",
+            "Cross-sell = bán thêm sản phẩm bổ trợ",
+            "Win-back = kéo khách đã rời bỏ quay lại",
+            "Basket size = giá trị giỏ hàng/đơn"
+          ]
+        },
+        {
+          "n": 3,
+          "kind": "steps",
+          "label": "Chiến thuật tăng giá trị đơn",
+          "lines": [
+            "Dựa vào **lịch sử mua** để gợi ý đúng lúc.",
+            "**Cross-sell** SKU bổ trợ ('mua nước ngọt thì thêm snack bán kèm').",
+            "**Upsell** gói/thùng lớn với ưu đãi/thùng.",
+            "Gợi ý **SKU mới** cho khách phù hợp.",
+            "Đặt mục tiêu tăng **basket size** mỗi lần ghé."
+          ]
+        },
+        {
+          "n": 4,
+          "kind": "technique",
+          "label": "Win-back khách rời bỏ",
+          "lines": [
+            "Xác định khách **ngừng mua** (giảm tần suất/giá trị).",
+            "Tìm **lý do rời bỏ** (giá, dịch vụ, đối thủ).",
+            "Đưa **lý do quay lại**: ưu đãi hồi phục, cải thiện dịch vụ.",
+            "Cá nhân hoá lời mời, theo dõi kết quả."
+          ]
+        },
+        {
+          "n": 5,
+          "kind": "example",
+          "label": "Ví dụ",
+          "lines": [
+            "Chủ quán 2 tháng không nhập hàng vì bị đối thủ chào giá tốt. Salesman gặp, tìm hiểu, đưa gói combo + hỗ trợ trưng bày + cam kết giao đúng hẹn → khách quay lại, đơn phục hồi."
+          ]
+        },
+        {
+          "n": 6,
+          "kind": "practice",
+          "label": "Thực hành",
+          "lines": [
+            "Lập 5 cặp cross-sell hợp lý cho danh mục của bạn.",
+            "Xác định 5 khách đang giảm mua để win-back.",
+            "Đặt mục tiêu basket size trung bình cho tuyến."
+          ]
+        },
+        {
+          "n": 7,
+          "kind": "pitfall",
+          "label": "Lỗi thường gặp",
+          "lines": [
+            "Gợi ý thêm không liên quan → khách khó chịu.",
+            "Ép upsell khi khách chưa sẵn sàng.",
+            "Không theo dõi khách rời bỏ → mất hẳn."
+          ]
+        }
+      ]
+    }
+  ]
+}

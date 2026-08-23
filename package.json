@@ -1,0 +1,19 @@
+{
+  "name": "ai-automation-academy",
+  "version": "1.0.0",
+  "description": "App học tập song ngữ: giáo án Sale thực chiến + trợ lý AI, TTS, kiểm tra, thư viện tài liệu",
+  "type": "module",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^2.1.7",
+    "youtube-transcript": "^1.2.1"
+  }
+}

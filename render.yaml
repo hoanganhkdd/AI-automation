@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: ai-automation-academy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      # Khi lên gói trả phí: bật Disk và đặt DATA_DIR trỏ vào đĩa để giữ dữ liệu.
+      # - key: DATA_DIR
+      #   value: /var/data
+# disk:
+#   name: data
+#   mountPath: /var/data
+#   sizeGB: 1

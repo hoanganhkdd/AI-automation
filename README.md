@@ -1,0 +1,54 @@
+# 🎓 AI Automation Academy
+
+App học tập **song ngữ Việt–Anh** với giáo án **Sale thực chiến** (4 module), tích hợp **trợ lý AI (OpenAI)**, **đọc to (TTS)**, **kiểm tra/thi**, và **thư viện tài liệu**. Backend Node/Express, frontend vanilla JS, lưu file JSON — không cần database, không build step.
+
+## ✨ Tính năng chính
+- **Giáo án 4 module × 4 bài** (General Trade, Modern Trade, Chốt sale & xử lý từ chối, Chăm sóc & giữ khách), mỗi bài nhiều slide: khái niệm, quy trình, kỹ thuật, ví dụ, thực hành, lỗi thường gặp, thuật ngữ.
+- **🎧 Đọc to (TTS)**: nghe từng bài (chế độ ngồi xe, tự chuyển bài) hoặc **nghe toàn bộ phần Đào sâu** (bài học + ví dụ + công cụ + video + thực hành + hỏi AI). Mini-player chỉnh tốc độ, chọn giọng vi-VN.
+- **🧠 Đào sâu (AI)**: gợi ý ví dụ thực tế, công cụ/website, **video liên quan**, bài tập — kèm URL nguồn thật (web_search). Mỗi kết quả **💾 Lưu** vào Kho kiến thức **và** Thư viện.
+- **📚 Thư viện**: thêm text/PDF/ảnh/YouTube/Reel FB/link, gắn tag, **✨ Rút insight** (Tóm tắt / Bài học chính / Áp dụng ngay), xuất .md.
+- **📝 Kiểm tra**: nhanh theo bài, theo module, **tổng kết toàn khoá** (trắc nghiệm + tự luận, AI chấm tự luận). Kết quả **lưu vào thư viện**.
+- **🔁 Nhắc ôn lại**: bài đã học quá 3 ngày / chưa kiểm tra / điểm < 7 sẽ hiện ở trang chủ.
+- **🎯 Mục tiêu học + ⏱️ timer + 🔥 streak**, đồng bộ đa thiết bị qua server.
+- **➕ CRUD giáo án** ngay trong app: thêm/xoá module, bài học, slide.
+
+## ▶️ Chạy trên máy
+```bash
+npm install
+npm start
+```
+Mở: http://localhost:3000 (nếu cổng bận, đặt `PORT=3100 npm start`).
+
+## 🤖 Bật AI
+Các tính năng AI cần **OpenAI API key**. Mở **⚙️ Cài đặt** trong app → dán key → chọn model (mặc định `gpt-4o-mini`).
+Hoặc đặt biến môi trường `OPENAI_API_KEY` (khuyên dùng khi deploy). **Không** hard-code, **không** commit key.
+
+## 🗂️ Cấu trúc
+```
+server/server.js            # toàn bộ API + proxy OpenAI + trích xuất nội dung
+server/data/                # curriculum.json, library.json (seed) + knowledge/settings/state (tự sinh) + uploads/
+public/index.html
+public/css/style.css
+public/js/slides.js         # render slide + TTS text
+public/js/app.js            # SPA: routing, tabs, TTS, quiz, thư viện, AI, đồng bộ
+render.yaml, Procfile, .nvmrc, DEPLOY.md
+```
+
+## 🔌 API
+| Method | Endpoint | Chức năng |
+|---|---|---|
+| GET | /api/curriculum | Lấy giáo án |
+| POST/DELETE | /api/curriculum/sessions[/:id] | Thêm/xoá bài học |
+| POST/DELETE | /api/curriculum/sessions/:id/slides[/:n] | Thêm/xoá slide |
+| GET/POST/DELETE | /api/resources[/:id] | Thư viện tài liệu |
+| POST | /api/resources/upload | Upload PDF/ảnh (≤50MB) |
+| GET/POST/DELETE | /api/knowledge[/:id] | Kho kiến thức |
+| POST | /api/knowledge/generate | AI sinh ví dụ/công cụ/video/thực hành |
+| GET/POST | /api/state | Đồng bộ tiến độ/kế hoạch/timer/ôn tập |
+| POST | /api/quiz/generate · /api/quiz/grade | Sinh đề · chấm tự luận |
+| POST | /api/chat · /api/insight | Coach AI · rút insight tài liệu |
+| GET/POST | /api/settings | Key + model |
+| GET | /healthz | Kiểm tra sống |
+
+## 🚀 Deploy
+Xem [DEPLOY.md](DEPLOY.md). Cần host **chạy Node** (Render/Railway/Fly/VPS). **Không** dùng Netlify/GitHub Pages (chỉ tĩnh).
