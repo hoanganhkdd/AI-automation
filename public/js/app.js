@@ -62,7 +62,7 @@ function openModal(title, html) {
   $("modalBody").innerHTML = html;
   $("modal").hidden = false;
 }
-function closeModal() { $("modal").hidden = true; }
+function closeModal() { $("modal").hidden = true; const inner = $("modal").querySelector(".modal"); if (inner) inner.classList.remove("wide"); }
 
 /* ---------- State sync (debounce) ---------- */
 let stateT;
@@ -841,6 +841,7 @@ async function renderNews() {
       <div><h1>📰 Tin tức AI Automation <span class="bi-tag">🌐 Song ngữ Anh–Việt</span></h1>
         <p class="muted">${d.updatedAt ? "Cập nhật: " + new Date(d.updatedAt).toLocaleString("vi-VN") : "Đang lấy tin..."} · ${items.length} tin</p></div>
       <div class="news-actions">
+        <button class="mini-btn primary" id="newsSummarize">🖼️ Tóm tắt Infographic</button>
         <button class="mini-btn" id="newsRefresh">↻ Cập nhật</button>
         <button class="mini-btn" id="newsRead">✓ Đã xem hết</button>
       </div>
@@ -873,6 +874,7 @@ async function renderNews() {
     newsLastVisit = Date.now(); localStorage.setItem(NEWS_VISIT_KEY, String(newsLastVisit));
     renderNews(); updateNewsBadge(); toast("Đã đánh dấu xem hết");
   };
+  $("newsSummarize").onclick = newsSummarize;
 
   renderNewsList();
   translateNewsVisible(items);
@@ -952,6 +954,69 @@ async function translateNewsVisible(items) {
     } catch { newsPollTimer = setTimeout(poll, 5000); }
   };
   newsPollTimer = setTimeout(poll, 2500);
+}
+
+/* ================= TÓM TẮT INFOGRAPHIC ================= */
+async function newsSummarize() {
+  if (!ensureKey()) return;
+  const inner = $("modal").querySelector(".modal");
+  $("modalTitle").textContent = "🖼️ Tóm tắt nhanh Tin AI";
+  $("modalBody").innerHTML = `<div class="loading" style="padding:24px">⏳ AI đang đọc & tóm tắt các tin mới nhất...</div>`;
+  if (inner) inner.classList.add("wide");
+  $("modal").hidden = false;
+  try {
+    const r = await api("POST", "/api/news/summarize", { source: newsSourceFilter });
+    $("modalBody").innerHTML = infographicHtml(r);
+    if ($("infoPrint")) $("infoPrint").onclick = () => window.print();
+  } catch (e) {
+    $("modalBody").innerHTML = `<p class="err" style="padding:16px">Không tóm tắt được: ${escapeHtml(e.message)}</p>`;
+  }
+}
+
+function infographicHtml(r) {
+  const labels = r.stats?.topicLabels || {};
+  const byTopic = r.stats?.byTopic || {};
+  const order = ["automation", "model", "business", "policy", "other"];
+  const maxCount = Math.max(1, ...Object.values(byTopic));
+  const dateStr = r.updatedAt ? new Date(r.updatedAt).toLocaleDateString("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric" }) : new Date().toLocaleDateString("vi-VN");
+
+  const bars = order.filter((k) => byTopic[k]).map((k) => `
+    <div class="ig-bar-row">
+      <span class="ig-bar-label">${escapeHtml(labels[k] || k)}</span>
+      <span class="ig-bar-track"><span class="ig-bar-fill ig-${k}" style="width:${Math.round((byTopic[k] / maxCount) * 100)}%"></span></span>
+      <span class="ig-bar-num">${byTopic[k]}</span>
+    </div>`).join("");
+
+  const topicBlocks = (r.topics || []).filter((t) => (t.points || []).length).map((t) => `
+    <div class="ig-topic">
+      <h4>${escapeHtml(labels[t.key] || t.key || "")}</h4>
+      <ul>${(t.points || []).map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>
+    </div>`).join("");
+
+  const highlights = (r.highlights || []).map((h, i) => `
+    <div class="ig-hi"><span class="ig-hi-n">${i + 1}</span><div><b>${escapeHtml(h.title || "")}</b><p>${escapeHtml(h.why || "")}</p></div></div>`).join("");
+
+  return `
+  <div class="infographic" id="infographic">
+    <div class="ig-head">
+      <div><div class="ig-kicker">📊 TÓM TẮT NHANH</div><h2>Tin tức AI Automation</h2><div class="ig-date">${escapeHtml(dateStr)}</div></div>
+      <div class="ig-badge">${r.stats?.total || 0}<small>tin</small></div>
+    </div>
+
+    ${r.overview ? `<div class="ig-overview">“${escapeHtml(r.overview)}”</div>` : ""}
+
+    <div class="ig-section-title">Phân bổ theo chủ đề</div>
+    <div class="ig-bars">${bars}</div>
+
+    ${topicBlocks ? `<div class="ig-section-title">Điểm chính theo chủ đề</div><div class="ig-topics">${topicBlocks}</div>` : ""}
+
+    ${highlights ? `<div class="ig-section-title">🔥 Tin nổi bật</div><div class="ig-highlights">${highlights}</div>` : ""}
+
+    <div class="ig-foot">
+      <span>${r.stats?.sources || 0} nguồn · tổng hợp bởi AI Automation Academy</span>
+      <button class="mini-btn" id="infoPrint">🖨️ In / Lưu PDF</button>
+    </div>
+  </div>`;
 }
 
 /* ================= INIT ================= */

@@ -666,6 +666,44 @@ app.post("/api/news/translate", async (req, res) => {
 });
 app.post("/api/news/refresh", async (req, res) => { await fetchNews(); res.json({ ok: true, updatedAt: newsCache.updatedAt, total: newsCache.items.length }); });
 
+// Tóm tắt tin tức dạng infographic (AI) — tổng quan + điểm nhấn theo chủ đề
+app.post("/api/news/summarize", async (req, res) => {
+  try {
+    const source = req.body?.source || "";
+    let items = newsCache.items.slice();
+    if (source) items = items.filter((i) => i.source === source);
+    items = items.slice(0, 45);
+    if (!items.length) return res.status(400).json({ ok: false, error: "Chưa có tin để tóm tắt" });
+
+    // Thống kê (không cần AI)
+    const byTopic = {}, bySource = {};
+    for (const i of items) {
+      const tp = classifyTopic(i.title + " " + i.summary);
+      byTopic[tp] = (byTopic[tp] || 0) + 1;
+      bySource[i.source] = (bySource[i.source] || 0) + 1;
+    }
+
+    // AI viết tổng quan + điểm chính theo chủ đề + tin nổi bật (JSON, tiếng Việt)
+    const list = items.map((i, n) => `${n + 1}. [${classifyTopic(i.title + " " + i.summary)}] ${i.title}`).join("\n");
+    const system = 'Bạn là biên tập viên bản tin công nghệ. Từ danh sách tiêu đề tin AI/automation, tạo bản TÓM TẮT tiếng Việt súc tích để đọc nhanh. CHỈ trả JSON: {"overview":"2-3 câu tổng quan xu hướng nổi bật","topics":[{"key":"automation|model|business|policy|other","points":["gạch đầu dòng ngắn",...]}],"highlights":[{"title":"tiêu đề tin (tiếng Việt, ngắn)","why":"vì sao đáng chú ý"}]}. Mỗi topic 2-3 điểm; 4-5 highlights.';
+    let ai = { overview: "", topics: [], highlights: [] };
+    try {
+      const raw = await openaiChat({ system, user: "Các tin mới nhất:\n" + list, json: true });
+      ai = parseJSONLoose(raw) || ai;
+    } catch (e) {
+      return res.status(502).json({ ok: false, error: e.message });
+    }
+    res.json({
+      ok: true,
+      updatedAt: newsCache.updatedAt,
+      stats: { total: items.length, sources: Object.keys(bySource).length, byTopic, topicLabels: TOPICS },
+      overview: ai.overview || "",
+      topics: ai.topics || [],
+      highlights: ai.highlights || [],
+    });
+  } catch (e) { res.status(502).json({ ok: false, error: e.message }); }
+});
+
 // ---------- Middleware bắt lỗi ----------
 app.use((err, req, res, next) => {
   console.error("[express error]", err);

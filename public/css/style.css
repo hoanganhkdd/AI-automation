@@ -176,6 +176,48 @@ html[data-bi="off"] .bi-tag{display:none}
 .modal-body .fld{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:13px;color:var(--muted)}
 .modal-body input,.modal-body select,.modal-body textarea{background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:9px 11px;border-radius:8px;font:inherit}
 
+/* modal rộng cho infographic */
+.modal.wide{width:min(920px,100%)}
+
+/* infographic */
+.infographic{color:var(--text)}
+.ig-head{display:flex;justify-content:space-between;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(79,140,255,.2),rgba(124,92,255,.16));border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.ig-kicker{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--accent)}
+.ig-head h2{font-size:22px;margin:4px 0}
+.ig-date{color:var(--muted);font-size:13px}
+.ig-badge{background:var(--accent);color:#fff;border-radius:14px;min-width:76px;text-align:center;padding:12px 14px;font-size:30px;font-weight:800;line-height:1}
+.ig-badge small{display:block;font-size:12px;font-weight:600;opacity:.9}
+.ig-overview{background:var(--panel2);border-left:4px solid var(--accent2);border-radius:8px;padding:14px 16px;font-size:15px;font-style:italic;margin-bottom:18px}
+.ig-section-title{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 10px}
+.ig-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.ig-bar-row{display:flex;align-items:center;gap:10px}
+.ig-bar-label{width:190px;font-size:13px;flex-shrink:0}
+.ig-bar-track{flex:1;height:14px;background:var(--panel2);border-radius:999px;overflow:hidden}
+.ig-bar-fill{display:block;height:100%;border-radius:999px}
+.ig-bar-num{width:28px;text-align:right;font-weight:700;font-size:13px}
+.ig-automation{background:var(--accent)} .ig-model{background:var(--accent2)}
+.ig-business{background:var(--ok)} .ig-policy{background:var(--warn)} .ig-other{background:#6b7280}
+.ig-topics{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ig-topic{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.ig-topic h4{margin:0 0 6px;font-size:14px}
+.ig-topic ul{margin:0;padding-left:18px}
+.ig-topic li{font-size:13px;color:var(--muted);margin-bottom:4px}
+.ig-highlights{display:flex;flex-direction:column;gap:8px}
+.ig-hi{display:flex;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.ig-hi-n{width:26px;height:26px;flex-shrink:0;background:var(--pink);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.ig-hi b{font-size:14px} .ig-hi p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.ig-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;padding-top:12px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;flex-wrap:wrap}
+
+@media print{
+  body>*:not(#modal){display:none!important}
+  #modal{position:absolute;inset:0;background:#fff;padding:0;overflow:visible}
+  #modal .modal{width:100%;max-width:100%;border:none;background:#fff;color:#111}
+  .modal-head,#infoPrint{display:none!important}
+  .infographic,.ig-date,.ig-topic li,.ig-hi p,.ig-foot{color:#111!important}
+  .ig-overview,.ig-topic,.ig-hi,.ig-bar-track{background:#f3f4f6!important}
+  .ig-head{background:#e8efff!important}
+}
+
 /* mini-player */
 .mini-player{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:10px 16px;z-index:50;flex-wrap:wrap}
 .mini-player[hidden]{display:none}
