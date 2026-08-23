@@ -486,6 +486,76 @@ const NEWS_KEYWORDS = /\b(ai|a\.i|automat|agent|llm|gpt|claude|gemini|copilot|wo
 const rssParser = new Parser({ timeout: 15000, headers: { "User-Agent": "AI-Automation-Academy/1.0" } });
 let newsCache = { items: [], updatedAt: null, refreshing: false, sources: [] };
 
+// ---- Dịch song ngữ (Google free -> MyMemory dự phòng, có cache ra file) ----
+const NEWS_TRANS_FILE = path.join(DATA_DIR, "news_trans.json");
+let newsTrans = readJSON(NEWS_TRANS_FILE, {});
+let newsTransDirty = false;
+setInterval(() => { if (newsTransDirty) { writeJSON(NEWS_TRANS_FILE, newsTrans); newsTransDirty = false; } }, 20000);
+const sleepMs = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function gTranslate(text) {
+  const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q=" + encodeURIComponent(text.slice(0, 1800));
+  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" } });
+  if (!res.ok) throw new Error("google " + res.status);
+  const data = await res.json();
+  return (data[0] || []).map((seg) => seg[0]).join("");
+}
+async function mmTranslate(text) {
+  const url = "https://api.mymemory.translated.net/get?langpair=en|vi&q=" + encodeURIComponent(text.slice(0, 480));
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("mymemory " + res.status);
+  const data = await res.json();
+  return data?.responseData?.translatedText || "";
+}
+async function translateVi(text) {
+  if (!text) return "";
+  if (newsTrans[text]) return newsTrans[text];
+  let out = "";
+  for (let i = 0; i < 2 && !out; i++) { try { out = await gTranslate(text); } catch (e) { if (String(e).includes("429")) await sleepMs(600); } }
+  if (!out) { try { out = await mmTranslate(text); } catch {} }
+  if (out) { newsTrans[text] = out; newsTransDirty = true; }
+  return out || text;
+}
+// Dịch theo LÔ bằng OpenAI (ổn định, không cạn quota như dịch vụ free)
+async function openaiTranslateMany(texts) {
+  const system = 'Bạn là người dịch. Dịch từng chuỗi tiếng Anh sang tiếng Việt tự nhiên, giữ nguyên số phần tử và thứ tự. CHỈ trả về JSON đúng dạng {"t":["...","..."]}.';
+  const raw = await openaiChat({ system, user: JSON.stringify(texts), json: true });
+  const parsed = parseJSONLoose(raw);
+  return Array.isArray(parsed?.t) ? parsed.t : [];
+}
+
+let preTransRunning = false;
+async function preTranslateNews(limit = 120) {
+  if (preTransRunning) return;
+  preTransRunning = true;
+  try {
+    const { key } = getKeyModel();
+    // Gom các đoạn cần dịch (title + summary) chưa có trong cache
+    const need = [];
+    for (const it of newsCache.items.slice(0, limit)) {
+      if (it.title && !newsTrans[it.title]) need.push(it.title);
+      if (it.summary && !newsTrans[it.summary]) need.push(it.summary);
+    }
+    if (!need.length) { preTransRunning = false; return; }
+
+    if (key) {
+      // OpenAI: dịch theo lô 20 đoạn/lần
+      for (let i = 0; i < need.length; i += 20) {
+        const batch = need.slice(i, i + 20);
+        try {
+          const vi = await openaiTranslateMany(batch);
+          batch.forEach((t, j) => { if (vi[j]) { newsTrans[t] = vi[j]; newsTransDirty = true; } });
+        } catch (e) { console.warn("openai translate batch fail", e.message); break; }
+      }
+    } else {
+      // Không có key: dùng Google/MyMemory (có thể bị giới hạn tốc độ)
+      for (const t of need) {
+        try { await translateVi(t); await sleepMs(120); } catch {}
+      }
+    }
+  } finally { preTransRunning = false; }
+}
+
 function cleanText(s = "") {
   return s.replace(/<[^>]*>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
 }
@@ -519,8 +589,25 @@ async function fetchNews() {
   }).sort((a, b) => b.ts - a.ts).slice(0, 120);
   newsCache = { items: filtered, updatedAt: new Date().toISOString(), refreshing: false, sources };
   console.log(`  📰 Tin AI: ${filtered.length} tin từ ${sources.filter((s) => s.ok).length}/${NEWS_FEEDS.length} nguồn.`);
+  preTranslateNews().catch(() => {}); // dịch sẵn song ngữ ở nền
 }
-app.get("/api/news", (req, res) => res.json({ updatedAt: newsCache.updatedAt, total: newsCache.items.length, sources: newsCache.sources, items: newsCache.items }));
+app.get("/api/news", (req, res) => {
+  const items = newsCache.items.map((i) => ({
+    ...i,
+    titleVi: newsTrans[i.title] || null,
+    summaryVi: i.summary ? newsTrans[i.summary] || null : null,
+  }));
+  res.json({ updatedAt: newsCache.updatedAt, total: items.length, sources: newsCache.sources, items });
+});
+// Dịch theo yêu cầu (các tin chưa có sẵn bản dịch)
+app.post("/api/news/translate", async (req, res) => {
+  const texts = Array.isArray(req.body?.texts) ? req.body.texts.slice(0, 40) : [];
+  try {
+    const out = {};
+    for (const t of texts) { if (!t || out[t] !== undefined) continue; const cached = !!newsTrans[t]; out[t] = await translateVi(t); if (!cached) await sleepMs(120); }
+    res.json({ ok: true, translations: out });
+  } catch (e) { res.status(502).json({ ok: false, error: e.message }); }
+});
 app.post("/api/news/refresh", async (req, res) => { await fetchNews(); res.json({ ok: true, updatedAt: newsCache.updatedAt, total: newsCache.items.length }); });
 
 // ---------- Middleware bắt lỗi ----------

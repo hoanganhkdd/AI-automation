@@ -784,17 +784,22 @@ async function updateNewsBadge() {
     if (n > 0) { b.textContent = n; b.hidden = false; } else b.hidden = true;
   } catch {}
 }
+const newsTrans = {}; // text -> bản dịch tiếng Việt
+let newsItemsCache = [];
 async function renderNews() {
   const view = $("news-view");
   view.innerHTML = `<div class="loading" style="padding:30px">⏳ Đang tải tin tức AI...</div>`;
   let d;
   try { d = await api("GET", "/api/news"); } catch (e) { view.innerHTML = `<p class="err" style="padding:30px">Không tải được tin: ${escapeHtml(e.message)}</p>`; return; }
   const items = d.items || [];
+  newsItemsCache = items;
+  // Nạp sẵn bản dịch server đã dịch trước
+  for (const i of items) { if (i.titleVi) newsTrans[i.title] = i.titleVi; if (i.summaryVi) newsTrans[i.summary] = i.summaryVi; }
   const newCount = items.filter((i) => i.ts > newsLastVisit).length;
   view.innerHTML = `
     <div class="crumbs"><a href="#home">← Trang chủ</a></div>
     <div class="news-top">
-      <div><h1>📰 Tin tức AI Automation</h1>
+      <div><h1>📰 Tin tức AI Automation <span class="bi-tag">🌐 Song ngữ Anh–Việt</span></h1>
         <p class="muted">${d.updatedAt ? "Cập nhật: " + new Date(d.updatedAt).toLocaleString("vi-VN") : "Đang lấy tin..."} · ${items.length} tin</p></div>
       <div class="news-actions">
         <button class="mini-btn" id="newsRefresh">↻ Cập nhật</button>
@@ -802,14 +807,7 @@ async function renderNews() {
       </div>
     </div>
     ${newCount ? `<div class="news-banner">✨ Có <b>${newCount}</b> tin mới kể từ lần bạn xem gần nhất.</div>` : ""}
-    <div class="news-list">
-      ${items.length ? items.map((i) => `
-        <article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""}">
-          <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
-          <h3><a href="${escapeHtml(i.link)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></h3>
-          ${i.summary ? `<p>${escapeHtml(i.summary)}</p>` : ""}
-        </article>`).join("") : `<p class="muted">Chưa có tin. Bấm "Cập nhật".</p>`}
-    </div>`;
+    <div class="news-list" id="newsList">${newsCardsHtml(items)}</div>`;
   $("newsRefresh").onclick = async () => {
     const b = $("newsRefresh"); b.disabled = true; b.textContent = "⏳...";
     try { await api("POST", "/api/news/refresh"); } catch {}
@@ -819,6 +817,47 @@ async function renderNews() {
     newsLastVisit = Date.now(); localStorage.setItem(NEWS_VISIT_KEY, String(newsLastVisit));
     renderNews(); updateNewsBadge(); toast("Đã đánh dấu xem hết");
   };
+  translateNewsVisible(items);
+}
+function newsCardsHtml(items) {
+  if (!items.length) return `<p class="muted">Chưa có tin. Bấm "Cập nhật".</p>`;
+  return items.map((i) => {
+    const tVi = newsTrans[i.title] ? `<div class="news-vi">🇻🇳 ${escapeHtml(newsTrans[i.title])}</div>` : "";
+    const sVi = i.summary && newsTrans[i.summary] ? `<p class="news-sum-vi">🇻🇳 ${escapeHtml(newsTrans[i.summary])}</p>` : "";
+    return `<article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""}">
+      <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
+      <h3><a href="${escapeHtml(i.link)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></h3>
+      ${tVi}
+      ${i.summary ? `<p>${escapeHtml(i.summary)}</p>` : ""}
+      ${sVi}
+    </article>`;
+  }).join("");
+}
+// Server dịch nền; frontend hỏi lại /api/news định kỳ để lấy bản dịch mới (không tự gọi dịch để tránh nghẽn)
+let newsPollTimer = null;
+function coverage(items) {
+  let have = 0; for (const i of items) if (newsTrans[i.title]) have++;
+  return items.length ? have / items.length : 1;
+}
+async function translateNewsVisible(items) {
+  clearTimeout(newsPollTimer);
+  if (coverage(items) >= 0.95) return;
+  let rounds = 0;
+  const poll = async () => {
+    if (location.hash.replace(/^#/, "") !== "news" || rounds++ > 30) return;
+    try {
+      const d = await api("GET", "/api/news");
+      let changed = false;
+      for (const i of d.items || []) {
+        if (i.titleVi && !newsTrans[i.title]) { newsTrans[i.title] = i.titleVi; changed = true; }
+        if (i.summaryVi && !newsTrans[i.summary]) { newsTrans[i.summary] = i.summaryVi; changed = true; }
+      }
+      const list = $("newsList");
+      if (changed && list) list.innerHTML = newsCardsHtml(newsItemsCache);
+      if (coverage(newsItemsCache) < 0.95) newsPollTimer = setTimeout(poll, 3000);
+    } catch { newsPollTimer = setTimeout(poll, 5000); }
+  };
+  newsPollTimer = setTimeout(poll, 2500);
 }
 
 /* ================= INIT ================= */
