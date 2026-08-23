@@ -822,6 +822,7 @@ let newsItemsCache = [];
 let newsGroupBy = localStorage.getItem("aiacad:newsGroup") || "date"; // date | source | topic
 let newsSourceFilter = "";
 let newsUpdatedAt = null;
+const selectedNews = new Set(); // id các tin được chọn để tóm tắt
 
 async function renderNews() {
   const view = $("news-view");
@@ -859,6 +860,11 @@ async function renderNews() {
       </label>
     </div>
     ${newCount ? `<div class="news-banner">✨ Có <b>${newCount}</b> tin mới kể từ lần bạn xem gần nhất.</div>` : ""}
+    <div id="newsSelBar" class="news-selbar" hidden>
+      <span>✅ Đã chọn <b id="selCount">0</b> tin</span>
+      <button class="mini-btn primary" id="selSummarize">🖼️ Tóm tắt tin đã chọn</button>
+      <button class="mini-btn" id="selClear">Bỏ chọn</button>
+    </div>
     <div id="newsList"></div>`;
 
   $("newsGroup").value = newsGroupBy;
@@ -874,7 +880,9 @@ async function renderNews() {
     newsLastVisit = Date.now(); localStorage.setItem(NEWS_VISIT_KEY, String(newsLastVisit));
     renderNews(); updateNewsBadge(); toast("Đã đánh dấu xem hết");
   };
-  $("newsSummarize").onclick = newsSummarize;
+  $("newsSummarize").onclick = summarizeSelected;
+  $("selSummarize").onclick = summarizeSelected;
+  $("selClear").onclick = () => { selectedNews.clear(); renderNewsList(); };
 
   renderNewsList();
   translateNewsVisible(items);
@@ -912,6 +920,8 @@ function renderNewsList() {
     // nút tóm tắt riêng theo chủ đề
     list.querySelectorAll("[data-sum-topic]").forEach((b) => b.onclick = () => newsSummarize({ topic: b.dataset.sumTopic, source: "" }));
   }
+  bindNewsChecks();
+  updateSelBar();
 }
 function emptyNews() { return `<p class="muted">Không có tin phù hợp bộ lọc.</p>`; }
 function newsGroupHtml(title, items, topicKey) {
@@ -924,14 +934,35 @@ function newsCardsHtml(items) {
     const tVi = newsTrans[i.title] ? `<div class="news-vi">🇻🇳 ${escapeHtml(newsTrans[i.title])}</div>` : "";
     const sVi = i.summary && newsTrans[i.summary] ? `<p class="news-sum-vi">🇻🇳 ${escapeHtml(newsTrans[i.summary])}</p>` : "";
     const topicTag = i.topicLabel ? `<span class="news-topic">${escapeHtml(i.topicLabel)}</span>` : "";
-    return `<article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""}">
-      <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}${topicTag}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
+    const sel = selectedNews.has(i.id);
+    return `<article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""} ${sel ? "picked" : ""}">
+      <div class="news-meta">
+        <label class="news-pick" title="Chọn để tóm tắt"><input type="checkbox" class="news-check" data-id="${escapeHtml(i.id)}" ${sel ? "checked" : ""}></label>
+        ${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}${topicTag}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
       <h3><a href="${escapeHtml(i.link)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></h3>
       ${tVi}
       ${i.summary ? `<p>${escapeHtml(i.summary)}</p>` : ""}
       ${sVi}
     </article>`;
   }).join("");
+}
+function bindNewsChecks() {
+  document.querySelectorAll(".news-check").forEach((c) => c.onchange = () => {
+    if (c.checked) selectedNews.add(c.dataset.id); else selectedNews.delete(c.dataset.id);
+    c.closest(".news-card").classList.toggle("picked", c.checked);
+    updateSelBar();
+  });
+}
+function updateSelBar() {
+  const n = selectedNews.size;
+  const bar = $("newsSelBar");
+  if (bar) { bar.hidden = n === 0; bar.querySelector("#selCount").textContent = n; }
+  const btn = $("newsSummarize");
+  if (btn) btn.textContent = n ? `🖼️ Tóm tắt ${n} tin đã chọn` : "🖼️ Tóm tắt Infographic";
+}
+function summarizeSelected() {
+  if (selectedNews.size === 0) { toast("Hãy tích chọn (ô ở góc) các tin muốn tóm tắt trước."); return; }
+  newsSummarize({ ids: [...selectedNews] });
 }
 // Server dịch nền; frontend hỏi lại /api/news định kỳ để lấy bản dịch mới (không tự gọi dịch để tránh nghẽn)
 let newsPollTimer = null;
@@ -968,8 +999,9 @@ async function newsSummarize(opts = {}) {
   if (inner) inner.classList.add("wide");
   $("modal").hidden = false;
   try {
-    const body = { source: opts.source ?? newsSourceFilter };
-    if (opts.topic) body.topic = opts.topic;
+    const body = {};
+    if (opts.ids && opts.ids.length) body.ids = opts.ids;
+    else { body.source = opts.source ?? newsSourceFilter; if (opts.topic) body.topic = opts.topic; }
     const r = await api("POST", "/api/news/summarize", body);
     $("modalBody").innerHTML = infographicHtml(r);
     if ($("infoPrint")) $("infoPrint").onclick = () => window.print();

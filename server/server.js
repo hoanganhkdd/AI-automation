@@ -671,9 +671,15 @@ app.post("/api/news/summarize", async (req, res) => {
   try {
     const source = req.body?.source || "";
     const topic = req.body?.topic || "";
+    const ids = Array.isArray(req.body?.ids) ? req.body.ids : [];
     let items = newsCache.items.slice();
-    if (source) items = items.filter((i) => i.source === source);
-    if (topic) items = items.filter((i) => classifyTopic(i.title + " " + i.summary) === topic);
+    if (ids.length) {
+      // Ưu tiên: chỉ tóm tắt các tin người dùng đã chọn
+      items = items.filter((i) => ids.includes(i.id));
+    } else {
+      if (source) items = items.filter((i) => i.source === source);
+      if (topic) items = items.filter((i) => classifyTopic(i.title + " " + i.summary) === topic);
+    }
     items = items.slice(0, 45);
     if (!items.length) return res.status(400).json({ ok: false, error: "Chưa có tin phù hợp để tóm tắt" });
 
@@ -698,7 +704,7 @@ app.post("/api/news/summarize", async (req, res) => {
     res.json({
       ok: true,
       updatedAt: newsCache.updatedAt,
-      focus: topic ? TOPICS[topic] : (source || ""),
+      focus: ids.length ? `${items.length} tin bạn chọn` : (topic ? TOPICS[topic] : (source || "")),
       stats: { total: items.length, sources: Object.keys(bySource).length, byTopic, topicLabels: TOPICS },
       overview: ai.overview || "",
       topics: ai.topics || [],
