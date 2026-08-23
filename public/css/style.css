@@ -102,6 +102,13 @@ button{font:inherit;cursor:pointer}
 /* bản dịch tiếng Anh dưới mỗi dòng (song ngữ bài học) */
 .ln-en{color:var(--muted);font-style:italic;font-size:.9em;margin-top:2px;opacity:.9}
 .ln-en::before{content:"EN ";font-style:normal;font-size:.85em;color:var(--accent);font-weight:700}
+/* Tắt song ngữ: chỉ hiện ngôn ngữ gốc (tin=Anh, bài học=Việt) */
+html[data-bi="off"] .news-vi,
+html[data-bi="off"] .news-sum-vi,
+html[data-bi="off"] .ln-en,
+html[data-bi="off"] .slide-title .kicker,
+html[data-bi="off"] .bi-tag{display:none}
+#biToggle.on{background:var(--accent2);border-color:var(--accent2);color:#fff}
 
 /* learn actions */
 .learn-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}

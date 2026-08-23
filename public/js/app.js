@@ -35,6 +35,20 @@ async function api(method, path, body) {
   return data;
 }
 
+/* ---------- Song ngữ (bật/tắt) ---------- */
+const BI_KEY = "aiacad:bilingual";
+let bilingual = localStorage.getItem(BI_KEY) !== "0"; // mặc định bật
+function applyBilingual() {
+  document.documentElement.setAttribute("data-bi", bilingual ? "on" : "off");
+  const b = $("biToggle");
+  if (b) { b.textContent = "🌐 Song ngữ: " + (bilingual ? "Bật" : "Tắt"); b.classList.toggle("on", bilingual); }
+}
+function toggleBilingual() {
+  bilingual = !bilingual;
+  localStorage.setItem(BI_KEY, bilingual ? "1" : "0");
+  applyBilingual();
+}
+
 /* ---------- Toast ---------- */
 let toastT;
 function toast(msg, ms = 2600) {
@@ -902,6 +916,8 @@ async function init() {
   $("modal").addEventListener("click", (e) => { if (e.target === $("modal")) closeModal(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
   $("settingsBtn").onclick = openSettings;
+  $("biToggle").onclick = toggleBilingual;
+  applyBilingual();
   $("brandLink").onclick = (e) => { e.preventDefault(); goHome(); };
 
   // load data
