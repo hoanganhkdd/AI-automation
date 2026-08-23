@@ -819,6 +819,10 @@ async function updateNewsBadge() {
 }
 const newsTrans = {}; // text -> bản dịch tiếng Việt
 let newsItemsCache = [];
+let newsGroupBy = localStorage.getItem("aiacad:newsGroup") || "date"; // date | source | topic
+let newsSourceFilter = "";
+let newsUpdatedAt = null;
+
 async function renderNews() {
   const view = $("news-view");
   view.innerHTML = `<div class="loading" style="padding:30px">⏳ Đang tải tin tức AI...</div>`;
@@ -826,9 +830,11 @@ async function renderNews() {
   try { d = await api("GET", "/api/news"); } catch (e) { view.innerHTML = `<p class="err" style="padding:30px">Không tải được tin: ${escapeHtml(e.message)}</p>`; return; }
   const items = d.items || [];
   newsItemsCache = items;
-  // Nạp sẵn bản dịch server đã dịch trước
+  newsUpdatedAt = d.updatedAt;
   for (const i of items) { if (i.titleVi) newsTrans[i.title] = i.titleVi; if (i.summaryVi) newsTrans[i.summary] = i.summaryVi; }
+  const sources = [...new Set(items.map((i) => i.source))].sort();
   const newCount = items.filter((i) => i.ts > newsLastVisit).length;
+
   view.innerHTML = `
     <div class="crumbs"><a href="#home">← Trang chủ</a></div>
     <div class="news-top">
@@ -839,8 +845,25 @@ async function renderNews() {
         <button class="mini-btn" id="newsRead">✓ Đã xem hết</button>
       </div>
     </div>
+    <div class="news-controls">
+      <label>Nhóm theo
+        <select id="newsGroup">
+          <option value="date">🕒 Ngày cập nhật</option>
+          <option value="source">🏷️ Nguồn</option>
+          <option value="topic">🧩 Chủ đề</option>
+        </select>
+      </label>
+      <label>Lọc nguồn
+        <select id="newsSource"><option value="">Tất cả nguồn</option>${sources.map((s) => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("")}</select>
+      </label>
+    </div>
     ${newCount ? `<div class="news-banner">✨ Có <b>${newCount}</b> tin mới kể từ lần bạn xem gần nhất.</div>` : ""}
-    <div class="news-list" id="newsList">${newsCardsHtml(items)}</div>`;
+    <div id="newsList"></div>`;
+
+  $("newsGroup").value = newsGroupBy;
+  $("newsSource").value = newsSourceFilter;
+  $("newsGroup").onchange = (e) => { newsGroupBy = e.target.value; localStorage.setItem("aiacad:newsGroup", newsGroupBy); renderNewsList(); };
+  $("newsSource").onchange = (e) => { newsSourceFilter = e.target.value; renderNewsList(); };
   $("newsRefresh").onclick = async () => {
     const b = $("newsRefresh"); b.disabled = true; b.textContent = "⏳...";
     try { await api("POST", "/api/news/refresh"); } catch {}
@@ -850,15 +873,54 @@ async function renderNews() {
     newsLastVisit = Date.now(); localStorage.setItem(NEWS_VISIT_KEY, String(newsLastVisit));
     renderNews(); updateNewsBadge(); toast("Đã đánh dấu xem hết");
   };
+
+  renderNewsList();
   translateNewsVisible(items);
 }
+
+// Áp bộ lọc + nhóm rồi vẽ danh sách
+function renderNewsList() {
+  const list = $("newsList"); if (!list) return;
+  let items = newsItemsCache.slice();
+  if (newsSourceFilter) items = items.filter((i) => i.source === newsSourceFilter);
+  items.sort((a, b) => b.ts - a.ts); // luôn mới nhất trước trong từng nhóm
+
+  if (newsGroupBy === "date") {
+    // Nhóm theo mốc thời gian
+    const buckets = { "Hôm nay": [], "Hôm qua": [], "Tuần này": [], "Cũ hơn": [] };
+    const now = new Date(); const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const DAY = 86400000;
+    for (const i of items) {
+      if (i.ts >= startToday) buckets["Hôm nay"].push(i);
+      else if (i.ts >= startToday - DAY) buckets["Hôm qua"].push(i);
+      else if (i.ts >= startToday - 7 * DAY) buckets["Tuần này"].push(i);
+      else buckets["Cũ hơn"].push(i);
+    }
+    list.innerHTML = Object.entries(buckets).filter(([, v]) => v.length).map(([k, v]) => newsGroupHtml("🕒 " + k, v)).join("") || emptyNews();
+  } else if (newsGroupBy === "source") {
+    const groups = {};
+    for (const i of items) (groups[i.source] ||= []).push(i);
+    const ordered = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
+    list.innerHTML = ordered.map(([k, v]) => newsGroupHtml("🏷️ " + k + " (" + v.length + ")", v)).join("") || emptyNews();
+  } else { // topic
+    const order = ["automation", "model", "business", "policy", "other"];
+    const groups = {};
+    for (const i of items) (groups[i.topic || "other"] ||= []).push(i);
+    list.innerHTML = order.filter((t) => groups[t]).map((t) => newsGroupHtml((groups[t][0].topicLabel || t) + " (" + groups[t].length + ")", groups[t])).join("") || emptyNews();
+  }
+}
+function emptyNews() { return `<p class="muted">Không có tin phù hợp bộ lọc.</p>`; }
+function newsGroupHtml(title, items) {
+  return `<div class="news-group"><h2 class="news-group-h">${escapeHtml(title)}</h2><div class="news-list">${newsCardsHtml(items)}</div></div>`;
+}
 function newsCardsHtml(items) {
-  if (!items.length) return `<p class="muted">Chưa có tin. Bấm "Cập nhật".</p>`;
+  if (!items.length) return emptyNews();
   return items.map((i) => {
     const tVi = newsTrans[i.title] ? `<div class="news-vi">🇻🇳 ${escapeHtml(newsTrans[i.title])}</div>` : "";
     const sVi = i.summary && newsTrans[i.summary] ? `<p class="news-sum-vi">🇻🇳 ${escapeHtml(newsTrans[i.summary])}</p>` : "";
+    const topicTag = i.topicLabel ? `<span class="news-topic">${escapeHtml(i.topicLabel)}</span>` : "";
     return `<article class="news-card ${i.ts > newsLastVisit ? "is-new" : ""}">
-      <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
+      <div class="news-meta">${i.ts > newsLastVisit ? '<span class="badge-new">MỚI</span>' : ""}${topicTag}<span class="news-src">${escapeHtml(i.source)}</span><span class="news-time">${newsTimeAgo(i.ts)}</span></div>
       <h3><a href="${escapeHtml(i.link)}" target="_blank" rel="noopener">${escapeHtml(i.title)}</a></h3>
       ${tVi}
       ${i.summary ? `<p>${escapeHtml(i.summary)}</p>` : ""}
@@ -885,8 +947,7 @@ async function translateNewsVisible(items) {
         if (i.titleVi && !newsTrans[i.title]) { newsTrans[i.title] = i.titleVi; changed = true; }
         if (i.summaryVi && !newsTrans[i.summary]) { newsTrans[i.summary] = i.summaryVi; changed = true; }
       }
-      const list = $("newsList");
-      if (changed && list) list.innerHTML = newsCardsHtml(newsItemsCache);
+      if (changed) renderNewsList();
       if (coverage(newsItemsCache) < 0.95) newsPollTimer = setTimeout(poll, 3000);
     } catch { newsPollTimer = setTimeout(poll, 5000); }
   };

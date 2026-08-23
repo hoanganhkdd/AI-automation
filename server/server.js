@@ -628,12 +628,31 @@ async function fetchNews() {
   console.log(`  📰 Tin AI: ${filtered.length} tin từ ${sources.filter((s) => s.ok).length}/${NEWS_FEEDS.length} nguồn.`);
   preTranslateNews().catch(() => {}); // dịch sẵn song ngữ ở nền
 }
+// Phân loại chủ đề tin theo từ khoá
+const TOPICS = {
+  automation: "🤖 Agent & Automation",
+  model: "🧠 Mô hình & Nghiên cứu",
+  business: "💼 Sản phẩm & Công ty",
+  policy: "⚖️ Chính sách & An toàn",
+  other: "📌 Khác",
+};
+function classifyTopic(text = "") {
+  const t = text.toLowerCase();
+  if (/\bagent|automat|workflow|n8n|zapier|make\.com|\brpa\b|copilot|no-?code|orchestrat|assistant/.test(t)) return "automation";
+  if (/safety|regulat|policy|\blaw\b|\bbill\b|privacy|govern|ethic|lawsuit|court|copyright|ban\b/.test(t)) return "policy";
+  if (/launch|release|funding|raises?\b|partner|acqui|valuation|startup|\bipo\b|billion|million|invest|revenue|deal\b/.test(t)) return "business";
+  if (/\bmodel|\bllm\b|gpt|research|paper|benchmark|neural|training|dataset|open-?source|weights|reasoning|multimodal/.test(t)) return "model";
+  return "other";
+}
 app.get("/api/news", (req, res) => {
-  const items = newsCache.items.map((i) => ({
-    ...i,
-    titleVi: newsTrans[i.title] || null,
-    summaryVi: i.summary ? newsTrans[i.summary] || null : null,
-  }));
+  const items = newsCache.items.map((i) => {
+    const topic = classifyTopic(i.title + " " + i.summary);
+    return {
+      ...i, topic, topicLabel: TOPICS[topic],
+      titleVi: newsTrans[i.title] || null,
+      summaryVi: i.summary ? newsTrans[i.summary] || null : null,
+    };
+  });
   res.json({ updatedAt: newsCache.updatedAt, total: items.length, sources: newsCache.sources, items });
 });
 // Dịch theo yêu cầu (các tin chưa có sẵn bản dịch)
