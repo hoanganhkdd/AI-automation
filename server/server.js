@@ -5,6 +5,9 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import Parser from "rss-parser";
+import { execFile } from "child_process";
+import { promisify } from "util";
+const execFileP = promisify(execFile);
 
 dotenv.config();
 
@@ -711,6 +714,97 @@ app.post("/api/news/summarize", async (req, res) => {
       highlights: ai.highlights || [],
     });
   } catch (e) { res.status(502).json({ ok: false, error: e.message }); }
+});
+
+// =========================================================
+//  TÍCH HỢP NOTEBOOKLM (gọi CLI notebooklm-py)
+// =========================================================
+let NBLM_BIN = process.env.NBLM_BIN || "notebooklm";
+(async () => {
+  try {
+    const cmd = process.platform === "win32" ? "where" : "which";
+    const { stdout } = await execFileP(cmd, ["notebooklm"], { timeout: 8000 });
+    const p = stdout.split(/\r?\n/).map((s) => s.trim()).find(Boolean);
+    if (p) { NBLM_BIN = p; console.log("  📓 NotebookLM CLI:", p); }
+  } catch { console.log("  📓 NotebookLM CLI: không tìm thấy (tính năng sẽ tắt)"); }
+})();
+
+async function nblm(args, timeout = 60000) {
+  const { stdout } = await execFileP(NBLM_BIN, args, { timeout, maxBuffer: 12 * 1024 * 1024, windowsHide: true });
+  return stdout;
+}
+async function waitSourcesReady(nid, timeoutMs = 240000) {
+  const start = Date.now();
+  let last = { ready: 0, total: 0 };
+  while (Date.now() - start < timeoutMs) {
+    try {
+      const j = parseJSONLoose(await nblm(["source", "list", "-n", nid, "--json"], 30000)) || { sources: [] };
+      const s = j.sources || [];
+      last = { ready: s.filter((x) => x.status === "ready").length, total: s.length };
+      if (s.length && s.every((x) => x.status === "ready" || x.status === "error")) return last;
+    } catch {}
+    await sleepMs(8000);
+  }
+  return { ...last, timedOut: true };
+}
+
+// Trạng thái: CLI có sẵn & đã đăng nhập?
+let nblmStatusCache = null, nblmStatusAt = 0;
+app.get("/api/notebooklm/status", async (req, res) => {
+  if (nblmStatusCache && Date.now() - nblmStatusAt < 60000) return res.json(nblmStatusCache);
+  try {
+    const j = parseJSONLoose(await nblm(["auth", "check", "--test", "--json"], 30000)) || {};
+    const authed = j.status === "ok" && j?.checks?.token_fetch === true;
+    nblmStatusCache = { available: true, authed, email: j?.account?.email || null };
+  } catch (e) {
+    nblmStatusCache = { available: false, authed: false, error: String(e.message || e).slice(0, 160) };
+  }
+  nblmStatusAt = Date.now();
+  res.json(nblmStatusCache);
+});
+
+// Tóm tắt các tin đã chọn bằng NotebookLM (tạo notebook -> nạp URL -> hỏi tóm tắt)
+app.post("/api/notebooklm/summarize", async (req, res) => {
+  try {
+    const ids = Array.isArray(req.body?.ids) ? req.body.ids : [];
+    let items = newsCache.items.filter((i) => ids.includes(i.id) && i.link).slice(0, 10);
+    if (!items.length) return res.status(400).json({ ok: false, error: "Chưa chọn tin (có link) để tóm tắt" });
+
+    // 1) Tạo notebook
+    const title = "Tin AI " + new Date().toLocaleDateString("vi-VN") + " (" + items.length + " nguồn)";
+    const created = parseJSONLoose(await nblm(["create", title, "--json"], 40000));
+    const nid = created?.notebook?.id;
+    if (!nid) throw new Error("Không tạo được notebook");
+
+    // 2) Nạp từng URL làm source (bỏ qua lỗi lẻ)
+    let added = 0;
+    for (const it of items) {
+      try { await nblm(["source", "add", it.link, "-n", nid, "--json"], 60000); added++; }
+      catch (e) { console.warn("nblm add fail", it.link, e.message); }
+    }
+    if (!added) throw new Error("Không nạp được nguồn nào vào notebook");
+
+    // 3) Chờ source xử lý xong
+    const ready = await waitSourcesReady(nid, 240000);
+
+    // 4) Hỏi NotebookLM tóm tắt (dựa trên nội dung nguồn thật)
+    const prompt = "Hãy đọc TẤT CẢ các nguồn trong notebook và viết bản tóm tắt tin tức bằng tiếng Việt, gồm: " +
+      "1) 4-6 gạch đầu dòng điểm chính nổi bật nhất; 2) Các xu hướng/chủ đề chung nổi lên; 3) Vì sao đáng chú ý. " +
+      "Trình bày ngắn gọn, rõ ràng, dựa hoàn toàn vào nội dung nguồn.";
+    const ans = parseJSONLoose(await nblm(["ask", prompt, "-n", nid, "--json"], 180000)) || {};
+
+    res.json({
+      ok: true,
+      notebookId: nid,
+      notebookUrl: "https://notebooklm.google.com/notebook/" + nid,
+      title,
+      added,
+      ready: ready.ready, total: ready.total, timedOut: !!ready.timedOut,
+      answer: ans.answer || "(NotebookLM không trả về nội dung)",
+    });
+  } catch (e) {
+    res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 300) });
+  }
 });
 
 // ---------- Middleware bắt lỗi ----------

@@ -862,7 +862,8 @@ async function renderNews() {
     ${newCount ? `<div class="news-banner">✨ Có <b>${newCount}</b> tin mới kể từ lần bạn xem gần nhất.</div>` : ""}
     <div id="newsSelBar" class="news-selbar" hidden>
       <span>✅ Đã chọn <b id="selCount">0</b> tin</span>
-      <button class="mini-btn primary" id="selSummarize">🖼️ Tóm tắt tin đã chọn</button>
+      <button class="mini-btn primary" id="selSummarize">🖼️ Tóm tắt Infographic</button>
+      <button class="mini-btn" id="selNblm" title="NotebookLM đọc toàn văn nguồn rồi tóm tắt">📓 Tóm tắt bằng NotebookLM</button>
       <button class="mini-btn" id="selClear">Bỏ chọn</button>
     </div>
     <div id="newsList"></div>`;
@@ -882,7 +883,9 @@ async function renderNews() {
   };
   $("newsSummarize").onclick = summarizeSelected;
   $("selSummarize").onclick = summarizeSelected;
+  $("selNblm").onclick = summarizeNblm;
   $("selClear").onclick = () => { selectedNews.clear(); renderNewsList(); };
+  checkNblm();
 
   renderNewsList();
   translateNewsVisible(items);
@@ -1104,6 +1107,60 @@ function infographicHtml(r) {
         <button class="mini-btn" id="infoPng">🖼️ Lưu ảnh PNG</button>
         <button class="mini-btn" id="infoPrint">🖨️ In / Lưu PDF</button>
       </span>
+    </div>
+  </div>`;
+}
+
+/* ================= NOTEBOOKLM ================= */
+let nblmStatus = null;
+async function checkNblm() {
+  const btn = $("selNblm"); if (!btn) return;
+  try {
+    nblmStatus = await api("GET", "/api/notebooklm/status");
+    if (!nblmStatus.available) { btn.disabled = true; btn.title = "Máy chủ chưa cài NotebookLM CLI"; btn.textContent = "📓 NotebookLM (chưa sẵn sàng)"; }
+    else if (!nblmStatus.authed) { btn.disabled = true; btn.title = "NotebookLM chưa đăng nhập Google — chạy: notebooklm login"; btn.textContent = "📓 NotebookLM (chưa đăng nhập)"; }
+    else { btn.disabled = false; btn.title = "NotebookLM đọc toàn văn nguồn rồi tóm tắt"; }
+  } catch { btn.disabled = true; btn.title = "Không kiểm tra được NotebookLM"; }
+}
+// Markdown nhẹ cho câu trả lời NotebookLM (###, *, **, xuống dòng)
+function mdRich(s = "") {
+  let t = escapeHtml(s);
+  t = t.replace(/^#{1,6}\s+(.+)$/gm, "<h4>$1</h4>");
+  t = t.replace(/^\s*[\*\-]\s+/gm, "• ");
+  t = t.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  t = t.replace(/\n/g, "<br>");
+  return t;
+}
+async function summarizeNblm() {
+  if (selectedNews.size === 0) { toast("Hãy tích chọn các tin muốn tóm tắt trước."); return; }
+  if (nblmStatus && !nblmStatus.authed) { toast("NotebookLM chưa sẵn sàng (chạy: notebooklm login)."); return; }
+  const inner = $("modal").querySelector(".modal");
+  $("modalTitle").textContent = "📓 NotebookLM đang tóm tắt nguồn";
+  $("modalBody").innerHTML = `<div class="nblm-loading">
+    <div class="spin">⏳</div>
+    <p>NotebookLM đang <b>tạo notebook → nạp ${selectedNews.size} nguồn → đọc toàn văn → tóm tắt</b>.</p>
+    <p class="muted">Việc này có thể mất <b>1–3 phút</b> (NotebookLM đọc hết nội dung bài, không chỉ tiêu đề). Vui lòng chờ...</p>
+  </div>`;
+  if (inner) inner.classList.add("wide");
+  $("modal").hidden = false;
+  try {
+    const r = await api("POST", "/api/notebooklm/summarize", { ids: [...selectedNews] });
+    $("modalBody").innerHTML = nblmResultHtml(r);
+    if ($("nblmSaveMd")) $("nblmSaveMd").onclick = () => {
+      const blob = new Blob([`# ${r.title}\n\nNguồn: ${r.notebookUrl}\n\n${r.answer}\n`], { type: "text/markdown" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "notebooklm-tom-tat.md"; a.click();
+    };
+  } catch (e) {
+    $("modalBody").innerHTML = `<p class="err" style="padding:16px">NotebookLM lỗi: ${escapeHtml(e.message)}<br><small>Nếu do đăng nhập, mở terminal chạy: <code>notebooklm login</code></small></p>`;
+  }
+}
+function nblmResultHtml(r) {
+  return `<div class="nblm-result">
+    <div class="nblm-head">📓 NotebookLM đã đọc <b>${r.total || 0}</b> nguồn (toàn văn)${r.timedOut ? " · một số nguồn xử lý chưa xong" : ""}</div>
+    <div class="nblm-answer">${mdRich(r.answer || "")}</div>
+    <div class="nblm-foot">
+      <a href="${escapeHtml(r.notebookUrl)}" target="_blank" rel="noopener" class="mini-btn">↗ Mở trong NotebookLM (tạo podcast, mind map, quiz...)</a>
+      <button class="mini-btn" id="nblmSaveMd">⬇️ Lưu .md</button>
     </div>
   </div>`;
 }

@@ -14,6 +14,17 @@ App học tập **song ngữ Việt–Anh** với giáo án **AI Automation** (4
 - **🎯 Mục tiêu học + ⏱️ timer + 🔥 streak**, đồng bộ đa thiết bị qua server.
 - **➕ CRUD giáo án** ngay trong app: thêm/xoá module, bài học, slide.
 
+## 📓 Tích hợp NotebookLM (tóm tắt toàn văn nguồn)
+Ở trang **📰 Tin AI**: tích chọn vài tin → **📓 Tóm tắt bằng NotebookLM**. App gọi CLI [notebooklm-py](https://github.com/teng-lin/notebooklm-py) để **tạo notebook → nạp URL các tin làm nguồn → NotebookLM đọc TOÀN VĂN bài báo → tóm tắt tiếng Việt kèm trích dẫn nguồn**, rồi trả về ngay trong app (kèm link mở notebook để tạo podcast/mind map/quiz).
+
+Yêu cầu (chỉ nơi chạy được CLI — thường là máy cá nhân, **không** phải Render free vốn là Node):
+```bash
+pip install "notebooklm-py[browser]"
+notebooklm login          # đăng nhập Google 1 lần (mở trình duyệt)
+notebooklm auth check --test   # kiểm tra
+```
+Nếu chưa cài/đăng nhập, nút sẽ tự **mờ đi** kèm hướng dẫn — các tính năng khác không ảnh hưởng.
+
 ## ▶️ Chạy trên máy
 ```bash
 npm install

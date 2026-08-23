@@ -220,6 +220,17 @@ html[data-bi="off"] .bi-tag{display:none}
   .ig-head{background:#e8efff!important}
 }
 
+/* NotebookLM */
+.nblm-loading{text-align:center;padding:24px}
+.nblm-loading .spin{font-size:40px;animation:nblmspin 1.4s linear infinite;display:inline-block}
+@keyframes nblmspin{to{transform:rotate(360deg)}}
+.nblm-result .nblm-head{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px}
+.nblm-answer{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.6}
+.nblm-answer h4{margin:12px 0 6px;font-size:15px;color:var(--accent)}
+.nblm-answer h4:first-child{margin-top:0}
+.nblm-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
+#selNblm:disabled{opacity:.55;cursor:not-allowed}
+
 /* mini-player */
 .mini-player{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:10px 16px;z-index:50;flex-wrap:wrap}
 .mini-player[hidden]{display:none}
