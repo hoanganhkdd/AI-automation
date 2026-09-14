@@ -1,19 +1,169 @@
 {
   "resources": [
-    { "id": "seed-f-1", "sessionId": "found-01", "type": "link", "title": "7 Types of AI Agents to Automate Your Workflows (2026)", "url": "https://www.reply.com/valorem-reply/en/resources/insights/blog/7-types-of-ai-agents-to-automate-your-workflows", "note": "Phân loại các loại AI agent để tự động hoá quy trình.", "tags": ["agent", "foundations"], "file": null, "createdAt": 0 },
-    { "id": "seed-f-2", "sessionId": "found-01", "type": "link", "title": "How to Automate Your Workflow with AI Agents — Complete 2026 Guide", "url": "https://www.humai.blog/how-to-automate-your-workflow-with-ai-agents-complete-2026-guide/", "note": "Hướng dẫn tổng quan tự động hoá bằng AI agent.", "tags": ["agent", "guide"], "file": null, "createdAt": 0 },
-    { "id": "seed-f-3", "sessionId": "found-03", "type": "link", "title": "Best Low-Code AI Workflow Automation Tools in 2026 (Firecrawl)", "url": "https://www.firecrawl.dev/blog/best-low-code-ai-workflow-automation-tools", "note": "So sánh công cụ automation low-code 2026.", "tags": ["tools", "comparison"], "file": null, "createdAt": 0 },
-    { "id": "seed-f-4", "sessionId": "found-03", "type": "link", "title": "Top AI Workflow Automation Tools 2026 (Composio)", "url": "https://composio.dev/content/top-ai-workflow-automation-tools-you-must-not-miss-in-2026", "note": "Danh sách công cụ workflow automation hàng đầu.", "tags": ["tools"], "file": null, "createdAt": 0 },
-
-    { "id": "seed-a-1", "sessionId": "agent-01", "type": "link", "title": "Claude Code — Tài liệu chính thức (Anthropic)", "url": "https://docs.claude.com/en/docs/claude-code/overview", "note": "Tài liệu chính thức về Claude Code.", "tags": ["claude-code"], "file": null, "createdAt": 0 },
-    { "id": "seed-a-2", "sessionId": "agent-03", "type": "link", "title": "Google Antigravity", "url": "https://antigravity.google/", "note": "Trang chính thức của Google Antigravity.", "tags": ["antigravity"], "file": null, "createdAt": 0 },
-    { "id": "seed-a-3", "sessionId": "agent-04", "type": "link", "title": "How to Automate Spreadsheets with AI Agents (Fastio)", "url": "https://fast.io/resources/ai-agent-spreadsheet-automation/", "note": "Tự động hoá bảng tính bằng AI agent.", "tags": ["excel", "agent"], "file": null, "createdAt": 0 },
-
-    { "id": "seed-o-1", "sessionId": "office-01", "type": "link", "title": "AI Agents for Individuals & Businesses (Microsoft Copilot)", "url": "https://www.microsoft.com/en-us/microsoft-365-copilot/agents", "note": "AI agent trong bộ Microsoft 365 cho công việc văn phòng.", "tags": ["office", "copilot"], "file": null, "createdAt": 0 },
-    { "id": "seed-o-2", "sessionId": "office-04", "type": "link", "title": "12 Best AI Agents for Productivity in 2026", "url": "https://www.usecarly.com/blog/best-ai-agents-productivity/", "note": "Các AI agent tăng năng suất, gồm scheduling.", "tags": ["productivity"], "file": null, "createdAt": 0 },
-
-    { "id": "seed-w-1", "sessionId": "flow-01", "type": "link", "title": "7 Best AI Automation Tools in 2026: n8n, Zapier, Make & More", "url": "https://spectrumailab.com/blog/best-ai-automation-tools-2026", "note": "So sánh n8n, Zapier, Make (đã kiểm thử).", "tags": ["no-code", "zapier", "n8n", "make"], "file": null, "createdAt": 0 },
-    { "id": "seed-w-2", "sessionId": "flow-01", "type": "link", "title": "n8n — Workflow Automation", "url": "https://n8n.io/", "note": "Nền tảng automation self-host, nhiều node AI.", "tags": ["n8n"], "file": null, "createdAt": 0 },
-    { "id": "seed-w-3", "sessionId": "flow-03", "type": "link", "title": "RAG-Based Chatbot for PDFs and Excel Files", "url": "https://www.weeklytechreview.com/post/conversational-ai-for-your-documents-a-rag-based-chatbot-for-pdfs-and-excel-files", "note": "Xây chatbot RAG trên tài liệu PDF/Excel.", "tags": ["rag", "chatbot"], "file": null, "createdAt": 0 }
+    {
+      "id": "seed-f-1",
+      "sessionId": "found-01",
+      "type": "link",
+      "title": "7 Types of AI Agents to Automate Your Workflows (2026)",
+      "url": "https://www.reply.com/valorem-reply/en/resources/insights/blog/7-types-of-ai-agents-to-automate-your-workflows",
+      "note": "Phân loại các loại AI agent để tự động hoá quy trình.",
+      "tags": [
+        "agent",
+        "foundations"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-f-2",
+      "sessionId": "found-01",
+      "type": "link",
+      "title": "How to Automate Your Workflow with AI Agents — Complete 2026 Guide",
+      "url": "https://www.humai.blog/how-to-automate-your-workflow-with-ai-agents-complete-2026-guide/",
+      "note": "Hướng dẫn tổng quan tự động hoá bằng AI agent.",
+      "tags": [
+        "agent",
+        "guide"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-f-3",
+      "sessionId": "found-03",
+      "type": "link",
+      "title": "Best Low-Code AI Workflow Automation Tools in 2026 (Firecrawl)",
+      "url": "https://www.firecrawl.dev/blog/best-low-code-ai-workflow-automation-tools",
+      "note": "So sánh công cụ automation low-code 2026.",
+      "tags": [
+        "tools",
+        "comparison"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-f-4",
+      "sessionId": "found-03",
+      "type": "link",
+      "title": "Top AI Workflow Automation Tools 2026 (Composio)",
+      "url": "https://composio.dev/content/top-ai-workflow-automation-tools-you-must-not-miss-in-2026",
+      "note": "Danh sách công cụ workflow automation hàng đầu.",
+      "tags": [
+        "tools"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-a-1",
+      "sessionId": "agent-01",
+      "type": "link",
+      "title": "Claude Code — Tài liệu chính thức (Anthropic)",
+      "url": "https://docs.claude.com/en/docs/claude-code/overview",
+      "note": "Tài liệu chính thức về Claude Code.",
+      "tags": [
+        "claude-code"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-a-2",
+      "sessionId": "agent-03",
+      "type": "link",
+      "title": "Google Antigravity",
+      "url": "https://antigravity.google/",
+      "note": "Trang chính thức của Google Antigravity.",
+      "tags": [
+        "antigravity"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-a-3",
+      "sessionId": "agent-04",
+      "type": "link",
+      "title": "How to Automate Spreadsheets with AI Agents (Fastio)",
+      "url": "https://fast.io/resources/ai-agent-spreadsheet-automation/",
+      "note": "Tự động hoá bảng tính bằng AI agent.",
+      "tags": [
+        "excel",
+        "agent"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-o-1",
+      "sessionId": "office-01",
+      "type": "link",
+      "title": "AI Agents for Individuals & Businesses (Microsoft Copilot)",
+      "url": "https://www.microsoft.com/en-us/microsoft-365-copilot/agents",
+      "note": "AI agent trong bộ Microsoft 365 cho công việc văn phòng.",
+      "tags": [
+        "office",
+        "copilot"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-o-2",
+      "sessionId": "office-04",
+      "type": "link",
+      "title": "12 Best AI Agents for Productivity in 2026",
+      "url": "https://www.usecarly.com/blog/best-ai-agents-productivity/",
+      "note": "Các AI agent tăng năng suất, gồm scheduling.",
+      "tags": [
+        "productivity"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-w-1",
+      "sessionId": "flow-01",
+      "type": "link",
+      "title": "7 Best AI Automation Tools in 2026: n8n, Zapier, Make & More",
+      "url": "https://spectrumailab.com/blog/best-ai-automation-tools-2026",
+      "note": "So sánh n8n, Zapier, Make (đã kiểm thử).",
+      "tags": [
+        "no-code",
+        "zapier",
+        "n8n",
+        "make"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-w-2",
+      "sessionId": "flow-01",
+      "type": "link",
+      "title": "n8n — Workflow Automation",
+      "url": "https://n8n.io/",
+      "note": "Nền tảng automation self-host, nhiều node AI.",
+      "tags": [
+        "n8n"
+      ],
+      "file": null,
+      "createdAt": 0
+    },
+    {
+      "id": "seed-w-3",
+      "sessionId": "flow-03",
+      "type": "link",
+      "title": "RAG-Based Chatbot for PDFs and Excel Files",
+      "url": "https://www.weeklytechreview.com/post/conversational-ai-for-your-documents-a-rag-based-chatbot-for-pdfs-and-excel-files",
+      "note": "Xây chatbot RAG trên tài liệu PDF/Excel.",
+      "tags": [
+        "rag",
+        "chatbot"
+      ],
+      "file": null,
+      "createdAt": 0
+    }
   ]
 }

@@ -29,6 +29,14 @@ Từ kết quả tóm tắt, có thể bấm **🧠 Tạo mind map** (nhanh, hi�
 
 Nếu chưa cài/đăng nhập, nút sẽ tự **mờ đi** kèm hướng dẫn — các tính năng khác không ảnh hưởng.
 
+## 📚 Thư viện tài liệu + Google Sheet/Drive
+Mỗi bài có tab **📚 Thư viện**: thêm **Text · Ảnh (chọn/dán nhiều) · PDF · YouTube · FB Reel · Link**, ghi chú **dán/kéo-thả ảnh** (tự upload, hiện inline, bấm xem lớn), tìm kiếm + lọc loại, **🗂️ Thư viện chung** (xem toàn bộ + lọc theo bài học), ⬇️ Xuất .md.
+
+**Đồng bộ Google Sheet + Drive (miễn phí, không cần service account):**
+1. Mở [google-apps-script.gs](google-apps-script.gs) → làm theo hướng dẫn đầu file (Tạo Sheet → Apps Script → Deploy Web app → cấp quyền Drive).
+2. Copy URL `.../exec` → đặt env **`GSHEET_WEBHOOK_URL`** (và **`PUBLIC_URL`** = domain app để link ảnh/PDF đầy đủ). Xem [.env.example](.env.example).
+3. Thêm tài liệu → tự ghi 1 dòng vào Sheet; ảnh được đẩy lên Drive (folder theo `module - bài học`) và hiện thumbnail trong Sheet. Nút **🔄 Đồng bộ tất cả** ghi lại toàn bộ (không trùng, ảnh không nhân bản).
+
 ## ▶️ Chạy trên máy
 ```bash
 npm install
@@ -57,8 +65,10 @@ render.yaml, Procfile, .nvmrc, DEPLOY.md
 | GET | /api/curriculum | Lấy giáo án |
 | POST/DELETE | /api/curriculum/sessions[/:id] | Thêm/xoá bài học |
 | POST/DELETE | /api/curriculum/sessions/:id/slides[/:n] | Thêm/xoá slide |
-| GET/POST/DELETE | /api/resources[/:id] | Thư viện tài liệu |
+| GET/POST/DELETE | /api/resources[/:id] | Thư viện tài liệu (lọc `?session=&type=&q=`, sắp mới nhất) |
 | POST | /api/resources/upload | Upload PDF/ảnh (≤50MB) |
+| POST | /api/upload-image | Lưu 1 ảnh, trả `{url}` (dán ảnh vào ghi chú) |
+| GET · POST | /api/gsheet/status · /api/gsheet/sync-all | Đồng bộ Thư viện lên Google Sheet + Drive |
 | GET/POST/DELETE | /api/knowledge[/:id] | Kho kiến thức |
 | POST | /api/knowledge/generate | AI sinh ví dụ/công cụ/video/thực hành |
 | GET/POST | /api/state | Đồng bộ tiến độ/kế hoạch/timer/ôn tập |

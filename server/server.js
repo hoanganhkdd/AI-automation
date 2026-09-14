@@ -277,22 +277,87 @@ app.delete("/api/curriculum/sessions/:id/slides/:n", (req, res) => {
   res.json({ ok: true });
 });
 
+// ---------- ĐỒNG BỘ GOOGLE SHEET + DRIVE (qua Apps Script Web App) ----------
+const GSHEET_WEBHOOK_URL = process.env.GSHEET_WEBHOOK_URL || "";
+const PUBLIC_URL = (process.env.PUBLIC_URL || "").replace(/\/$/, "");
+const VALID_TYPES = ["text", "image", "pdf", "youtube", "facebook", "link"];
+const MIME_BY_EXT = { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".gif": "image/gif", ".webp": "image/webp" };
+
+// Tên module / bài học để đặt folder Drive & cột Sheet
+function sessionMeta(sessionId) {
+  const cur = readJSON(FILES.curriculum, { sessions: [] });
+  const s = (cur.sessions || []).find((x) => x.id === sessionId);
+  return s ? { module: s.module || "", lesson: s.title_vi || sessionId } : { module: "", lesson: sessionId || "Chung" };
+}
+// Gom ảnh nội bộ (/uploads) từ file ảnh + ảnh dán trong ghi chú → base64 (bỏ >4MB, tối đa 3)
+function collectResourceImages(resource) {
+  const files = new Set();
+  if (resource.type === "image" && resource.file) files.add(resource.file);
+  const re = /\/uploads\/([A-Za-z0-9._-]+)/g; let m;
+  while ((m = re.exec(resource.note || "")) !== null) files.add(m[1]);
+  const out = [];
+  for (const fname of files) {
+    if (out.length >= 3) break;
+    try {
+      const p = path.join(UPLOAD_DIR, fname);
+      const st = fs.statSync(p);
+      if (st.size > 4 * 1024 * 1024) continue;
+      const ext = path.extname(fname).toLowerCase();
+      out.push({ base64: fs.readFileSync(p).toString("base64"), name: fname, mime: MIME_BY_EXT[ext] || "image/png" });
+    } catch {}
+  }
+  return out;
+}
+// Gửi 1 dòng sang Google Sheet (kèm ảnh nếu có). Fire-and-forget.
+async function logToGSheet(resource, action = "add") {
+  if (!GSHEET_WEBHOOK_URL) return;
+  try {
+    const meta = sessionMeta(resource.sessionId);
+    const url = resource.url && resource.url.startsWith("/uploads") && PUBLIC_URL ? PUBLIC_URL + resource.url : (resource.url || "");
+    const images = collectResourceImages(resource);
+    const payload = {
+      action, id: resource.id, time: new Date(resource.createdAt || Date.now()).toISOString(),
+      module: meta.module, lesson: meta.lesson, sessionId: resource.sessionId,
+      type: resource.type, title: resource.title || "", url,
+      tags: Array.isArray(resource.tags) ? resource.tags.join(", ") : (resource.tags || ""),
+      note: resource.note || "", images,
+    };
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), images.length ? 25000 : 12000);
+    await fetch(GSHEET_WEBHOOK_URL, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload), signal: ctrl.signal,
+    }).catch(() => {});
+    clearTimeout(timer);
+  } catch (e) { console.warn("logToGSheet fail", e.message); }
+}
+
 // ---------- RESOURCES (thư viện) ----------
 app.get("/api/resources", (req, res) => {
   const lib = readJSON(FILES.library, { resources: [] });
-  const { sessionId } = req.query;
-  let list = lib.resources;
-  if (sessionId) list = list.filter((r) => r.sessionId === sessionId);
+  const { sessionId, session, type, q } = req.query;
+  const sid = sessionId || session;
+  let list = lib.resources.slice();
+  if (sid) list = list.filter((r) => r.sessionId === sid);
+  if (type) list = list.filter((r) => r.type === type);
+  if (q) {
+    const s = String(q).toLowerCase();
+    list = list.filter((r) => ((r.title || "") + " " + (r.note || "") + " " + (r.url || "") + " " + (Array.isArray(r.tags) ? r.tags.join(" ") : "")).toLowerCase().includes(s));
+  }
+  list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // mới nhất trước
   res.json({ resources: list });
 });
 
 app.post("/api/resources", (req, res) => {
   const lib = readJSON(FILES.library, { resources: [] });
   const { sessionId, type, title, url, note, tags } = req.body || {};
-  if (!sessionId || !type) return res.status(400).json({ ok: false, error: "Thiếu sessionId/type" });
-  const r = { id: uid("r-"), sessionId, type, title: title || "", url: url || "", note: note || "", tags: tags || [], file: null, createdAt: Date.now() };
+  if (!sessionId || !VALID_TYPES.includes(type)) return res.status(400).json({ ok: false, error: "Thiếu sessionId hoặc type không hợp lệ" });
+  if (["youtube", "facebook", "link"].includes(type) && !url) return res.status(400).json({ ok: false, error: "Loại này cần URL" });
+  if (type === "text" && !note) return res.status(400).json({ ok: false, error: "Text cần nội dung ghi chú" });
+  const r = { id: uid("r-"), sessionId, type, title: title || "", url: url || "", note: note || "", tags: Array.isArray(tags) ? tags : [], file: null, createdAt: Date.now() };
   lib.resources.push(r);
   writeJSON(FILES.library, lib);
+  logToGSheet(r, "add");
   res.json({ ok: true, resource: r });
 });
 
@@ -302,12 +367,19 @@ app.post("/api/resources/upload", upload.single("file"), (req, res) => {
   if (!sessionId || !req.file) return res.status(400).json({ ok: false, error: "Thiếu file/sessionId" });
   const r = {
     id: uid("r-"), sessionId, type: type || "pdf", title: title || req.file.originalname,
-    url: "/uploads/" + req.file.filename, note: "", tags: tags ? JSON.parse(tags) : [],
+    url: "/uploads/" + req.file.filename, note: req.body.note || "", tags: tags ? JSON.parse(tags) : [],
     file: req.file.filename, createdAt: Date.now(),
   };
   lib.resources.push(r);
   writeJSON(FILES.library, lib);
+  logToGSheet(r, "add");
   res.json({ ok: true, resource: r });
+});
+
+// Chỉ lưu 1 ảnh, trả {url} — dùng cho dán ảnh vào ghi chú (KHÔNG tạo resource)
+app.post("/api/upload-image", upload.single("file"), (req, res) => {
+  if (!req.file) return res.status(400).json({ ok: false, error: "Thiếu file" });
+  res.json({ ok: true, url: "/uploads/" + req.file.filename });
 });
 
 app.delete("/api/resources/:id", (req, res) => {
@@ -316,7 +388,25 @@ app.delete("/api/resources/:id", (req, res) => {
   if (r?.file) { try { fs.unlinkSync(path.join(UPLOAD_DIR, r.file)); } catch {} }
   lib.resources = lib.resources.filter((x) => x.id !== req.params.id);
   writeJSON(FILES.library, lib);
-  res.json({ ok: true });
+  res.json({ ok: true }); // Sheet/Drive dọn ở lần "Đồng bộ tất cả" kế tiếp
+});
+
+// Trạng thái Google Sheet
+app.get("/api/gsheet/status", (req, res) => res.json({ configured: !!GSHEET_WEBHOOK_URL }));
+
+// Đồng bộ toàn bộ: reset Sheet rồi ghi lại tất cả (không trùng, ảnh tái dùng theo tên)
+app.post("/api/gsheet/sync-all", async (req, res) => {
+  if (!GSHEET_WEBHOOK_URL) return res.status(400).json({ ok: false, error: "Chưa cấu hình GSHEET_WEBHOOK_URL" });
+  try {
+    const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 20000);
+    await fetch(GSHEET_WEBHOOK_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "reset" }), signal: ctrl.signal });
+    clearTimeout(t);
+    const lib = readJSON(FILES.library, { resources: [] });
+    const items = lib.resources.slice().sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+    let ok = 0;
+    for (const r of items) { await logToGSheet(r, "sync"); ok++; }
+    res.json({ ok: true, synced: ok });
+  } catch (e) { res.status(502).json({ ok: false, error: String(e.message || e).slice(0, 200) }); }
 });
 
 // Phục vụ file upload

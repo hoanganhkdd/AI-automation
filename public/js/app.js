@@ -546,43 +546,110 @@ function listenDeepAll() {
   TTS.start(sents.filter(Boolean), "🎧 Toàn bộ đào sâu: " + curSession.title_vi);
 }
 
+/* ---------- Thư viện: helpers ---------- */
+const TYPE_LABEL = { text: "📝 Text", image: "🖼️ Ảnh", pdf: "📄 PDF", youtube: "▶️ YouTube", facebook: "🎬 FB Reel", link: "🔗 Link" };
+function typeLabel(t) { return TYPE_LABEL[t] || t; }
+// Render ghi chú: ảnh dán ![..](/uploads/..) -> <img>, **đậm**, *nghiêng*, xuống dòng; phần còn lại escape
+function renderNote(note) {
+  if (!note) return "";
+  let t = escapeHtml(note);
+  t = t.replace(/!\[[^\]]*\]\((\/uploads\/[^)\s]+)\)/g, (mm, u) => `<img class="note-img" src="${u}" loading="lazy" alt="ảnh">`);
+  t = t.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/\*([^*]+)\*/g, "<i>$1</i>").replace(/\n/g, "<br>");
+  return t;
+}
+// Dán / kéo-thả ảnh vào textarea -> upload -> chèn markdown ảnh
+function attachNotePaste(ta) {
+  if (!ta) return;
+  const up = async (file) => {
+    try {
+      const fd = new FormData(); fd.append("file", file);
+      const r = await api("POST", "/api/upload-image", fd);
+      const ins = `\n![ảnh](${r.url})\n`;
+      const s = ta.selectionStart ?? ta.value.length;
+      ta.value = ta.value.slice(0, s) + ins + ta.value.slice(s);
+      toast("Đã chèn ảnh vào ghi chú");
+    } catch { toast("Lỗi tải ảnh"); }
+  };
+  ta.addEventListener("paste", (e) => {
+    for (const it of e.clipboardData?.items || []) if (it.type.startsWith("image/")) { e.preventDefault(); const f = it.getAsFile(); if (f) up(f); }
+  });
+  ta.addEventListener("dragover", (e) => e.preventDefault());
+  ta.addEventListener("drop", (e) => { e.preventDefault(); for (const f of e.dataTransfer?.files || []) if (f.type.startsWith("image/")) up(f); });
+}
+// Xem ảnh lớn (lightbox)
+function openLightbox(url) {
+  let lb = $("imgLightbox");
+  if (!lb) { lb = document.createElement("div"); lb.id = "imgLightbox"; lb.className = "lightbox"; lb.onclick = () => (lb.hidden = true); document.body.appendChild(lb); }
+  lb.innerHTML = `<img src="${escapeHtml(url)}">`; lb.hidden = false;
+}
+document.addEventListener("click", (e) => {
+  const img = e.target.closest(".embed-img, .note-img");
+  if (img) openLightbox(img.getAttribute("src"));
+});
+
 /* ---------- Tab: Thư viện ---------- */
+let libAll = [];
 async function renderLibTab(body) {
   body.innerHTML = `<div class="loading">⏳ Đang tải thư viện...</div>`;
-  let list = [];
-  try { list = (await api("GET", "/api/resources?sessionId=" + curSession.id)).resources; } catch {}
+  try { libAll = (await api("GET", "/api/resources?sessionId=" + curSession.id)).resources; } catch { libAll = []; }
   body.innerHTML = `
     <div class="lib-actions">
-      <button class="chip-btn" data-add="youtube">➕ YouTube</button>
-      <button class="chip-btn" data-add="facebook">➕ Reel FB</button>
-      <button class="chip-btn" data-add="pdf">➕ PDF</button>
-      <button class="chip-btn" data-add="image">➕ Ảnh</button>
-      <button class="chip-btn" data-add="text">➕ Text</button>
-      <button class="chip-btn" data-add="link">➕ Link</button>
-      <button class="mini-btn" id="exportMd">⬇️ Xuất .md</button>
+      <button class="chip-btn" data-add="text">📝 Text</button>
+      <button class="chip-btn" data-add="image">🖼️ Ảnh</button>
+      <button class="chip-btn" data-add="pdf">📄 PDF</button>
+      <button class="chip-btn" data-add="youtube">▶️ YouTube</button>
+      <button class="chip-btn" data-add="facebook">🎬 FB Reel</button>
+      <button class="chip-btn" data-add="link">🔗 Link</button>
     </div>
-    <div class="lib-list">${list.length ? list.map(resCard).join("") : `<p class="muted">Chưa có tài liệu. Thêm ở trên.</p>`}</div>
+    <div class="lib-toolbar">
+      <input type="search" id="libSearch" placeholder="🔍 Tìm tên / ghi chú / tag / link...">
+      <select id="libType">
+        <option value="">Mọi loại</option>
+        ${Object.entries(TYPE_LABEL).map(([v, l]) => `<option value="${v}">${l}</option>`).join("")}
+      </select>
+      <button class="mini-btn" id="exportMd">⬇️ Xuất .md</button>
+      <button class="mini-btn" id="libAllBtn">🗂️ Thư viện chung</button>
+    </div>
+    <div class="lib-list" id="libList"></div>
   `;
   document.querySelectorAll("[data-add]").forEach((b) => b.onclick = () => openAddResource(b.dataset.add));
-  $("exportMd").onclick = () => exportMd(list);
-  bindResCards(list);
+  $("exportMd").onclick = () => exportMd(filterLib());
+  $("libAllBtn").onclick = openLibraryAll;
+  $("libSearch").oninput = renderLibList;
+  $("libType").onchange = renderLibList;
+  renderLibList();
+}
+function filterLib() {
+  const q = ($("libSearch")?.value || "").toLowerCase();
+  const ty = $("libType")?.value || "";
+  return libAll.filter((r) => {
+    if (ty && r.type !== ty) return false;
+    if (q && !((r.title || "") + " " + (r.note || "") + " " + (r.url || "") + " " + (r.tags || []).join(" ")).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function renderLibList() {
+  const items = filterLib();
+  $("libList").innerHTML = items.length ? items.map(resCard).join("") : `<p class="muted">Chưa có tài liệu phù hợp.</p>`;
+  bindResCards(items);
 }
 function resCard(r) {
   let embed = "";
   if (r.type === "youtube") { const m = (r.url || "").match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/); if (m) embed = `<iframe class="embed" src="https://www.youtube.com/embed/${m[1]}" allowfullscreen loading="lazy"></iframe>`; }
   else if (r.type === "image" && r.url) embed = `<img class="embed-img" src="${escapeHtml(r.url)}" loading="lazy">`;
   else if (r.type === "facebook" && r.url) embed = `<iframe class="embed" src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(r.url)}" loading="lazy"></iframe>`;
+  const lessonTag = r._lesson ? `<span class="res-lesson">${escapeHtml(r._lesson)}</span>` : "";
   return `<div class="res-card" data-id="${r.id}">
     <div class="res-head">
-      <span class="res-type">${r.type}</span>
-      <b>${escapeHtml(r.title || "(không tên)")}</b>
+      <span class="res-type">${typeLabel(r.type)}</span>
+      <b>${escapeHtml(r.title || "(không tên)")}</b>${lessonTag}
       <div class="res-act">
         <button class="mini-btn insight-btn">✨ Rút insight</button>
         <button class="mini-btn del-res">🗑</button>
       </div>
     </div>
     ${r.url && (r.type === "link" || r.type === "pdf") ? `<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">🔗 ${escapeHtml(r.url).slice(0, 60)}</a>` : ""}
-    ${r.note ? `<p class="res-note">${mdLite(r.note)}</p>` : ""}
+    ${r.note ? `<div class="res-note">${renderNote(r.note)}</div>` : ""}
     ${(r.tags || []).length ? `<div class="tags">${r.tags.map((t) => `<span class="tag">#${escapeHtml(t)}</span>`).join("")}</div>` : ""}
     ${embed}
     ${r.insight ? insightHtml(r) : `<div class="insight-slot"></div>`}
@@ -594,7 +661,11 @@ function insightHtml(r) {
 function bindResCards(list) {
   document.querySelectorAll(".res-card").forEach((card) => {
     const id = card.dataset.id;
-    card.querySelector(".del-res").onclick = async () => { if (!confirm("Xoá tài liệu?")) return; await api("DELETE", "/api/resources/" + id); renderTab(); };
+    card.querySelector(".del-res").onclick = async () => {
+      if (!confirm("Xoá tài liệu?")) return;
+      try { await api("DELETE", "/api/resources/" + id); libAll = libAll.filter((x) => x.id !== id); card.remove(); toast("Đã xoá"); }
+      catch (e) { toast(e.message); }
+    };
     card.querySelector(".insight-btn").onclick = async (e) => {
       if (!ensureKey()) return;
       const slot = card.querySelector(".insight-slot") || card.querySelector(".insight");
@@ -780,31 +851,94 @@ function openAddSlide() {
   };
 }
 function openAddResource(type) {
-  const isFile = type === "pdf" || type === "image";
-  openModal("Thêm tài liệu: " + type, `
-    <label class="fld">Tiêu đề <input id="rTitle"></label>
-    ${isFile
-      ? `<label class="fld">Chọn file <input type="file" id="rFile" accept="${type === "pdf" ? "application/pdf" : "image/*"}"></label>`
-      : `<label class="fld">${type === "text" ? "Nội dung" : "URL / Link"} ${type === "text" ? `<textarea id="rUrl" rows="4"></textarea>` : `<input id="rUrl" placeholder="https://...">`}</label>`}
-    <label class="fld">Tag (phẩy) <input id="rTags" placeholder="vd: chốt-sale, ví-dụ"></label>
+  const isImage = type === "image", isPdf = type === "pdf";
+  const isLink = type === "youtube" || type === "facebook" || type === "link";
+  openModal("Thêm tài liệu: " + typeLabel(type), `
+    <label class="fld">Tiêu đề <input id="rTitle" placeholder="Tuỳ chọn"></label>
+    ${isImage ? `<label class="fld">Chọn ảnh (có thể chọn NHIỀU ảnh — mỗi ảnh 1 tài liệu) <input type="file" id="rFile" accept="image/*" multiple></label>` : ""}
+    ${isPdf ? `<label class="fld">Chọn PDF <input type="file" id="rFile" accept="application/pdf"></label>` : ""}
+    ${isLink ? `<label class="fld">URL / Link <input id="rUrl" placeholder="https://..."></label>` : ""}
+    <label class="fld">${type === "text" ? "Nội dung" : "Ghi chú"} <span class="muted">(dán Ctrl+V hoặc kéo-thả ảnh vào đây)</span>
+      <textarea id="rNote" rows="4" placeholder="${type === "text" ? "Nội dung..." : "Ghi chú..."} — có thể dán ảnh vào"></textarea></label>
+    <label class="fld">Tag (phẩy) <input id="rTags" placeholder="vd: automation, ví-dụ"></label>
     <button class="mini-btn primary" id="rSave">Lưu tài liệu</button>
   `);
+  attachNotePaste($("rNote"));
   $("rSave").onclick = async () => {
     const tags = ($("rTags").value || "").split(",").map((x) => x.trim()).filter(Boolean);
+    const note = $("rNote").value.trim();
+    const title = $("rTitle").value.trim();
     try {
-      if (isFile) {
-        const f = $("rFile").files[0]; if (!f) { toast("Chọn file"); return; }
-        const fd = new FormData(); fd.append("file", f); fd.append("sessionId", curSession.id); fd.append("type", type); fd.append("title", $("rTitle").value || f.name); fd.append("tags", JSON.stringify(tags));
+      if (isImage) {
+        const files = $("rFile").files; if (!files.length) { toast("Chọn ít nhất 1 ảnh"); return; }
+        for (const f of files) {
+          const fd = new FormData();
+          fd.append("file", f); fd.append("sessionId", curSession.id); fd.append("type", "image");
+          fd.append("title", title || f.name); fd.append("tags", JSON.stringify(tags)); fd.append("note", note);
+          await api("POST", "/api/resources/upload", fd);
+        }
+      } else if (isPdf) {
+        const f = $("rFile").files[0]; if (!f) { toast("Chọn PDF"); return; }
+        const fd = new FormData();
+        fd.append("file", f); fd.append("sessionId", curSession.id); fd.append("type", "pdf");
+        fd.append("title", title || f.name); fd.append("tags", JSON.stringify(tags)); fd.append("note", note);
         await api("POST", "/api/resources/upload", fd);
       } else {
-        const val = $("rUrl").value.trim(); if (!val) { toast("Nhập nội dung/URL"); return; }
-        const body = { sessionId: curSession.id, type, title: $("rTitle").value.trim(), tags };
-        if (type === "text") body.note = val; else body.url = val;
+        const body = { sessionId: curSession.id, type, title, tags, note };
+        if (isLink) { body.url = $("rUrl").value.trim(); if (!body.url) { toast("Nhập URL"); return; } }
+        else if (!note) { toast("Nhập nội dung"); return; } // text
         await api("POST", "/api/resources", body);
       }
       closeModal(); toast("Đã thêm tài liệu");
       if (curTab === "lib") renderTab();
     } catch (e) { toast(e.message); }
+  };
+}
+
+// ---------- Thư viện chung (tất cả bài học) + đồng bộ Google Sheet ----------
+async function openLibraryAll() {
+  openModal("🗂️ Thư viện chung", `<div class="loading">⏳ Đang tải toàn bộ tài liệu...</div>`);
+  const inner = $("modal").querySelector(".modal"); if (inner) inner.classList.add("wide");
+  let all = [];
+  try { all = (await api("GET", "/api/resources")).resources; } catch {}
+  let gs = { configured: false };
+  try { gs = await api("GET", "/api/gsheet/status"); } catch {}
+  // gắn tên bài học cho mỗi tài liệu
+  const byId = {}; (CUR.sessions || []).forEach((s) => (byId[s.id] = s));
+  all.forEach((r) => { const s = byId[r.sessionId]; r._lesson = s ? (s.module + " › " + s.title_vi) : r.sessionId; });
+  const lessons = [...new Set(all.map((r) => r._lesson))].sort();
+  $("modalBody").innerHTML = `
+    <div class="gsheet-bar ${gs.configured ? "on" : "off"}">
+      ${gs.configured ? "🟢 Google Sheet đã cấu hình" : "⚪ Chưa cấu hình Google Sheet (đặt env GSHEET_WEBHOOK_URL)"}
+      ${gs.configured ? `<button class="mini-btn" id="syncAll">🔄 Đồng bộ tất cả</button>` : ""}
+      <span id="syncMsg" class="muted"></span>
+    </div>
+    <div class="lib-toolbar">
+      <input type="search" id="allSearch" placeholder="🔍 Tìm...">
+      <select id="allType"><option value="">Mọi loại</option>${Object.entries(TYPE_LABEL).map(([v, l]) => `<option value="${v}">${l}</option>`).join("")}</select>
+      <select id="allLesson"><option value="">Mọi bài học</option>${lessons.map((l) => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join("")}</select>
+      <span class="muted" id="allCount"></span>
+    </div>
+    <div class="lib-list" id="allList"></div>`;
+  const draw = () => {
+    const q = ($("allSearch").value || "").toLowerCase(), ty = $("allType").value, ls = $("allLesson").value;
+    const items = all.filter((r) => {
+      if (ty && r.type !== ty) return false;
+      if (ls && r._lesson !== ls) return false;
+      if (q && !((r.title || "") + " " + (r.note || "") + " " + (r.url || "") + " " + (r.tags || []).join(" ")).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    $("allCount").textContent = items.length + " tài liệu";
+    $("allList").innerHTML = items.length ? items.map(resCard).join("") : `<p class="muted">Không có tài liệu phù hợp.</p>`;
+    bindResCards(items);
+  };
+  $("allSearch").oninput = draw; $("allType").onchange = draw; $("allLesson").onchange = draw;
+  draw();
+  if ($("syncAll")) $("syncAll").onclick = async () => {
+    const b = $("syncAll"); b.disabled = true; b.textContent = "⏳ Đang đồng bộ...";
+    try { const r = await api("POST", "/api/gsheet/sync-all"); $("syncMsg").textContent = `✓ Đã ghi ${r.synced} dòng lên Google Sheet`; }
+    catch (e) { $("syncMsg").textContent = "✗ " + e.message; }
+    finally { b.disabled = false; b.textContent = "🔄 Đồng bộ tất cả"; }
   };
 }
 
