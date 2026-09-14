@@ -1408,6 +1408,7 @@ async function init() {
   $("modal").addEventListener("click", (e) => { if (e.target === $("modal")) closeModal(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
   $("settingsBtn").onclick = openSettings;
+  $("libraryBtn").onclick = openLibraryAll;
   $("biToggle").onclick = toggleBilingual;
   applyBilingual();
   $("brandLink").onclick = (e) => { e.preventDefault(); goHome(); };
