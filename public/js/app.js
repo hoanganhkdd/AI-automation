@@ -243,6 +243,20 @@ async function renderHome() {
         <button class="mini-btn primary" id="quizCourse">🧪 Kiểm tra tổng kết toàn khoá</button>
         <button class="mini-btn" id="addSessionBtn">➕ Thêm module / bài học</button>
       </div>
+
+      <div class="tool-card">
+        <h3>📚 Thư viện tài liệu <span class="chip">${libCount}</span></h3>
+        <p class="muted">Thêm nhanh tài liệu (chọn bài học để lưu vào):</p>
+        <div class="quick-lib">
+          <button class="chip-btn" data-qadd="text">📝 Text</button>
+          <button class="chip-btn" data-qadd="image">🖼️ Ảnh</button>
+          <button class="chip-btn" data-qadd="pdf">📄 PDF</button>
+          <button class="chip-btn" data-qadd="youtube">▶️ YouTube</button>
+          <button class="chip-btn" data-qadd="facebook">🎬 FB Reel</button>
+          <button class="chip-btn" data-qadd="link">🔗 Link</button>
+        </div>
+        <button class="mini-btn" id="openLibHome" style="margin-top:8px">🗂️ Mở thư viện chung</button>
+      </div>
     </div>
 
     <h2 class="section-title">Chương trình học</h2>
@@ -257,6 +271,8 @@ async function renderHome() {
   $("tStart").onclick = timerStart; $("tPause").onclick = timerPause; $("tStop").onclick = timerStop;
   $("quizCourse").onclick = () => startQuiz({ scope: "toàn khoá", context: courseContext(), title: "Kiểm tra tổng kết toàn khoá" });
   $("addSessionBtn").onclick = openAddSession;
+  if ($("openLibHome")) $("openLibHome").onclick = openLibraryAll;
+  document.querySelectorAll("[data-qadd]").forEach((b) => b.onclick = () => openAddResource(b.dataset.qadd));
   document.querySelectorAll("[data-quiz-module]").forEach((b) => b.onclick = () => {
     const m = b.dataset.quizModule;
     startQuiz({ scope: "module: " + m, context: moduleContext(m), title: "Kiểm tra module: " + m });
@@ -850,10 +866,19 @@ function openAddSlide() {
     catch (e) { toast(e.message); }
   };
 }
-function openAddResource(type) {
+function sessionOptions(selectedId) {
+  const byMod = {};
+  (CUR.sessions || []).forEach((s) => { (byMod[s.module] ||= []).push(s); });
+  return Object.entries(byMod).map(([m, ss]) =>
+    `<optgroup label="${escapeHtml(m)}">${ss.map((s) => `<option value="${s.id}"${s.id === selectedId ? " selected" : ""}>${escapeHtml(s.title_vi)}</option>`).join("")}</optgroup>`
+  ).join("");
+}
+function openAddResource(type, presetSid) {
   const isImage = type === "image", isPdf = type === "pdf";
   const isLink = type === "youtube" || type === "facebook" || type === "link";
+  const defSid = presetSid || curSession?.id || (CUR.sessions || [])[0]?.id;
   openModal("Thêm tài liệu: " + typeLabel(type), `
+    <label class="fld">Lưu vào bài học <select id="rSession">${sessionOptions(defSid)}</select></label>
     <label class="fld">Tiêu đề <input id="rTitle" placeholder="Tuỳ chọn"></label>
     ${isImage ? `<label class="fld">Chọn ảnh (có thể chọn NHIỀU ảnh — mỗi ảnh 1 tài liệu) <input type="file" id="rFile" accept="image/*" multiple></label>` : ""}
     ${isPdf ? `<label class="fld">Chọn PDF <input type="file" id="rFile" accept="application/pdf"></label>` : ""}
@@ -865,6 +890,7 @@ function openAddResource(type) {
   `);
   attachNotePaste($("rNote"));
   $("rSave").onclick = async () => {
+    const sid = $("rSession").value; if (!sid) { toast("Chọn bài học để lưu"); return; }
     const tags = ($("rTags").value || "").split(",").map((x) => x.trim()).filter(Boolean);
     const note = $("rNote").value.trim();
     const title = $("rTitle").value.trim();
@@ -873,24 +899,25 @@ function openAddResource(type) {
         const files = $("rFile").files; if (!files.length) { toast("Chọn ít nhất 1 ảnh"); return; }
         for (const f of files) {
           const fd = new FormData();
-          fd.append("file", f); fd.append("sessionId", curSession.id); fd.append("type", "image");
+          fd.append("file", f); fd.append("sessionId", sid); fd.append("type", "image");
           fd.append("title", title || f.name); fd.append("tags", JSON.stringify(tags)); fd.append("note", note);
           await api("POST", "/api/resources/upload", fd);
         }
       } else if (isPdf) {
         const f = $("rFile").files[0]; if (!f) { toast("Chọn PDF"); return; }
         const fd = new FormData();
-        fd.append("file", f); fd.append("sessionId", curSession.id); fd.append("type", "pdf");
+        fd.append("file", f); fd.append("sessionId", sid); fd.append("type", "pdf");
         fd.append("title", title || f.name); fd.append("tags", JSON.stringify(tags)); fd.append("note", note);
         await api("POST", "/api/resources/upload", fd);
       } else {
-        const body = { sessionId: curSession.id, type, title, tags, note };
+        const body = { sessionId: sid, type, title, tags, note };
         if (isLink) { body.url = $("rUrl").value.trim(); if (!body.url) { toast("Nhập URL"); return; } }
         else if (!note) { toast("Nhập nội dung"); return; } // text
         await api("POST", "/api/resources", body);
       }
       closeModal(); toast("Đã thêm tài liệu");
-      if (curTab === "lib") renderTab();
+      if (curTab === "lib" && curSession) renderTab();
+      else if (!$("home-view").hidden) renderHome();
     } catch (e) { toast(e.message); }
   };
 }
